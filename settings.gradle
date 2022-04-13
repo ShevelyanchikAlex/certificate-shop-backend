@@ -1,0 +1,6 @@
+rootProject.name = 'mjs-rest-api-basics'
+include 'model'
+include 'web'
+include 'service'
+include 'persistence'
+
