@@ -1,7 +1,5 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.domain.Tag;
-
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -13,13 +11,13 @@ public class GiftCertificateDto {
     private int duration;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
-    private Set<Tag> tagSet;
+    private Set<TagDto> tagSet;
 
     public GiftCertificateDto() {
     }
 
     public GiftCertificateDto(long id, String name, String description, int price, int duration,
-                              LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<Tag> tagSet) {
+                              LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<TagDto> tagSet) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -30,7 +28,7 @@ public class GiftCertificateDto {
         this.tagSet = tagSet;
     }
 
-    public GiftCertificateDto(long id, String name, String description, int price, Set<Tag> tagSet) {
+    public GiftCertificateDto(long id, String name, String description, int price, Set<TagDto> tagSet) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -39,7 +37,7 @@ public class GiftCertificateDto {
     }
 
     public GiftCertificateDto(long id, String name, String description, int price, int duration,
-                              Set<Tag> tagSet) {
+                              Set<TagDto> tagSet) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -49,7 +47,7 @@ public class GiftCertificateDto {
     }
 
     public GiftCertificateDto(String name, String description, int price, int duration,
-                              LocalDateTime lastUpdateDate, Set<Tag> tagSet) {
+                              LocalDateTime lastUpdateDate, Set<TagDto> tagSet) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -114,11 +112,11 @@ public class GiftCertificateDto {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public Set<Tag> getTagSet() {
+    public Set<TagDto> getTagSet() {
         return tagSet;
     }
 
-    public void setTagSet(Set<Tag> tagSet) {
+    public void setTagSet(Set<TagDto> tagSet) {
         this.tagSet = tagSet;
     }
 
