@@ -12,7 +12,7 @@ import java.util.Objects;
 @ComponentScan("com.epam.esm")
 @PropertySource("classpath:db.properties")
 @Profile("prod")
-public class PersistenceConfiguration {
+public class PersistenceConfig {
     private static final String DATABASE_DRIVER = "db.driver";
     private static final String DATABASE_URL = "db.url";
     private static final String DATABASE_USER_NAME = "db.user";
@@ -22,7 +22,7 @@ public class PersistenceConfiguration {
 
     private final Environment environment;
 
-    public PersistenceConfiguration(Environment environment) {
+    public PersistenceConfig(Environment environment) {
         this.environment = environment;
     }
 
