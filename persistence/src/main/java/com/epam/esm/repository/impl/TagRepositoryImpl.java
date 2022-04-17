@@ -14,7 +14,7 @@ public class TagRepositoryImpl implements TagRepository {
     private static final String INSERT_TAG_QUERY = "INSERT INTO tag VALUES(0, ?)";
     private static final String FIND_BY_ID_TAG_QUERY = "SELECT * FROM tag WHERE id=?";
     private static final String FIND_ALL_TAGS_QUERY = "SELECT * FROM tag";
-    private static final String FIND_BY_NAME_TAG_QUERY = "SELECT * FROM tag WHERE name=?";
+    private static final String COUNT_ALL_TAG_QUERY = "SELECT COUNT(*) FROM tag";
     private static final String UPDATE_TAG_QUERY = "UPDATE tag SET name=? WHERE id=?";
     private static final String DELETE_TAG_QUERY = "DELETE FROM tag WHERE id=?";
 
@@ -41,8 +41,9 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public Tag findByName(String name) {
-        return jdbcTemplate.queryForObject(FIND_BY_NAME_TAG_QUERY, new TagMapper(), name);
+    public int countAll() {
+        Integer countOfTags = jdbcTemplate.queryForObject(COUNT_ALL_TAG_QUERY, Integer.class);
+        return countOfTags == null ? 0 : countOfTags;
     }
 
     @Override

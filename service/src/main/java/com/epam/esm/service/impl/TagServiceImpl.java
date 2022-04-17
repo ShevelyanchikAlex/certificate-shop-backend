@@ -44,9 +44,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagDto findByName(String name) {
-        Tag tag = Optional.ofNullable(tagRepository.findByName(name)).orElseThrow(() -> new ServiceException("404", name));
-        return tagDtoSerializer.serializeDtoFromEntity(tag);
+    public int countAll() {
+        return tagRepository.countAll();
     }
 
     @Override

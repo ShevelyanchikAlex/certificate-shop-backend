@@ -11,7 +11,7 @@ public interface TagService {
 
     List<TagDto> findAll();
 
-    TagDto findByName(String name);
+    int countAll();
 
     int delete(long id);
 }
