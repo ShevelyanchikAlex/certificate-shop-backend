@@ -1,7 +1,7 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.repository.filter.FilterCondition;
+import com.epam.esm.repository.filter.condition.FilterCondition;
 
 import java.util.List;
 

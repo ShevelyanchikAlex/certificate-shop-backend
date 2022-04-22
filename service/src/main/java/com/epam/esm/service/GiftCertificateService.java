@@ -1,7 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.repository.filter.FilterCondition;
+import com.epam.esm.repository.filter.condition.FilterCondition;
 
 import java.util.List;
 

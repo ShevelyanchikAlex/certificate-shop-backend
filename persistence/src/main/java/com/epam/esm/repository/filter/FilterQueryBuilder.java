@@ -1,9 +1,10 @@
 package com.epam.esm.repository.filter;
 
+import com.epam.esm.repository.filter.condition.FilterCondition;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FilterBuilder {
+public class FilterQueryBuilder {
     private static final String INIT_QUERY = "SELECT * FROM gift_certificate " +
             "JOIN gift_certificate_has_tag ON gift_certificate_has_tag.gift_certificate_id = gift_certificate.id " +
             "JOIN tag ON gift_certificate_has_tag.tag_id = tag.id ";

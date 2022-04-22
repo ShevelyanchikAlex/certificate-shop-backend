@@ -8,7 +8,7 @@ import com.epam.esm.dto.serialization.DtoSerializer;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.TagRepository;
-import com.epam.esm.repository.filter.FilterCondition;
+import com.epam.esm.repository.filter.condition.FilterCondition;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -79,21 +79,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public int update(GiftCertificateDto giftCertificateDto) {
-        GiftCertificate giftCertificateToUpdate = Optional.ofNullable(giftCertificateRepository.findById(giftCertificateDto.getId()))
-                .orElseThrow(() -> new ServiceException("40401", giftCertificateDto.getId()));
-        updateNecessaryParams(giftCertificateDto, giftCertificateToUpdate);
+        if (giftCertificateRepository.findById(giftCertificateDto.getId()) == null) {
+            throw new ServiceException("40401", giftCertificateDto.getId());
+        }
+        int updatedRowsCount = giftCertificateRepository.update(giftCertificateDtoSerializer.serializeDtoToEntity(giftCertificateDto));
         associateGiftCertificateWithTag(giftCertificateDto.getId(),
                 fetchTagSet(giftCertificateDto.getTagSet()
                         .stream().map(tagDtoSerializer::serializeDtoToEntity).collect(Collectors.toSet())));
-        return giftCertificateRepository.update(giftCertificateToUpdate);
-    }
-
-    private void updateNecessaryParams(GiftCertificateDto giftCertificateDto, GiftCertificate giftCertificate) {
-        Optional.ofNullable(giftCertificateDto.getName()).ifPresent(giftCertificate::setName);
-        Optional.ofNullable(giftCertificateDto.getDescription()).ifPresent(giftCertificate::setDescription);
-        Optional.of(giftCertificateDto.getDuration()).ifPresent(giftCertificate::setDuration);
-        Optional.of(giftCertificateDto.getPrice()).ifPresent(giftCertificate::setPrice);
-        Optional.of(LocalDateTime.now()).ifPresent(giftCertificate::setLastUpdateDate);
+        return updatedRowsCount;
     }
 
     @Override

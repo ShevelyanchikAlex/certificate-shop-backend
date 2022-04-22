@@ -1,4 +1,4 @@
-package com.epam.esm.repository.filter;
+package com.epam.esm.repository.filter.condition;
 
 public class FilterCondition {
     private String tagName;

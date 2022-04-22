@@ -64,12 +64,6 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public int countAll() {
-        Integer countOfTags = jdbcTemplate.queryForObject(COUNT_ALL_TAG_QUERY, Integer.class);
-        return countOfTags == null ? 0 : countOfTags;
-    }
-
-    @Override
     public Set<Tag> findAllByGiftCertificateId(long giftCertificateId) {
         return new HashSet<>(jdbcTemplate.query(FIND_BY_GIFT_CERTIFICATE_ID_QUERY, new TagMapper(), giftCertificateId));
     }
@@ -82,5 +76,11 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public int delete(long id) {
         return jdbcTemplate.update(DELETE_TAG_QUERY, id);
+    }
+
+    @Override
+    public int countAll() {
+        Integer countOfTags = jdbcTemplate.queryForObject(COUNT_ALL_TAG_QUERY, Integer.class);
+        return countOfTags == null ? 0 : countOfTags;
     }
 }

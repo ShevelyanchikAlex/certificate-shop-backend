@@ -2,8 +2,10 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.repository.GiftCertificateRepository;
-import com.epam.esm.repository.filter.FilterBuilder;
-import com.epam.esm.repository.filter.FilterCondition;
+import com.epam.esm.repository.filter.FilterQueryBuilder;
+import com.epam.esm.repository.filter.UpdateQueryBuilder;
+import com.epam.esm.repository.filter.condition.FilterCondition;
+import com.epam.esm.repository.filter.condition.UpdateCondition;
 import com.epam.esm.repository.mapper.GiftCertificateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -28,13 +30,15 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private static final String DELETE_GIFT_CERTIFICATE_QUERY = "DELETE FROM gift_certificate WHERE id=?";
     private static final String ASSOCIATE_GIFT_CERTIFICATE_WITH_TAG_QUERY = "INSERT INTO gift_certificate_has_tag VALUES(?,?)";
 
-    private final FilterBuilder filterBuilder;
     private final JdbcTemplate jdbcTemplate;
+    private final FilterQueryBuilder filterBuilder;
+    private final UpdateQueryBuilder updateQueryBuilder;
 
     @Autowired
-    public GiftCertificateRepositoryImpl(JdbcTemplate jdbcTemplate, FilterBuilder filterBuilder) {
+    public GiftCertificateRepositoryImpl(JdbcTemplate jdbcTemplate, FilterQueryBuilder filterBuilder, UpdateQueryBuilder updateQueryBuilder) {
         this.jdbcTemplate = jdbcTemplate;
         this.filterBuilder = filterBuilder;
+        this.updateQueryBuilder = updateQueryBuilder;
     }
 
     @Override
@@ -77,10 +81,11 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public int update(GiftCertificate giftCertificate) {
-        return jdbcTemplate.update(UPDATE_GIFT_CERTIFICATE_QUERY, giftCertificate.getName(),
-                giftCertificate.getDescription(), giftCertificate.getPrice(),
-                giftCertificate.getDuration(), giftCertificate.getCreateDate(),
-                giftCertificate.getLastUpdateDate(), giftCertificate.getId());
+        UpdateCondition updateCondition = new UpdateCondition(giftCertificate.getId(), giftCertificate.getName(),
+                giftCertificate.getDescription(), giftCertificate.getPrice(), giftCertificate.getDuration());
+        String query = updateQueryBuilder.buildUpdateQuery(updateCondition);
+        System.out.println(query);
+        return jdbcTemplate.update(query);
     }
 
     @Override
