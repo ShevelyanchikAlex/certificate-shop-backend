@@ -27,8 +27,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public long save(TagDto tagDto) {
-        Tag tag = tagDtoSerializer.serializeDtoToEntity(tagDto);
-        return tagRepository.save(tag);
+        return tagRepository.save(tagDtoSerializer.serializeDtoToEntity(tagDto));
     }
 
     @Override
@@ -50,10 +49,6 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public int delete(long id) {
-        int deletedRows = tagRepository.delete(id);
-        if (deletedRows == 0) {
-            throw new ServiceException("404", id);
-        }
-        return deletedRows;
+        return tagRepository.delete(id);
     }
 }
