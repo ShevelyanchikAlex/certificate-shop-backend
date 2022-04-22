@@ -25,8 +25,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private static final String INSERT_GIFT_CERTIFICATE_QUERY = "INSERT INTO gift_certificate VALUES(0, ?, ?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID_GIFT_CERTIFICATE_QUERY = "SELECT * FROM gift_certificate WHERE id=?";
     private static final String FIND_ALL_GIFT_CERTIFICATES_QUERY = "SELECT * FROM gift_certificate";
-    private static final String UPDATE_GIFT_CERTIFICATE_QUERY = "UPDATE gift_certificate SET name=?, description=?, price=?," +
-            " duration=?, create_date=?, last_update_date=? WHERE id=?";
     private static final String DELETE_GIFT_CERTIFICATE_QUERY = "DELETE FROM gift_certificate WHERE id=?";
     private static final String ASSOCIATE_GIFT_CERTIFICATE_WITH_TAG_QUERY = "INSERT INTO gift_certificate_has_tag VALUES(?,?)";
 
@@ -83,9 +81,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     public int update(GiftCertificate giftCertificate) {
         UpdateCondition updateCondition = new UpdateCondition(giftCertificate.getId(), giftCertificate.getName(),
                 giftCertificate.getDescription(), giftCertificate.getPrice(), giftCertificate.getDuration());
-        String query = updateQueryBuilder.buildUpdateQuery(updateCondition);
-        System.out.println(query);
-        return jdbcTemplate.update(query);
+        return jdbcTemplate.update(updateQueryBuilder.buildUpdateQuery(updateCondition));
     }
 
     @Override
