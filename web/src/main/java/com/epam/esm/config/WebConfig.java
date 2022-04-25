@@ -24,7 +24,7 @@ import java.util.Locale;
 @PropertySource("classpath:web.config.properties")
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
-    private static final String EXCEPTION_MESSAGE_BUNDLE = "config.exception.message";
+    private static final String EXCEPTION_MESSAGE_BUNDLE = "exception.message";
     private static final String DEFAULT_ENCODING = "config.default.encoding";
 
     @Bean
@@ -50,7 +50,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(mappingJackson2HttpMessageConverter());
     }
-
 
     @Bean
     public MessageSource messageSource() {

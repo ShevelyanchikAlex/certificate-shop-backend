@@ -2,6 +2,8 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.domain.Tag;
 import com.epam.esm.repository.TagRepository;
+import com.epam.esm.repository.exception.RepositoryErrorCode;
+import com.epam.esm.repository.exception.RepositoryException;
 import com.epam.esm.repository.mapper.TagMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,7 +21,6 @@ public class TagRepositoryImpl implements TagRepository {
     private static final String FIND_BY_NAME_TAG_QUERY = "SELECT * FROM tag WHERE name=?";
     private static final String FIND_ALL_TAGS_QUERY = "SELECT * FROM tag";
     private static final String COUNT_ALL_TAG_QUERY = "SELECT COUNT(*) FROM tag";
-    private static final String UPDATE_TAG_QUERY = "UPDATE tag SET name=? WHERE id=?";
     private static final String DELETE_TAG_QUERY = "DELETE FROM tag WHERE id=?";
     private static final String FIND_BY_GIFT_CERTIFICATE_ID_QUERY = """
             SELECT * FROM tag
@@ -27,6 +28,8 @@ public class TagRepositoryImpl implements TagRepository {
                 JOIN gift_certificate ON gift_certificate_has_tag.gift_certificate_id = gift_certificate.id
                 WHERE gift_certificate.id=?
             """;
+    private static final int SUCCESS_CHANGED_ROW_COUNT = 1;
+
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -45,7 +48,7 @@ public class TagRepositoryImpl implements TagRepository {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID_TAG_QUERY, new TagMapper(), id);
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            throw new RepositoryException(RepositoryErrorCode.TAG_NOT_FOUND, id);
         }
     }
 
@@ -54,7 +57,7 @@ public class TagRepositoryImpl implements TagRepository {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_NAME_TAG_QUERY, new TagMapper(), name);
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            throw new RepositoryException(RepositoryErrorCode.TAG_NOT_FOUND, name);
         }
     }
 
@@ -70,12 +73,16 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public int update(Tag tag) {
-        return jdbcTemplate.update(UPDATE_TAG_QUERY, tag.getName(), tag.getId());
+        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "UPDATE");
     }
 
     @Override
     public int delete(long id) {
-        return jdbcTemplate.update(DELETE_TAG_QUERY, id);
+        int deletedRowCount = jdbcTemplate.update(DELETE_TAG_QUERY, id);
+        if (deletedRowCount != SUCCESS_CHANGED_ROW_COUNT) {
+            throw new RepositoryException(RepositoryErrorCode.TAG_NOT_FOUND, id);
+        }
+        return deletedRowCount;
     }
 
     @Override

@@ -3,36 +3,51 @@ package com.epam.esm.service.impl;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.serialization.DtoSerializer;
-import com.epam.esm.exception.ServiceException;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.TagService;
+import com.epam.esm.service.exception.ServiceErrorCode;
+import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.validator.impl.IdValidator;
+import com.epam.esm.service.validator.impl.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final DtoSerializer<TagDto, Tag> tagDtoSerializer;
+    private final TagValidator tagValidator;
+    private final IdValidator idValidator;
 
     @Autowired
-    public TagServiceImpl(TagRepository tagRepository, @Qualifier("tagDtoSerializer") DtoSerializer<TagDto, Tag> tagDtoSerializer) {
+    public TagServiceImpl(TagRepository tagRepository, @Qualifier("tagDtoSerializer") DtoSerializer<TagDto, Tag> tagDtoSerializer, TagValidator tagValidator, IdValidator idValidator) {
         this.tagRepository = tagRepository;
         this.tagDtoSerializer = tagDtoSerializer;
+        this.tagValidator = tagValidator;
+        this.idValidator = idValidator;
     }
 
     @Override
     public long save(TagDto tagDto) {
+        if (!tagValidator.validate(tagDto)) {
+            throw new ServiceException(ServiceErrorCode.TAG_VALIDATE_ERROR, tagDto.getName());
+        }
+//        if (tagRepository.findByName(tagDto.getName()) != null) {
+//            throw new ServiceException(ServiceErrorCode.RESOURCE_ALREADY_EXIST, tagDto.getName());
+//        }
         return tagRepository.save(tagDtoSerializer.serializeDtoToEntity(tagDto));
     }
 
     @Override
     public TagDto findById(long id) {
-        Tag tag = Optional.ofNullable(tagRepository.findById(id)).orElseThrow(() -> new ServiceException("404", id));
+        if (!idValidator.validate(id)) {
+            throw new ServiceException(ServiceErrorCode.REQUEST_VALIDATE_ERROR, id);
+        }
+        Tag tag = tagRepository.findById(id);
         return tagDtoSerializer.serializeDtoFromEntity(tag);
     }
 
@@ -49,6 +64,9 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public int delete(long id) {
+        if (!idValidator.validate(id)) {
+            throw new ServiceException(ServiceErrorCode.REQUEST_VALIDATE_ERROR, id);
+        }
         return tagRepository.delete(id);
     }
 }

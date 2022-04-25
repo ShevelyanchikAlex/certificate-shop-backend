@@ -2,12 +2,15 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.repository.GiftCertificateRepository;
+import com.epam.esm.repository.exception.RepositoryErrorCode;
+import com.epam.esm.repository.exception.RepositoryException;
 import com.epam.esm.repository.filter.FilterQueryBuilder;
 import com.epam.esm.repository.filter.UpdateQueryBuilder;
 import com.epam.esm.repository.filter.condition.FilterCondition;
 import com.epam.esm.repository.filter.condition.UpdateCondition;
 import com.epam.esm.repository.mapper.GiftCertificateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -27,6 +30,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private static final String FIND_ALL_GIFT_CERTIFICATES_QUERY = "SELECT * FROM gift_certificate";
     private static final String DELETE_GIFT_CERTIFICATE_QUERY = "DELETE FROM gift_certificate WHERE id=?";
     private static final String ASSOCIATE_GIFT_CERTIFICATE_WITH_TAG_QUERY = "INSERT INTO gift_certificate_has_tag VALUES(?,?)";
+    private static final int SUCCESS_CHANGED_ROW_COUNT = 1;
 
     private final JdbcTemplate jdbcTemplate;
     private final FilterQueryBuilder filterBuilder;
@@ -42,20 +46,24 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     @Override
     public long save(GiftCertificate giftCertificate) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(
-                connection -> {
-                    PreparedStatement ps =
-                            connection.prepareStatement(INSERT_GIFT_CERTIFICATE_QUERY, Statement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, giftCertificate.getName());
-                    ps.setString(2, giftCertificate.getDescription());
-                    ps.setInt(3, giftCertificate.getPrice());
-                    ps.setInt(4, giftCertificate.getDuration());
-                    ps.setTimestamp(5, Timestamp.valueOf(giftCertificate.getCreateDate()));
-                    ps.setTimestamp(6, Timestamp.valueOf(giftCertificate.getLastUpdateDate()));
-                    return ps;
-                },
-                keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).intValue();
+        try {
+            jdbcTemplate.update(
+                    connection -> {
+                        PreparedStatement ps =
+                                connection.prepareStatement(INSERT_GIFT_CERTIFICATE_QUERY, Statement.RETURN_GENERATED_KEYS);
+                        ps.setString(1, giftCertificate.getName());
+                        ps.setString(2, giftCertificate.getDescription());
+                        ps.setInt(3, giftCertificate.getPrice());
+                        ps.setInt(4, giftCertificate.getDuration());
+                        ps.setTimestamp(5, Timestamp.valueOf(giftCertificate.getCreateDate()));
+                        ps.setTimestamp(6, Timestamp.valueOf(giftCertificate.getLastUpdateDate()));
+                        return ps;
+                    },
+                    keyHolder);
+            return Objects.requireNonNull(keyHolder.getKey()).intValue();
+        } catch (DuplicateKeyException e) {
+            throw new RepositoryException(RepositoryErrorCode.RESOURCE_ALREADY_EXIST, giftCertificate.getName());
+        }
     }
 
     @Override
@@ -63,7 +71,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID_GIFT_CERTIFICATE_QUERY, new GiftCertificateMapper(), id);
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            throw new RepositoryException(RepositoryErrorCode.GIFT_CERTIFICATE_NOT_FOUND, id);
         }
     }
 
@@ -86,7 +94,11 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public int delete(long id) {
-        return jdbcTemplate.update(DELETE_GIFT_CERTIFICATE_QUERY, id);
+        int deletedRowCount = jdbcTemplate.update(DELETE_GIFT_CERTIFICATE_QUERY, id);
+        if (deletedRowCount != SUCCESS_CHANGED_ROW_COUNT) {
+            throw new RepositoryException(RepositoryErrorCode.GIFT_CERTIFICATE_NOT_FOUND, id);
+        }
+        return deletedRowCount;
     }
 
     @Override
