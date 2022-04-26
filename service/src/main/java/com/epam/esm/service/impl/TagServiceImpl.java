@@ -24,7 +24,9 @@ public class TagServiceImpl implements TagService {
     private final IdValidator idValidator;
 
     @Autowired
-    public TagServiceImpl(TagRepository tagRepository, @Qualifier("tagDtoSerializer") DtoSerializer<TagDto, Tag> tagDtoSerializer, TagValidator tagValidator, IdValidator idValidator) {
+    public TagServiceImpl(TagRepository tagRepository,
+                          @Qualifier("tagDtoSerializer") DtoSerializer<TagDto, Tag> tagDtoSerializer,
+                          TagValidator tagValidator, IdValidator idValidator) {
         this.tagRepository = tagRepository;
         this.tagDtoSerializer = tagDtoSerializer;
         this.tagValidator = tagValidator;
@@ -34,11 +36,11 @@ public class TagServiceImpl implements TagService {
     @Override
     public long save(TagDto tagDto) {
         if (!tagValidator.validate(tagDto)) {
-            throw new ServiceException(ServiceErrorCode.TAG_VALIDATE_ERROR, tagDto.getName());
+            throw new ServiceException(ServiceErrorCode.TAG_VALIDATE_ERROR);
         }
-//        if (tagRepository.findByName(tagDto.getName()) != null) {
-//            throw new ServiceException(ServiceErrorCode.RESOURCE_ALREADY_EXIST, tagDto.getName());
-//        }
+        if (tagRepository.existsTagByName(tagDto.getName())) {
+            throw new ServiceException(ServiceErrorCode.RESOURCE_ALREADY_EXIST, "TAG");
+        }
         return tagRepository.save(tagDtoSerializer.serializeDtoToEntity(tagDto));
     }
 

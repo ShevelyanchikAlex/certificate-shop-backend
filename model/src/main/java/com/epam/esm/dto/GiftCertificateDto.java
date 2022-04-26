@@ -1,6 +1,7 @@
 package com.epam.esm.dto;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
 public class GiftCertificateDto {
@@ -24,34 +25,6 @@ public class GiftCertificateDto {
         this.price = price;
         this.duration = duration;
         this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-        this.tagSet = tagSet;
-    }
-
-    public GiftCertificateDto(long id, String name, String description, int price, Set<TagDto> tagSet) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.tagSet = tagSet;
-    }
-
-    public GiftCertificateDto(long id, String name, String description, int price, int duration,
-                              Set<TagDto> tagSet) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.tagSet = tagSet;
-    }
-
-    public GiftCertificateDto(String name, String description, int price, int duration,
-                              LocalDateTime lastUpdateDate, Set<TagDto> tagSet) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
         this.lastUpdateDate = lastUpdateDate;
         this.tagSet = tagSet;
     }
@@ -118,6 +91,19 @@ public class GiftCertificateDto {
 
     public void setTagSet(Set<TagDto> tagSet) {
         this.tagSet = tagSet;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GiftCertificateDto that = (GiftCertificateDto) o;
+        return id == that.id && price == that.price && duration == that.duration && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(createDate, that.createDate) && Objects.equals(lastUpdateDate, that.lastUpdateDate) && Objects.equals(tagSet, that.tagSet);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate, tagSet);
     }
 
     @Override

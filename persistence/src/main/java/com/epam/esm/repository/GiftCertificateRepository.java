@@ -8,5 +8,9 @@ import java.util.List;
 public interface GiftCertificateRepository extends CrudRepository<GiftCertificate> {
     List<GiftCertificate> findWithFilter(FilterCondition filterCondition);
 
-    int associateGiftCertificateWithTag(long giftCertificateId, long tagId);
+    void associateGiftCertificateWithTag(long giftCertificateId, long tagId);
+
+    void deAssociateGiftCertificateWithTag(long giftCertificateId, long tagId);
+
+    boolean existsGiftCertificateByName(String name);
 }

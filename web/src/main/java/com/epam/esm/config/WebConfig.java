@@ -9,7 +9,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -21,11 +20,10 @@ import java.util.Locale;
 
 @Configuration
 @ComponentScan("com.epam.esm")
-@PropertySource("classpath:web.config.properties")
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
-    private static final String EXCEPTION_MESSAGE_BUNDLE = "exception.message";
-    private static final String DEFAULT_ENCODING = "config.default.encoding";
+    private static final String EXCEPTION_MESSAGE_BUNDLE = "message";
+    private static final String DEFAULT_ENCODING = "UTF-8";
 
     @Bean
     public ObjectMapper objectMapper() {

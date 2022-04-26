@@ -20,6 +20,7 @@ public class TagRepositoryImpl implements TagRepository {
     private static final String FIND_BY_ID_TAG_QUERY = "SELECT * FROM tag WHERE id=?";
     private static final String FIND_BY_NAME_TAG_QUERY = "SELECT * FROM tag WHERE name=?";
     private static final String FIND_ALL_TAGS_QUERY = "SELECT * FROM tag";
+    private static final String EXIST_TAG_BY_NAME_QUERY = "SELECT COUNT(*) FROM tag WHERE name=?";
     private static final String COUNT_ALL_TAG_QUERY = "SELECT COUNT(*) FROM tag";
     private static final String DELETE_TAG_QUERY = "DELETE FROM tag WHERE id=?";
     private static final String FIND_BY_GIFT_CERTIFICATE_ID_QUERY = """
@@ -29,6 +30,7 @@ public class TagRepositoryImpl implements TagRepository {
                 WHERE gift_certificate.id=?
             """;
     private static final int SUCCESS_CHANGED_ROW_COUNT = 1;
+    public static final int EMPTY_COUNT_OF_TAGS = 0;
 
 
     private final JdbcTemplate jdbcTemplate;
@@ -62,6 +64,12 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
+    public boolean existsTagByName(String name) {
+        Integer countOfTag = jdbcTemplate.queryForObject(EXIST_TAG_BY_NAME_QUERY, Integer.class, name);
+        return (countOfTag != null) && (countOfTag != EMPTY_COUNT_OF_TAGS);
+    }
+
+    @Override
     public List<Tag> findAll() {
         return jdbcTemplate.query(FIND_ALL_TAGS_QUERY, new TagMapper());
     }
@@ -88,6 +96,6 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public int countAll() {
         Integer countOfTags = jdbcTemplate.queryForObject(COUNT_ALL_TAG_QUERY, Integer.class);
-        return countOfTags == null ? 0 : countOfTags;
+        return countOfTags == null ? EMPTY_COUNT_OF_TAGS : countOfTags;
     }
 }

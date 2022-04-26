@@ -10,4 +10,6 @@ public interface TagRepository extends CrudRepository<Tag> {
     Set<Tag> findAllByGiftCertificateId(long giftCertificateId);
 
     Tag findByName(String name);
+
+    boolean existsTagByName(String name);
 }

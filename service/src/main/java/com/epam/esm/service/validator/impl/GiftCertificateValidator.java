@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 public class GiftCertificateValidator implements Validator<GiftCertificateDto> {
     private static final String GIFT_CERTIFICATE_NAME_REGEX_PATTERN = "^([A-Za-z ]{1,45})$";
     private static final String GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN = "^([A-Za-z ]{1,200})$";
+    public static final int MIN_VALUE = 0;
 
     @Override
     public boolean validate(GiftCertificateDto giftCertificateDto) {
@@ -45,7 +46,7 @@ public class GiftCertificateValidator implements Validator<GiftCertificateDto> {
         if (price == null) {
             return false;
         }
-        Predicate<Integer> giftCertificatePricePredicate = num -> num >= 0;
+        Predicate<Integer> giftCertificatePricePredicate = num -> num >= MIN_VALUE;
         return giftCertificatePricePredicate.test(price);
     }
 
@@ -53,7 +54,7 @@ public class GiftCertificateValidator implements Validator<GiftCertificateDto> {
         if (duration == null) {
             return false;
         }
-        Predicate<Integer> giftCertificateDurationPredicate = num -> num >= 0;
+        Predicate<Integer> giftCertificateDurationPredicate = num -> num >= MIN_VALUE;
         return giftCertificateDurationPredicate.test(duration);
     }
 

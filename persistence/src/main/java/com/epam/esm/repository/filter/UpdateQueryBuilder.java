@@ -12,6 +12,7 @@ public class UpdateQueryBuilder {
     private static final String GIFT_CERTIFICATE_PRICE = ", price=%d ";
     private static final String GIFT_CERTIFICATE_DURATION = ", duration=%d ";
     private static final String NO_EXIST_PARAMETER = "";
+    public static final int UNRESOLVED_VALUE = 0;
 
     public String buildUpdateQuery(UpdateCondition updateCondition) {
         StringBuilder updateQuery = new StringBuilder(START_INIT_QUERY);
@@ -39,14 +40,14 @@ public class UpdateQueryBuilder {
     }
 
     private String buildPriceQuery(Integer price) {
-        if (price != null) {
+        if (price != null && price != UNRESOLVED_VALUE) {
             return String.format(GIFT_CERTIFICATE_PRICE, price);
         }
         return NO_EXIST_PARAMETER;
     }
 
     private String buildDurationQuery(Integer duration) {
-        if (duration != null) {
+        if (duration != null && duration != UNRESOLVED_VALUE) {
             return String.format(GIFT_CERTIFICATE_DURATION, duration);
         }
         return NO_EXIST_PARAMETER;

@@ -28,9 +28,12 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private static final String INSERT_GIFT_CERTIFICATE_QUERY = "INSERT INTO gift_certificate VALUES(0, ?, ?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID_GIFT_CERTIFICATE_QUERY = "SELECT * FROM gift_certificate WHERE id=?";
     private static final String FIND_ALL_GIFT_CERTIFICATES_QUERY = "SELECT * FROM gift_certificate";
+    private static final String EXIST_GIFT_CERTIFICATES_QUERY = "SELECT COUNT(*) FROM gift_certificate WHERE name=?";
     private static final String DELETE_GIFT_CERTIFICATE_QUERY = "DELETE FROM gift_certificate WHERE id=?";
+    private static final String DE_ASSOCIATE_GIFT_CERTIFICATE_WITH_TAG_QUERY = "DELETE FROM gift_certificate_has_tag WHERE gift_certificate_has_tag.gift_certificate_id=? AND gift_certificate_has_tag.tag_id=?";
     private static final String ASSOCIATE_GIFT_CERTIFICATE_WITH_TAG_QUERY = "INSERT INTO gift_certificate_has_tag VALUES(?,?)";
     private static final int SUCCESS_CHANGED_ROW_COUNT = 1;
+    public static final int EMPTY_COUNT_OF_GIFT_CERTIFICATE = 0;
 
     private final JdbcTemplate jdbcTemplate;
     private final FilterQueryBuilder filterBuilder;
@@ -102,7 +105,18 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public int associateGiftCertificateWithTag(long giftCertificateId, long tagId) {
-        return jdbcTemplate.update(ASSOCIATE_GIFT_CERTIFICATE_WITH_TAG_QUERY, giftCertificateId, tagId);
+    public void associateGiftCertificateWithTag(long giftCertificateId, long tagId) {
+        jdbcTemplate.update(ASSOCIATE_GIFT_CERTIFICATE_WITH_TAG_QUERY, giftCertificateId, tagId);
+    }
+
+    @Override
+    public void deAssociateGiftCertificateWithTag(long giftCertificateId, long tagId) {
+        jdbcTemplate.update(DE_ASSOCIATE_GIFT_CERTIFICATE_WITH_TAG_QUERY, giftCertificateId, tagId);
+    }
+
+    @Override
+    public boolean existsGiftCertificateByName(String name) {
+        Integer countOfGiftCertificate = jdbcTemplate.queryForObject(EXIST_GIFT_CERTIFICATES_QUERY, Integer.class, name);
+        return (countOfGiftCertificate != null) && (countOfGiftCertificate != EMPTY_COUNT_OF_GIFT_CERTIFICATE);
     }
 }

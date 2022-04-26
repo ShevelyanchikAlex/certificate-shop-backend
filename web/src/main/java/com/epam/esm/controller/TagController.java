@@ -27,14 +27,14 @@ public class TagController {
         return tagService.findById(id);
     }
 
-    @GetMapping("/count")
-    public int findByName() {
-        return tagService.countAll();
-    }
-
     @GetMapping(produces = "application/json")
     public List<TagDto> findAll() {
         return tagService.findAll();
+    }
+
+    @GetMapping("/count")
+    public int countAll() {
+        return tagService.countAll();
     }
 
     @DeleteMapping("/{id}")
