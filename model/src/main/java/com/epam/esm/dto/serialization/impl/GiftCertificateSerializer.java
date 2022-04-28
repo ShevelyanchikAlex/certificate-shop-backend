@@ -1,11 +1,15 @@
 package com.epam.esm.dto.serialization.impl;
 
 import com.epam.esm.domain.GiftCertificate;
+import com.epam.esm.domain.Tag;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.serialization.DtoSerializer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+/**
+ * Implemented {@link DtoSerializer} for {@link GiftCertificate} entity.
+ */
 @Component
 @Qualifier("giftCertificateDtoSerializer")
 public class GiftCertificateSerializer implements DtoSerializer<GiftCertificateDto, GiftCertificate> {

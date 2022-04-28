@@ -6,7 +6,9 @@ import com.epam.esm.dto.serialization.DtoSerializer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-
+/**
+ *Implemented {@link DtoSerializer} for {@link Tag} entity.
+ */
 @Component
 @Qualifier("tagDtoSerializer")
 public class TagSerializer implements DtoSerializer<TagDto, Tag> {

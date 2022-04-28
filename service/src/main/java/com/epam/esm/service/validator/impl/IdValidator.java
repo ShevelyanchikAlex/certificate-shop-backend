@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.Predicate;
 
+/**
+ * Implemented {@link Validator} for {@link Long}
+ */
 @Component
 public class IdValidator implements Validator<Long> {
     private static final Long MIN_ID = 0L;

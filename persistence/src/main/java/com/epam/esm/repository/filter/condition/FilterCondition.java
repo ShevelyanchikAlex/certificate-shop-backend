@@ -1,5 +1,8 @@
 package com.epam.esm.repository.filter.condition;
 
+/**
+ * Condition for filter according to specific parameters
+ */
 public class FilterCondition {
     private String tagName;
     private String name;

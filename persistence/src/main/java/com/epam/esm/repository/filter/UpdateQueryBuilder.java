@@ -3,6 +3,9 @@ package com.epam.esm.repository.filter;
 import com.epam.esm.repository.filter.condition.UpdateCondition;
 import org.springframework.stereotype.Component;
 
+/**
+ * Query Builder to build update Query depending on {@link UpdateCondition}
+ */
 @Component
 public class UpdateQueryBuilder {
     private static final String START_INIT_QUERY = "UPDATE gift_certificate SET last_update_date=NOW()";

@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.Predicate;
 
+/**
+ * Implemented {@link Validator} for {@link TagDto}
+ */
 @Component
 public class TagValidator implements Validator<TagDto> {
     private static final String TAG_NAME_REGEX_PATTERN = "^(#[A-Za-z0-9_]{1,20})$";
@@ -18,7 +21,7 @@ public class TagValidator implements Validator<TagDto> {
         return validateName(tagDto.getName());
     }
 
-    public boolean validateName(String name) {
+    private boolean validateName(String name) {
         if (name == null) {
             return false;
         }

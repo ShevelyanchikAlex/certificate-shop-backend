@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 import java.util.function.Predicate;
 
+/**
+ * Implemented {@link Validator} for {@link GiftCertificateDto}
+ */
 @Component
 public class UpdateGiftCertificateValidator implements Validator<GiftCertificateDto> {
     private static final String GIFT_CERTIFICATE_NAME_REGEX_PATTERN = "^([A-Za-z ]{1,45})$";
@@ -26,7 +29,7 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
                 validateTags(giftCertificateDto.getTagSet());
     }
 
-    public boolean validateName(String name) {
+    private boolean validateName(String name) {
         if (name == null) {
             return true;
         }
@@ -34,7 +37,7 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
         return gftCertificateNamePredicate.test(name);
     }
 
-    public boolean validateDescription(String description) {
+    private boolean validateDescription(String description) {
         if (description == null) {
             return true;
         }
@@ -42,7 +45,7 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
         return giftCertificateDescriptionPredicate.test(description);
     }
 
-    public boolean validatePrice(Integer price) {
+    private boolean validatePrice(Integer price) {
         if (price == null) {
             return true;
         }
@@ -50,7 +53,7 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
         return giftCertificatePricePredicate.test(price);
     }
 
-    public boolean validateDuration(Integer duration) {
+    private boolean validateDuration(Integer duration) {
         if (duration == null) {
             return true;
         }
@@ -58,7 +61,7 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
         return giftCertificateDurationPredicate.test(duration);
     }
 
-    public boolean validateTags(Set<TagDto> tags) {
+    private boolean validateTags(Set<TagDto> tags) {
         if (tags == null) {
             return true;
         }

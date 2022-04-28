@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.Predicate;
 
+/**
+ * Implemented {@link Validator} for {@link FilterCondition}
+ */
 @Component
 public class FilterConditionValidator implements Validator<FilterCondition> {
     private static final String TAG_NAME_REGEX_PATTERN = "^(#[A-Za-z0-9_]{1,20})$";
@@ -24,7 +27,7 @@ public class FilterConditionValidator implements Validator<FilterCondition> {
                 validateOrder(filterCondition.getSortDirection());
     }
 
-    public boolean validateTagName(String tagName) {
+    private boolean validateTagName(String tagName) {
         if (tagName == null) {
             return true;
         }
@@ -32,7 +35,7 @@ public class FilterConditionValidator implements Validator<FilterCondition> {
         return tagNamePredicate.test(tagName);
     }
 
-    public boolean validatePartOfName(String partOfName) {
+    private boolean validatePartOfName(String partOfName) {
         if (partOfName == null) {
             return true;
         }
@@ -40,7 +43,7 @@ public class FilterConditionValidator implements Validator<FilterCondition> {
         return partOfNamePredicate.test(partOfName);
     }
 
-    public boolean validatePartOfDescription(String partOfDescription) {
+    private boolean validatePartOfDescription(String partOfDescription) {
         if (partOfDescription == null) {
             return true;
         }
@@ -48,7 +51,7 @@ public class FilterConditionValidator implements Validator<FilterCondition> {
         return partOfDescriptionPredicate.test(partOfDescription);
     }
 
-    public boolean validateOrder(String order) {
+    private boolean validateOrder(String order) {
         if (order == null) {
             return true;
         }

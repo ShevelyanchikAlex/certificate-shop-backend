@@ -24,6 +24,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Implemented {@link GiftCertificateService}
+ */
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateRepository giftCertificateRepository;
@@ -38,7 +41,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Autowired
     public GiftCertificateServiceImpl(GiftCertificateRepository giftCertificateRepository, TagRepository tagRepository,
                                       @Qualifier("giftCertificateDtoSerializer") DtoSerializer<GiftCertificateDto, GiftCertificate> giftCertificateDtoSerializer,
-                                      @Qualifier("tagDtoSerializer") DtoSerializer<TagDto, Tag> tagDtoSerializer, GiftCertificateValidator giftCertificateValidator, IdValidator idValidator, UpdateGiftCertificateValidator updateGiftCertificateValidator, FilterConditionValidator filterConditionValidator, TagValidator tagValidator) {
+                                      @Qualifier("tagDtoSerializer") DtoSerializer<TagDto, Tag> tagDtoSerializer, GiftCertificateValidator giftCertificateValidator,
+                                      IdValidator idValidator, UpdateGiftCertificateValidator updateGiftCertificateValidator, FilterConditionValidator filterConditionValidator) {
         this.giftCertificateRepository = giftCertificateRepository;
         this.tagRepository = tagRepository;
         this.giftCertificateDtoSerializer = giftCertificateDtoSerializer;
@@ -127,6 +131,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return giftCertificateRepository.delete(id);
     }
 
+    /**
+     * Adds Set of Tags to GiftCertificateDto
+     *
+     * @param giftCertificateDtoList List of GiftCertificateDto
+     */
     private void addTagSetToGiftCertificateDto(List<GiftCertificateDto> giftCertificateDtoList) {
         for (GiftCertificateDto giftCertificateDto : giftCertificateDtoList) {
             giftCertificateDto.setTagSet(tagRepository.findAllByGiftCertificateId(giftCertificateDto.getId())
@@ -134,6 +143,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
     }
 
+    /**
+     * Fetch Set of Tag.
+     * Saves Tag if it not exists and adds to Set.
+     *
+     * @param tagSet New set of Tag
+     * @return Set of Tag
+     */
     private Set<Tag> fetchTagSet(Set<Tag> tagSet) {
         return tagSet.stream()
                 .map(tag -> {
@@ -144,6 +160,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 }).collect(Collectors.toSet());
     }
 
+    /**
+     * Associate id of GiftCertificate and ids of Tags
+     *
+     * @param giftCertificateId id of GiftCertificate
+     * @param tagSet            Set of Tag
+     */
     private void associateGiftCertificateWithTag(long giftCertificateId, Set<Tag> tagSet) {
         Set<Tag> currentAssociateGiftCertificateWithTag = tagRepository.findAllByGiftCertificateId(giftCertificateId);
         if (currentAssociateGiftCertificateWithTag.isEmpty()) {
@@ -153,6 +175,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
     }
 
+    /**
+     * Deassociate id of GiftCertificate and iв of Tag if the new set no longer contains the old tags otherwise associate
+     *
+     * @param giftCertificateId                      id Of GiftCertificate
+     * @param currentAssociateGiftCertificateWithTag prev association of GiftCertificates and Tags
+     * @param tagSet                                 Set of Tag
+     */
     private void resolveAssociationsOfGiftCertificateWithTag(long giftCertificateId, Set<Tag> currentAssociateGiftCertificateWithTag, Set<Tag> tagSet) {
         currentAssociateGiftCertificateWithTag.forEach(tag -> {
             if (!tagSet.contains(tag)) {

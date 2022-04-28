@@ -1,6 +1,7 @@
 package com.epam.esm.repository.filter;
 
 import com.epam.esm.repository.filter.condition.FilterCondition;
+import com.epam.esm.repository.filter.condition.SortDirection;
 import org.springframework.stereotype.Component;
 
 @Component

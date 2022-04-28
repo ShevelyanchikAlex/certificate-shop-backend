@@ -14,6 +14,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Implementation of {@link TagRepository}
+ */
 @Repository
 public class TagRepositoryImpl implements TagRepository {
     private static final String INSERT_TAG_QUERY = "INSERT INTO tag(name) VALUES(?)";

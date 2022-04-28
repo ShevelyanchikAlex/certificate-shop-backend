@@ -8,11 +8,14 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 import java.util.function.Predicate;
 
+/**
+ * Implemented {@link Validator} for {@link GiftCertificateDto}
+ */
 @Component
 public class GiftCertificateValidator implements Validator<GiftCertificateDto> {
     private static final String GIFT_CERTIFICATE_NAME_REGEX_PATTERN = "^([A-Za-z ]{1,45})$";
     private static final String GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN = "^([A-Za-z ]{1,200})$";
-    public static final int MIN_VALUE = 0;
+    private static final int MIN_VALUE = 0;
 
     @Override
     public boolean validate(GiftCertificateDto giftCertificateDto) {
@@ -26,7 +29,7 @@ public class GiftCertificateValidator implements Validator<GiftCertificateDto> {
                 validateTags(giftCertificateDto.getTagSet());
     }
 
-    public boolean validateName(String name) {
+    private boolean validateName(String name) {
         if (name == null) {
             return false;
         }
@@ -34,7 +37,7 @@ public class GiftCertificateValidator implements Validator<GiftCertificateDto> {
         return gftCertificateNamePredicate.test(name);
     }
 
-    public boolean validateDescription(String description) {
+    private boolean validateDescription(String description) {
         if (description == null) {
             return false;
         }
@@ -42,7 +45,7 @@ public class GiftCertificateValidator implements Validator<GiftCertificateDto> {
         return giftCertificateDescriptionPredicate.test(description);
     }
 
-    public boolean validatePrice(Integer price) {
+    private boolean validatePrice(Integer price) {
         if (price == null) {
             return false;
         }
@@ -50,7 +53,7 @@ public class GiftCertificateValidator implements Validator<GiftCertificateDto> {
         return giftCertificatePricePredicate.test(price);
     }
 
-    public boolean validateDuration(Integer duration) {
+    private boolean validateDuration(Integer duration) {
         if (duration == null) {
             return false;
         }
@@ -58,7 +61,7 @@ public class GiftCertificateValidator implements Validator<GiftCertificateDto> {
         return giftCertificateDurationPredicate.test(duration);
     }
 
-    public boolean validateTags(Set<TagDto> tags) {
+    private boolean validateTags(Set<TagDto> tags) {
         if (tags == null) {
             return true;
         }

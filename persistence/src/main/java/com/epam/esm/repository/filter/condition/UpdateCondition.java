@@ -1,5 +1,8 @@
 package com.epam.esm.repository.filter.condition;
 
+/**
+ * Condition for update according to specific parameters
+ */
 public class UpdateCondition {
     private long id;
     private String name;

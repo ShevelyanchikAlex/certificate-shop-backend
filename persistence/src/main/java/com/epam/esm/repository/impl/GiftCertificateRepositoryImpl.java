@@ -2,6 +2,7 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.repository.GiftCertificateRepository;
+import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.exception.RepositoryErrorCode;
 import com.epam.esm.repository.exception.RepositoryException;
 import com.epam.esm.repository.filter.FilterQueryBuilder;
@@ -23,6 +24,9 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Implementation of {@link GiftCertificateRepository}
+ */
 @Repository
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
     private static final String INSERT_GIFT_CERTIFICATE_QUERY = "INSERT INTO gift_certificate VALUES(0, ?, ?, ?, ?, ?, ?)";

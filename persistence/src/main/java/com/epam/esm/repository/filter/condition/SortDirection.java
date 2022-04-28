@@ -1,5 +1,8 @@
-package com.epam.esm.repository.filter;
+package com.epam.esm.repository.filter.condition;
 
+/**
+ * Direction by sort
+ */
 public enum SortDirection {
     ASC("ASC"), DESC("DESC");
 
