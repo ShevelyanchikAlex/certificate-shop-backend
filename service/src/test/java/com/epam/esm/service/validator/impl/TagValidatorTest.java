@@ -19,12 +19,19 @@ class TagValidatorTest {
 
     @Test
     void testValidTagName() {
+        //given
         tagDto.setName("r23r");
-        assertFalse(tagValidator.validate(tagDto));
+        //when
+        boolean actual = tagValidator.validate(tagDto);
+        //then
+        assertFalse(actual);
     }
 
     @Test
     void testInvalidTagName() {
-        assertTrue(tagValidator.validate(tagDto));
+        //when
+        boolean actual = tagValidator.validate(tagDto);
+        //then
+        assertTrue(actual);
     }
 }

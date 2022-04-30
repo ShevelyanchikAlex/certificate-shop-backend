@@ -1,7 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.repository.filter.condition.FilterCondition;
+import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +34,8 @@ public class GiftCertificateController {
     }
 
     @GetMapping("/filter")
-    public List<GiftCertificateDto> findWithFilter(
-            @RequestBody FilterCondition filterCondition) {
-        return giftCertificateService.findWithFilter(filterCondition);
+    public List<GiftCertificateDto> findWithFilter(@RequestBody GiftCertificateFilterCondition giftCertificateFilterCondition) {
+        return giftCertificateService.findWithFilter(giftCertificateFilterCondition);
     }
 
     @PatchMapping

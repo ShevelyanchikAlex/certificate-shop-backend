@@ -16,11 +16,17 @@ class IdValidatorTest {
 
     @Test
     void testValidId() {
-        assertTrue(idValidator.validate(1L));
+        //when
+        boolean actual = idValidator.validate(1L);
+        //then
+        assertTrue(actual);
     }
 
     @Test
     void testInvalidId() {
-        assertFalse(idValidator.validate(null));
+        //when
+        boolean actual = idValidator.validate(null);
+        //then
+        assertFalse(actual);
     }
 }

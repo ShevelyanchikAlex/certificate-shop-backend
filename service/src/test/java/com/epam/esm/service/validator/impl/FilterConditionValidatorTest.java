@@ -1,6 +1,7 @@
 package com.epam.esm.service.validator.impl;
 
-import com.epam.esm.repository.filter.condition.FilterCondition;
+import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
+import com.epam.esm.repository.filter.condition.SortDirection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,71 +9,101 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FilterConditionValidatorTest {
     private FilterConditionValidator filterConditionValidator;
-    private FilterCondition filterCondition;
+    private GiftCertificateFilterCondition giftCertificateFilterCondition;
 
     @BeforeEach
     public void setUp() {
         filterConditionValidator = new FilterConditionValidator();
-        filterCondition = new FilterCondition();
+        giftCertificateFilterCondition = new GiftCertificateFilterCondition();
     }
 
     @Test
     void testInvalidName() {
-        filterCondition.setName("43243dsada");
-        assertFalse(filterConditionValidator.validate(filterCondition));
+        //given
+        giftCertificateFilterCondition.setName("43243dsada");
+        //when
+        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
+        //then
+        assertFalse(actual);
     }
 
     @Test
     void testValidName() {
-        filterCondition.setName("name");
-        assertTrue(filterConditionValidator.validate(filterCondition));
+        //given
+        giftCertificateFilterCondition.setName("name");
+        //when
+        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
+        //then
+        assertTrue(actual);
     }
 
     @Test
     void testInvalidTagName() {
-        filterCondition.setTagName("4fdss");
-        assertFalse(filterConditionValidator.validate(filterCondition));
+        //given
+        giftCertificateFilterCondition.setTagName("4fdss");
+        //when
+        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
+        //then
+        assertFalse(actual);
     }
 
     @Test
     void testValidTagName() {
-        filterCondition.setTagName("#tagName");
-        assertTrue(filterConditionValidator.validate(filterCondition));
+        //given
+        giftCertificateFilterCondition.setTagName("#tagName");
+        //when
+        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
+        //then
+        assertTrue(actual);
     }
 
     @Test
     void testInvalidDescription() {
-        filterCondition.setDescription("Desc_$#@");
-        assertFalse(filterConditionValidator.validate(filterCondition));
+        //given
+        giftCertificateFilterCondition.setDescription("Desc_$#@");
+        //when
+        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
+        //then
+        assertFalse(actual);
     }
 
     @Test
     void testValidDescription() {
-        filterCondition.setDescription("Description of Certificate");
-        assertTrue(filterConditionValidator.validate(filterCondition));
-    }
-
-    @Test
-    void testInvalidSortDirection() {
-        filterCondition.setSortDirection("start");
-        assertFalse(filterConditionValidator.validate(filterCondition));
+        //given
+        giftCertificateFilterCondition.setDescription("Description of Certificate");
+        //when
+        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
+        //then
+        assertTrue(actual);
     }
 
     @Test
     void testValidSortDirection() {
-        filterCondition.setSortDirection("DESC");
-        assertTrue(filterConditionValidator.validate(filterCondition));
+        //given
+        giftCertificateFilterCondition.setSortDirection(SortDirection.valueOf("ASC"));
+        //when
+        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
+        //then
+        assertTrue(actual);
     }
 
     @Test
     void testValidSortByName() {
-        filterCondition.setSortByName(true);
-        assertTrue(filterConditionValidator.validate(filterCondition));
+        //given
+        giftCertificateFilterCondition.setSortByName(true);
+        //when
+        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
+        //then
+        assertTrue(actual);
     }
 
     @Test
     void testValidSortByDate() {
-        filterCondition.setSortByDate(true);
-        assertTrue(filterConditionValidator.validate(filterCondition));
+        //given
+        giftCertificateFilterCondition.setSortByDate(true);
+        //when
+        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
+        //then
+        assertTrue(actual);
     }
 }

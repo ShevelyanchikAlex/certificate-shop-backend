@@ -15,6 +15,11 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 @Import(PersistenceConfig.class)
 public class ServiceConfig {
+    //common regex patterns for DTO validation
+    public static final String TAG_NAME_REGEX_PATTERN = "^(#[A-Za-z0-9_]{1,20})$";
+    public static final String GIFT_CERTIFICATE_NAME_REGEX_PATTERN = "^([A-Za-z ]{1,45})$";
+    public static final String GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN = "^([A-Za-z ]{1,200})$";
+
     private final DataSource dataSource;
 
     @Autowired

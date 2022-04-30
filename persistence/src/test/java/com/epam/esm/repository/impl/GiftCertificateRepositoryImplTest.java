@@ -3,7 +3,8 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.config.DevPersistenceConfig;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.repository.GiftCertificateRepository;
-import com.epam.esm.repository.filter.condition.FilterCondition;
+import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
+import com.epam.esm.repository.filter.condition.SortDirection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,16 +28,22 @@ class GiftCertificateRepositoryImplTest {
 
     @Test
     void save() {
+        //given
         giftCertificateRepository.save(new GiftCertificate(0, "New Gift Certificate", "DescriptionUpd new", 20, 2,
                 DATE_TIME, DATE_TIME));
+        //when
         boolean actual = giftCertificateRepository.existsGiftCertificateByName("New Gift Certificate");
+        //then
         Assertions.assertTrue(actual);
     }
 
     @Test
     void findById() {
+        //given
         String expected = "Nike";
+        //when
         GiftCertificate actual = giftCertificateRepository.findById(1L);
+        //then
         Assertions.assertEquals(expected, actual.getName());
     }
 
@@ -47,32 +54,44 @@ class GiftCertificateRepositoryImplTest {
 
     @Test
     void findWithFilter() {
-        FilterCondition filterCondition = new FilterCondition();
-        filterCondition.setDescription("Swim");
-        filterCondition.setSortDirection("DESC");
+        //given
+        GiftCertificateFilterCondition giftCertificateFilterCondition = new GiftCertificateFilterCondition();
+        giftCertificateFilterCondition.setDescription("Swim");
+        giftCertificateFilterCondition.setSortDirection(SortDirection.DESC);
         int expected = 1;
-        List<GiftCertificate> actual = giftCertificateRepository.findWithFilter(filterCondition)
+        //when
+        List<GiftCertificate> actual = giftCertificateRepository.findWithFilter(giftCertificateFilterCondition)
                 .stream().distinct().collect(Collectors.toList());
+        //then
         Assertions.assertEquals(expected, actual.size());
     }
 
     @Test
     void update() {
+        //given
         int expected = 1;
+        //when
         int actual = giftCertificateRepository.update(new GiftCertificate(1, "Nike", "DescriptionUpd upd", 22, 2,
                 DATE_TIME, DATE_TIME));
+        //then
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void delete() {
+        //given
         int expected = 1;
+        //when
         int actual = giftCertificateRepository.delete(2L);
+        //then
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void existsGiftCertificateByName() {
-        Assertions.assertTrue(giftCertificateRepository.existsGiftCertificateByName("Nike"));
+        //when
+        boolean actual = giftCertificateRepository.existsGiftCertificateByName("Nike");
+        //then
+        Assertions.assertTrue(actual);
     }
 }

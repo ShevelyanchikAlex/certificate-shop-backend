@@ -6,12 +6,17 @@ import com.epam.esm.repository.exception.RepositoryErrorCode;
 import com.epam.esm.repository.exception.RepositoryException;
 import com.epam.esm.repository.mapper.TagMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -32,8 +37,9 @@ public class TagRepositoryImpl implements TagRepository {
                 JOIN gift_certificate ON gift_certificate_has_tag.gift_certificate_id = gift_certificate.id
                 WHERE gift_certificate.id=?
             """;
+    private static final String ID_COLUMN = "id";
     private static final int SUCCESS_CHANGED_ROW_COUNT = 1;
-    public static final int EMPTY_COUNT_OF_TAGS = 0;
+    private static final int EMPTY_COUNT_OF_TAGS = 0;
 
 
     private final JdbcTemplate jdbcTemplate;
@@ -45,7 +51,19 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public long save(Tag tag) {
-        return jdbcTemplate.update(INSERT_TAG_QUERY, tag.getName());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        try {
+            jdbcTemplate.update(
+                    connection -> {
+                        PreparedStatement ps = connection.prepareStatement(INSERT_TAG_QUERY, new String[]{ID_COLUMN});
+                        ps.setString(1, tag.getName());
+                        return ps;
+                    },
+                    keyHolder);
+            return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        } catch (DuplicateKeyException e) {
+            throw new RepositoryException(RepositoryErrorCode.RESOURCE_ALREADY_EXIST, tag.getName());
+        }
     }
 
     @Override

@@ -42,53 +42,72 @@ class TagServiceImplTest {
 
     @Test
     void save() {
+        //given
         Mockito.when(tagRepositoryMock.save(TEST_TAGS.get(0))).thenReturn(1L);
+        //when
         long actual = tagService.save(TEST_TAGS_DTO.get(0));
+        //then
         Mockito.verify(tagRepositoryMock).save(TEST_TAGS.get(0));
         Assertions.assertEquals(1L, actual);
     }
 
     @Test
     void findById() {
+        //given
         Mockito.when(tagRepositoryMock.findById(1L)).thenReturn(TEST_TAGS.get(0));
+        //when
         TagDto actual = tagService.findById(1L);
+        //then
         Mockito.verify(tagRepositoryMock).findById(1L);
         Assertions.assertEquals(TEST_TAGS_DTO.get(0), actual);
     }
 
     @Test
     void findAll() {
+        //given
         Mockito.when(tagRepositoryMock.findAll()).thenReturn(TEST_TAGS);
-        List<TagDto> tags = tagService.findAll();
+        //when
+        List<TagDto> actual = tagService.findAll();
+        //then
         Mockito.verify(tagRepositoryMock).findAll();
-        Assertions.assertEquals(TEST_TAGS_DTO, tags);
+        Assertions.assertEquals(TEST_TAGS_DTO, actual);
     }
 
     @Test
     void countAll() {
+        //given
         Mockito.when(tagRepositoryMock.countAll()).thenReturn(TAG_LIST_LENGTH);
-        int countOfTags = tagService.countAll();
+        //when
+        int actual = tagService.countAll();
+        //then
         Mockito.verify(tagRepositoryMock).countAll();
-        Assertions.assertEquals(TAG_LIST_LENGTH, countOfTags);
+        Assertions.assertEquals(TAG_LIST_LENGTH, actual);
     }
 
     @Test
     void delete() {
+        //given
         Mockito.when(tagRepositoryMock.delete(Mockito.anyLong())).thenReturn(1);
+        //when
         int actual = tagService.delete(1L);
+        //then
         Mockito.verify(tagRepositoryMock).delete(Mockito.anyLong());
         Assertions.assertEquals(1, actual);
     }
 
     @Test
     void findNonExistingTagByIdTest() {
+        //given
         Mockito.when(tagRepositoryMock.findById(10L)).thenThrow(RepositoryException.class);
+        //then
         Assertions.assertThrows(RepositoryException.class, () -> tagService.findById(10L));
     }
 
     @Test
     void deleteNonExistingTag() {
+        //given
         Mockito.when(tagRepositoryMock.delete(10L)).thenThrow(RepositoryException.class);
+        //then
         Assertions.assertThrows(RepositoryException.class, () -> tagService.delete(10L));
     }
 }

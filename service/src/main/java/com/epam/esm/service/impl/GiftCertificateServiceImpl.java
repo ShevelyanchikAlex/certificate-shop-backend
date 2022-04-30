@@ -7,7 +7,7 @@ import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.serialization.DtoSerializer;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.TagRepository;
-import com.epam.esm.repository.filter.condition.FilterCondition;
+import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.exception.ServiceErrorCode;
 import com.epam.esm.service.exception.ServiceException;
@@ -95,11 +95,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<GiftCertificateDto> findWithFilter(FilterCondition filterCondition) {
-        if (!filterConditionValidator.validate(filterCondition)) {
+    public List<GiftCertificateDto> findWithFilter(GiftCertificateFilterCondition giftCertificateFilterCondition) {
+        if (!filterConditionValidator.validate(giftCertificateFilterCondition)) {
             throw new ServiceException(ServiceErrorCode.FILTER_CONDITION_VALIDATE_ERROR);
         }
-        List<GiftCertificateDto> giftCertificateDtoSet = giftCertificateRepository.findWithFilter(filterCondition)
+        List<GiftCertificateDto> giftCertificateDtoSet = giftCertificateRepository.findWithFilter(giftCertificateFilterCondition)
                 .stream().map(giftCertificateDtoSerializer::serializeDtoFromEntity)
                 .distinct().collect(Collectors.toList());
         addTagSetToGiftCertificateDto(giftCertificateDtoSet);

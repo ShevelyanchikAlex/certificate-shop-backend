@@ -1,5 +1,6 @@
 package com.epam.esm.service.validator.impl;
 
+import com.epam.esm.config.ServiceConfig;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.service.validator.Validator;
@@ -13,8 +14,6 @@ import java.util.function.Predicate;
  */
 @Component
 public class UpdateGiftCertificateValidator implements Validator<GiftCertificateDto> {
-    private static final String GIFT_CERTIFICATE_NAME_REGEX_PATTERN = "^([A-Za-z ]{1,45})$";
-    private static final String GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN = "^([A-Za-z ]{1,200})$";
     public static final int MIN_VALUE = 0;
 
     @Override
@@ -33,7 +32,7 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
         if (name == null) {
             return true;
         }
-        Predicate<String> gftCertificateNamePredicate = str -> str.matches(GIFT_CERTIFICATE_NAME_REGEX_PATTERN);
+        Predicate<String> gftCertificateNamePredicate = str -> str.matches(ServiceConfig.GIFT_CERTIFICATE_NAME_REGEX_PATTERN);
         return gftCertificateNamePredicate.test(name);
     }
 
@@ -41,7 +40,7 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
         if (description == null) {
             return true;
         }
-        Predicate<String> giftCertificateDescriptionPredicate = str -> str.matches(GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN);
+        Predicate<String> giftCertificateDescriptionPredicate = str -> str.matches(ServiceConfig.GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN);
         return giftCertificateDescriptionPredicate.test(description);
     }
 

@@ -1,7 +1,7 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.repository.filter.condition.FilterCondition;
+import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 
 import java.util.List;
 
@@ -12,10 +12,10 @@ public interface GiftCertificateRepository extends CrudRepository<GiftCertificat
     /**
      * Finds all certificates by filter
      *
-     * @param filterCondition Condition for filtering
+     * @param giftCertificateFilterCondition Condition for filtering
      * @return List with filtered GiftCertificates
      */
-    List<GiftCertificate> findWithFilter(FilterCondition filterCondition);
+    List<GiftCertificate> findWithFilter(GiftCertificateFilterCondition giftCertificateFilterCondition);
 
     /**
      * Associate id of GiftCertificate and id of Tag

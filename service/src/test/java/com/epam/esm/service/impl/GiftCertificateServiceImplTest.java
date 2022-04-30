@@ -9,10 +9,14 @@ import com.epam.esm.dto.serialization.impl.GiftCertificateSerializer;
 import com.epam.esm.dto.serialization.impl.TagSerializer;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.TagRepository;
-import com.epam.esm.repository.filter.condition.FilterCondition;
+import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
+import com.epam.esm.repository.filter.condition.SortDirection;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.validator.impl.*;
+import com.epam.esm.service.validator.impl.FilterConditionValidator;
+import com.epam.esm.service.validator.impl.GiftCertificateValidator;
+import com.epam.esm.service.validator.impl.IdValidator;
+import com.epam.esm.service.validator.impl.UpdateGiftCertificateValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,70 +81,91 @@ class GiftCertificateServiceImplTest {
     public void setUp() {
         giftCertificateService = new GiftCertificateServiceImpl(
                 giftCertificateRepositoryMock, tagRepositoryMock,
-                giftCertificateDtoSerializer, tagDtoSerializer,
-                giftCertificateValidator, idValidator,
+                giftCertificateDtoSerializer, tagDtoSerializer, giftCertificateValidator, idValidator,
                 updateGiftCertificateValidator, filterConditionValidator);
     }
 
     @Test
     void save() {
+        //given
         Mockito.when(giftCertificateRepositoryMock.save(TEST_GIFT_CERTIFICATES.get(0))).thenReturn(1L);
+        //when
         giftCertificateService.save(TEST_GIFT_CERTIFICATES_DTO.get(0));
+        //then
         Mockito.verify(giftCertificateRepositoryMock, Mockito.times(1)).save(Mockito.any(GiftCertificate.class));
     }
 
     @Test
     void findById() {
+        //given
         Mockito.when(giftCertificateRepositoryMock.findById(1L)).thenReturn(TEST_GIFT_CERTIFICATES.get(0));
+        //when
         GiftCertificateDto actual = giftCertificateService.findById(1L);
+        //then
         Mockito.verify(giftCertificateRepositoryMock).findById(1L);
         Assertions.assertEquals(TEST_GIFT_CERTIFICATES_DTO.get(0), actual);
     }
 
     @Test
     void findAll() {
+        //given
         Mockito.when(giftCertificateRepositoryMock.findAll()).thenReturn(TEST_GIFT_CERTIFICATES);
+        //when
         List<GiftCertificateDto> actual = giftCertificateService.findAll();
+        //then
         Mockito.verify(giftCertificateRepositoryMock).findAll();
         Assertions.assertEquals(TEST_GIFT_CERTIFICATES.size(), actual.size());
     }
 
     @Test
     void findWithFilter() {
-        FilterCondition filterCondition = new FilterCondition();
-        filterCondition.setDescription("Description");
-        filterCondition.setSortDirection("DESC");
-        Mockito.when(giftCertificateRepositoryMock.findWithFilter(filterCondition)).thenReturn(TEST_GIFT_CERTIFICATES);
-        List<GiftCertificateDto> actual = giftCertificateService.findWithFilter(filterCondition);
-        Mockito.verify(giftCertificateRepositoryMock).findWithFilter(filterCondition);
+        //given
+        GiftCertificateFilterCondition giftCertificateFilterCondition = new GiftCertificateFilterCondition();
+        giftCertificateFilterCondition.setDescription("Description");
+        giftCertificateFilterCondition.setSortDirection(SortDirection.ASC);
+        Mockito.when(giftCertificateRepositoryMock.findWithFilter(giftCertificateFilterCondition)).thenReturn(TEST_GIFT_CERTIFICATES);
+        //when
+        List<GiftCertificateDto> actual = giftCertificateService.findWithFilter(giftCertificateFilterCondition);
+        //then
+        Mockito.verify(giftCertificateRepositoryMock).findWithFilter(giftCertificateFilterCondition);
         Assertions.assertEquals(TEST_GIFT_CERTIFICATES.size(), actual.size());
     }
 
     @Test
     void update() {
+        //given
         Mockito.when(giftCertificateRepositoryMock.update(TEST_GIFT_CERTIFICATES.get(0))).thenReturn(1);
         Mockito.when(giftCertificateRepositoryMock.findById(1L)).thenReturn(TEST_GIFT_CERTIFICATES.get(0));
+        //when
         giftCertificateService.update(TEST_GIFT_CERTIFICATES_DTO.get(0));
+        //then
         Mockito.verify(giftCertificateRepositoryMock, Mockito.times(1)).update(TEST_GIFT_CERTIFICATES.get(0));
     }
 
     @Test
     void delete() {
+        //given
         Mockito.when(giftCertificateService.delete(1L)).thenReturn(1);
+        //when
         int actual = giftCertificateService.delete(1L);
+        //then
         Mockito.verify(giftCertificateRepositoryMock).delete(Mockito.anyLong());
         Assertions.assertEquals(1, actual);
     }
 
     @Test
     void updateNonExistingGiftCertificateTest() {
+        //given
         Mockito.when(giftCertificateRepositoryMock.findById(1L)).thenThrow(ServiceException.class);
+        //then
         Assertions.assertThrows(ServiceException.class, () -> giftCertificateService.update(TEST_GIFT_CERTIFICATES_DTO.get(0)));
     }
 
     @Test
     void deleteNonExistingGiftCertificateTest() {
+        //given
         Mockito.when(giftCertificateRepositoryMock.delete(1L)).thenThrow(ServiceException.class);
+        //then
         Assertions.assertThrows(ServiceException.class, () -> giftCertificateService.delete(1L));
     }
 }

@@ -1,7 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.repository.filter.condition.FilterCondition;
+import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 
 import java.util.List;
 
@@ -33,12 +33,12 @@ public interface GiftCertificateService {
     List<GiftCertificateDto> findAll();
 
     /**
-     * Finds GiftCertificateDtos by {@link FilterCondition}
+     * Finds GiftCertificateDtos by {@link GiftCertificateFilterCondition}
      *
-     * @param filterCondition Condition for filter according to specific parameters
+     * @param giftCertificateFilterCondition Condition for filter according to specific parameters
      * @return List with filtered GiftCertificateDtos
      */
-    List<GiftCertificateDto> findWithFilter(FilterCondition filterCondition);
+    List<GiftCertificateDto> findWithFilter(GiftCertificateFilterCondition giftCertificateFilterCondition);
 
     /**
      * Updates GiftCertificateDto

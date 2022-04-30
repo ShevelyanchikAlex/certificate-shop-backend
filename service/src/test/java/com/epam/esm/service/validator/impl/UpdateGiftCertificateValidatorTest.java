@@ -26,13 +26,20 @@ class UpdateGiftCertificateValidatorTest {
 
     @Test
     void testValidGiftCertificateDto() {
-        assertTrue(updateGiftCertificateValidator.validate(giftCertificateDto));
+        //when
+        boolean actual = updateGiftCertificateValidator.validate(giftCertificateDto);
+        //then
+        assertTrue(actual);
     }
 
     @Test
     void testInvalidGiftCertificateDto() {
+        //given
         giftCertificateDto.setDescription("()*&ddd");
         giftCertificateDto.setName("()*&ss");
-        assertFalse(updateGiftCertificateValidator.validate(giftCertificateDto));
+        //when
+        boolean actual = updateGiftCertificateValidator.validate(giftCertificateDto);
+        //then
+        assertFalse(actual);
     }
 }

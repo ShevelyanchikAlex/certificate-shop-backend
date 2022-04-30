@@ -22,30 +22,42 @@ class TagRepositoryImplTest {
 
     @Test
     void save() {
-        long expected = 1L;
-        long actual = tagRepository.save(new Tag(1L, "#test"));
-        Assertions.assertEquals(expected, actual);
+        //given
+        tagRepository.save(new Tag(1L, "#test"));
+        //when
+        boolean actual = tagRepository.existsTagByName("#test");
+        //then
+        Assertions.assertTrue(actual);
     }
 
     @Test
     void findById() {
+        //given
         String expected = "#tag";
+        //when
         Tag tag = tagRepository.findById(1L);
         String actual = tag.getName();
+        //then
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void findByName() {
+        //given
         long expected = 3L;
+        //when
         Tag tag = tagRepository.findByName("#like");
         long actual = tag.getId();
+        //then
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void existsTagByName() {
-        Assertions.assertTrue(tagRepository.existsTagByName("#like"));
+        //when
+        boolean actual = tagRepository.existsTagByName("#like");
+        //then
+        Assertions.assertTrue(actual);
     }
 
     @Test
@@ -55,17 +67,23 @@ class TagRepositoryImplTest {
 
     @Test
     void findAllByGiftCertificateId() {
+        //given
         Set<Tag> expected = Set.of(new Tag(1L, "#tag"),
                 new Tag(3L, "#like"));
+        //when
         Set<Tag> actual = tagRepository.findAllByGiftCertificateId(1L);
+        //then
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void delete() {
+        //given
         int expected = 1;
         tagRepository.save(new Tag(4L, "#new_tag"));
+        //when
         int actual = tagRepository.delete(2L);
+        //then
         Assertions.assertEquals(expected, actual);
     }
 }

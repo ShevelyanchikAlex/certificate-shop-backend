@@ -6,9 +6,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +17,7 @@ import java.util.Locale;
 @ResponseBody
 @ControllerAdvice
 public class ControllerExceptionHandler {
+    public static final String BAD_REQUEST_STATUS_CODE = "40000";
     private final MessageSource messageSource;
 
     public ControllerExceptionHandler(MessageSource messageSource) {
@@ -40,15 +38,12 @@ public class ControllerExceptionHandler {
         return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public HttpExceptionResponse handleValidationExceptions(
-            HttpServletRequest httpServletRequest, MethodArgumentNotValidException e) {
-        BindingResult bindingResult = e.getBindingResult();
-        ObjectError error = bindingResult.getAllErrors().get(0);
-        String errorCode = error.getDefaultMessage();
-        String message = messageSource.getMessage(errorCode, null, getLocale(httpServletRequest));
-        return new HttpExceptionResponse(errorCode, message);
+    public ResponseEntity<HttpExceptionResponse> badRequestError(HttpServletRequest httpServletRequest, Exception e) {
+        String errorMessage = messageSource.getMessage(BAD_REQUEST_STATUS_CODE, new Object[]{}, getLocale(httpServletRequest));
+        HttpExceptionResponse errorResponse = new HttpExceptionResponse(BAD_REQUEST_STATUS_CODE, errorMessage);
+        return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
     }
 
     private Locale getLocale(HttpServletRequest httpServletRequest) {
