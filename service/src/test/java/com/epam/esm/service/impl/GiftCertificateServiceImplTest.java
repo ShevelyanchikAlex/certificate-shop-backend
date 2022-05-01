@@ -88,11 +88,16 @@ class GiftCertificateServiceImplTest {
     @Test
     void save() {
         //given
-        Mockito.when(giftCertificateRepositoryMock.save(TEST_GIFT_CERTIFICATES.get(0))).thenReturn(1L);
+        Mockito.when(giftCertificateRepositoryMock.save(Mockito.any(GiftCertificate.class))).thenReturn(TEST_GIFT_CERTIFICATES.get(0));
+        String expectedName = TEST_GIFT_CERTIFICATES.get(0).getName();
+        String expectedDescription = TEST_GIFT_CERTIFICATES.get(0).getDescription();
         //when
-        giftCertificateService.save(TEST_GIFT_CERTIFICATES_DTO.get(0));
+        GiftCertificateDto savedGiftCertificate = giftCertificateService.save(TEST_GIFT_CERTIFICATES_DTO.get(0));
+        String actualName = savedGiftCertificate.getName();
+        String actualDescription = savedGiftCertificate.getDescription();
         //then
-        Mockito.verify(giftCertificateRepositoryMock, Mockito.times(1)).save(Mockito.any(GiftCertificate.class));
+        Assertions.assertEquals(expectedName, actualName);
+        Assertions.assertEquals(expectedDescription, actualDescription);
     }
 
     @Test

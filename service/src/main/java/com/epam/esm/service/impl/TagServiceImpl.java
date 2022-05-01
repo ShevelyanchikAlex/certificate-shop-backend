@@ -37,14 +37,14 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public long save(TagDto tagDto) {
+    public TagDto save(TagDto tagDto) {
         if (!tagValidator.validate(tagDto)) {
             throw new ServiceException(ServiceErrorCode.TAG_VALIDATE_ERROR);
         }
         if (tagRepository.existsTagByName(tagDto.getName())) {
             throw new ServiceException(ServiceErrorCode.RESOURCE_ALREADY_EXIST, "TAG");
         }
-        return tagRepository.save(tagDtoSerializer.serializeDtoToEntity(tagDto));
+        return tagDtoSerializer.serializeDtoFromEntity(tagRepository.save(tagDtoSerializer.serializeDtoToEntity(tagDto)));
     }
 
     @Override

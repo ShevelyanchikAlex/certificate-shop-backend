@@ -19,7 +19,7 @@ public class GiftCertificateController {
     }
 
     @PostMapping
-    public long save(@RequestBody GiftCertificateDto giftCertificateDto) {
+    public GiftCertificateDto save(@RequestBody GiftCertificateDto giftCertificateDto) {
         return giftCertificateService.save(giftCertificateDto);
     }
 

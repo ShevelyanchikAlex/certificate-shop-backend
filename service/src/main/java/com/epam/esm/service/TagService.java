@@ -12,9 +12,9 @@ public interface TagService {
      * Saves {@link TagDto} to data source
      *
      * @param tagDto TagDto
-     * @return id of saved tagDto
+     * @return saved tagDto
      */
-    long save(TagDto tagDto);
+    TagDto save(TagDto tagDto);
 
     /**
      * Finds TagDto by id

@@ -18,7 +18,7 @@ public class TagController {
     }
 
     @PostMapping
-    public long save(@RequestBody TagDto tagDto) {
+    public TagDto save(@RequestBody TagDto tagDto) {
         return tagService.save(tagDto);
     }
 

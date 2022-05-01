@@ -43,12 +43,14 @@ class TagServiceImplTest {
     @Test
     void save() {
         //given
-        Mockito.when(tagRepositoryMock.save(TEST_TAGS.get(0))).thenReturn(1L);
+        Mockito.when(tagRepositoryMock.save(TEST_TAGS.get(0))).thenReturn(TEST_TAGS.get(0));
+        String expected = TEST_TAGS.get(0).getName();
         //when
-        long actual = tagService.save(TEST_TAGS_DTO.get(0));
+        TagDto savedTagDto = tagService.save(TEST_TAGS_DTO.get(0));
+        String actual = savedTagDto.getName();
         //then
         Mockito.verify(tagRepositoryMock).save(TEST_TAGS.get(0));
-        Assertions.assertEquals(1L, actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test

@@ -54,7 +54,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public long save(GiftCertificate giftCertificate) {
+    public GiftCertificate save(GiftCertificate giftCertificate) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
             jdbcTemplate.update(
@@ -69,7 +69,8 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
                         return ps;
                     },
                     keyHolder);
-            return Objects.requireNonNull(keyHolder.getKey()).longValue();
+            giftCertificate.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
+            return giftCertificate;
         } catch (DuplicateKeyException e) {
             throw new RepositoryException(RepositoryErrorCode.RESOURCE_ALREADY_EXIST, giftCertificate.getName());
         }

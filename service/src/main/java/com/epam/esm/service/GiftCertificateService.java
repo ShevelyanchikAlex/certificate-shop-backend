@@ -13,9 +13,9 @@ public interface GiftCertificateService {
      * Saves GiftCertificateDto
      *
      * @param giftCertificateDto GiftCertificateDto
-     * @return id of saved GiftCertificateDto
+     * @return saved GiftCertificateDto
      */
-    long save(GiftCertificateDto giftCertificateDto);
+    GiftCertificateDto save(GiftCertificateDto giftCertificateDto);
 
     /**
      * Finds GiftCertificateDto by id

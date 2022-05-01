@@ -50,7 +50,7 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public long save(Tag tag) {
+    public Tag save(Tag tag) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
             jdbcTemplate.update(
@@ -60,7 +60,8 @@ public class TagRepositoryImpl implements TagRepository {
                         return ps;
                     },
                     keyHolder);
-            return Objects.requireNonNull(keyHolder.getKey()).longValue();
+            tag.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
+            return tag;
         } catch (DuplicateKeyException e) {
             throw new RepositoryException(RepositoryErrorCode.RESOURCE_ALREADY_EXIST, tag.getName());
         }

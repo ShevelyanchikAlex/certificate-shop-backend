@@ -12,9 +12,9 @@ public interface CrudRepository<T> {
      * Saves Entity to data source
      *
      * @param entity Entity
-     * @return id of saved Entity
+     * @return saved Entity
      */
-    long save(T entity);
+    T save(T entity);
 
     /**
      * Finds Entity by id

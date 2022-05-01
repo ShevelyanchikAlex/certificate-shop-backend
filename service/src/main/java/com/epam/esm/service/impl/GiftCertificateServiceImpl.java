@@ -55,7 +55,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     @Transactional
-    public long save(GiftCertificateDto giftCertificateDto) {
+    public GiftCertificateDto save(GiftCertificateDto giftCertificateDto) {
         if (!giftCertificateValidator.validate(giftCertificateDto)) {
             throw new ServiceException(ServiceErrorCode.GIFT_CERTIFICATE_VALIDATE_ERROR);
         }
@@ -66,12 +66,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDto.setCreateDate(localDateTime);
         giftCertificateDto.setLastUpdateDate(localDateTime);
         GiftCertificate giftCertificate = giftCertificateDtoSerializer.serializeDtoToEntity(giftCertificateDto);
-        long giftCertificateId = giftCertificateRepository.save(giftCertificate);
+        GiftCertificateDto savedGiftCertificateDto = giftCertificateDtoSerializer.serializeDtoFromEntity(giftCertificateRepository.save(giftCertificate));
 
         Set<Tag> tagSet = fetchTagSet(Optional.ofNullable(giftCertificateDto.getTagSet()).orElse(new HashSet<>())
                 .stream().map(tagDtoSerializer::serializeDtoToEntity).collect(Collectors.toSet()));
-        associateGiftCertificateWithTag(giftCertificateId, tagSet);
-        return giftCertificateId;
+        associateGiftCertificateWithTag(savedGiftCertificateDto.getId(), tagSet);
+        savedGiftCertificateDto.setTagSet(tagSet.stream().map(tagDtoSerializer::serializeDtoFromEntity).collect(Collectors.toSet()));
+        return savedGiftCertificateDto;
     }
 
 
