@@ -2,8 +2,8 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.domain.Tag;
 import com.epam.esm.dto.TagDto;
-import com.epam.esm.dto.serialization.DtoSerializer;
-import com.epam.esm.dto.serialization.impl.TagSerializer;
+import com.epam.esm.dto.converter.DtoConverter;
+import com.epam.esm.dto.converter.impl.TagConverter;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.exception.RepositoryException;
 import com.epam.esm.service.TagService;
@@ -31,13 +31,13 @@ class TagServiceImplTest {
 
     private TagService tagService;
     private final TagRepository tagRepositoryMock = Mockito.mock(TagRepository.class);
-    private final DtoSerializer<TagDto, Tag> tagDtoSerializer = new TagSerializer();
+    private final DtoConverter<TagDto, Tag> tagDtoConverter = new TagConverter();
     private final TagValidator tagValidator = new TagValidator();
     private final IdValidator idValidator = new IdValidator();
 
     @BeforeEach
     public void setUp() {
-        tagService = new TagServiceImpl(tagRepositoryMock, tagDtoSerializer, tagValidator, idValidator);
+        tagService = new TagServiceImpl(tagRepositoryMock, tagDtoConverter, tagValidator, idValidator);
     }
 
     @Test
@@ -88,13 +88,10 @@ class TagServiceImplTest {
 
     @Test
     void delete() {
-        //given
-        Mockito.when(tagRepositoryMock.delete(Mockito.anyLong())).thenReturn(1);
         //when
-        int actual = tagService.delete(1L);
+        tagService.delete(1L);
         //then
         Mockito.verify(tagRepositoryMock).delete(Mockito.anyLong());
-        Assertions.assertEquals(1, actual);
     }
 
     @Test
@@ -103,13 +100,5 @@ class TagServiceImplTest {
         Mockito.when(tagRepositoryMock.findById(10L)).thenThrow(RepositoryException.class);
         //then
         Assertions.assertThrows(RepositoryException.class, () -> tagService.findById(10L));
-    }
-
-    @Test
-    void deleteNonExistingTag() {
-        //given
-        Mockito.when(tagRepositoryMock.delete(10L)).thenThrow(RepositoryException.class);
-        //then
-        Assertions.assertThrows(RepositoryException.class, () -> tagService.delete(10L));
     }
 }

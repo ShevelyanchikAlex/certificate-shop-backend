@@ -63,7 +63,7 @@ public class TagRepositoryImpl implements TagRepository {
             tag.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
             return tag;
         } catch (DuplicateKeyException e) {
-            throw new RepositoryException(RepositoryErrorCode.RESOURCE_ALREADY_EXIST, tag.getName());
+            throw new RepositoryException(e.getMessage(), RepositoryErrorCode.RESOURCE_ALREADY_EXIST, tag.getName());
         }
     }
 
@@ -72,7 +72,8 @@ public class TagRepositoryImpl implements TagRepository {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID_TAG_QUERY, new TagMapper(), id);
         } catch (EmptyResultDataAccessException e) {
-            throw new RepositoryException(RepositoryErrorCode.TAG_NOT_FOUND, id);
+            System.out.println(e.getMessage());
+            throw new RepositoryException(e.getMessage(), RepositoryErrorCode.TAG_NOT_FOUND, id);
         }
     }
 
@@ -81,7 +82,7 @@ public class TagRepositoryImpl implements TagRepository {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_NAME_TAG_QUERY, new TagMapper(), name);
         } catch (EmptyResultDataAccessException e) {
-            throw new RepositoryException(RepositoryErrorCode.TAG_NOT_FOUND, name);
+            throw new RepositoryException(e.getMessage(), RepositoryErrorCode.TAG_NOT_FOUND, name);
         }
     }
 
@@ -102,17 +103,16 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public int update(Tag tag) {
-        throw new RepositoryException(RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "UPDATE");
+    public Tag update(Tag tag) {
+        throw new RepositoryException("Update operation not supported", RepositoryErrorCode.OPERATION_NOT_SUPPORTED, "UPDATE");
     }
 
     @Override
-    public int delete(long id) {
+    public void delete(long id) {
         int deletedRowCount = jdbcTemplate.update(DELETE_TAG_QUERY, id);
         if (deletedRowCount != SUCCESS_CHANGED_ROW_COUNT) {
-            throw new RepositoryException(RepositoryErrorCode.TAG_NOT_FOUND, id);
+            throw new RepositoryException("Tag not found in time performing a delete operation", RepositoryErrorCode.TAG_NOT_FOUND, id);
         }
-        return deletedRowCount;
     }
 
     @Override

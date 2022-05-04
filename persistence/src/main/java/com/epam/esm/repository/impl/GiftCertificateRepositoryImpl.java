@@ -72,7 +72,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
             giftCertificate.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
             return giftCertificate;
         } catch (DuplicateKeyException e) {
-            throw new RepositoryException(RepositoryErrorCode.RESOURCE_ALREADY_EXIST, giftCertificate.getName());
+            throw new RepositoryException(e.getMessage(), RepositoryErrorCode.RESOURCE_ALREADY_EXIST, giftCertificate.getName());
         }
     }
 
@@ -81,7 +81,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID_GIFT_CERTIFICATE_QUERY, new GiftCertificateMapper(), id);
         } catch (EmptyResultDataAccessException e) {
-            throw new RepositoryException(RepositoryErrorCode.GIFT_CERTIFICATE_NOT_FOUND, id);
+            throw new RepositoryException(e.getMessage(), RepositoryErrorCode.GIFT_CERTIFICATE_NOT_FOUND, id);
         }
     }
 
@@ -97,20 +97,20 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public int update(GiftCertificate giftCertificate) {
+    public GiftCertificate update(GiftCertificate giftCertificate) {
         GiftCertificateUpdateCondition updateCondition = new GiftCertificateUpdateCondition(giftCertificate.getId(), giftCertificate.getName(),
                 giftCertificate.getDescription(), giftCertificate.getPrice(), giftCertificate.getDuration());
         queryBuilderResult = updateQueryBuilder.buildUpdateQuery(updateCondition);
-        return jdbcTemplate.update(queryBuilderResult.getQuery(), queryBuilderResult.getParameters().toArray());
+        jdbcTemplate.update(queryBuilderResult.getQuery(), queryBuilderResult.getParameters().toArray());
+        return giftCertificate;
     }
 
     @Override
-    public int delete(long id) {
+    public void delete(long id) {
         int deletedRowCount = jdbcTemplate.update(DELETE_GIFT_CERTIFICATE_QUERY, id);
         if (deletedRowCount != SUCCESS_CHANGED_ROW_COUNT) {
-            throw new RepositoryException(RepositoryErrorCode.GIFT_CERTIFICATE_NOT_FOUND, id);
+            throw new RepositoryException("Gift Certificate not found in time performing a delete operation", RepositoryErrorCode.GIFT_CERTIFICATE_NOT_FOUND, id);
         }
-        return deletedRowCount;
     }
 
     @Override

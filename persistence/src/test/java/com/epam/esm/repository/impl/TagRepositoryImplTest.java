@@ -79,11 +79,11 @@ class TagRepositoryImplTest {
     @Test
     void delete() {
         //given
-        int expected = 1;
         tagRepository.save(new Tag(4L, "#new_tag"));
         //when
-        int actual = tagRepository.delete(2L);
+        tagRepository.delete(2L);
+        boolean actual = tagRepository.existsTagByName("#cool");
         //then
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertFalse(actual);
     }
 }

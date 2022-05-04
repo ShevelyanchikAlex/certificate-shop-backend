@@ -46,13 +46,12 @@ public interface GiftCertificateService {
      * @param giftCertificateDto GiftCertificateDto
      * @return 1 if the update operation was successful, otherwise 0
      */
-    int update(GiftCertificateDto giftCertificateDto);
+    GiftCertificateDto update(GiftCertificateDto giftCertificateDto);
 
     /**
      * Deletes GiftCertificateDto by id
      *
      * @param id id of GiftCertificate
-     * @return 1 if the update operation was successful, otherwise 0
      */
-    int delete(long id);
+    void delete(long id);
 }

@@ -35,15 +35,14 @@ public interface CrudRepository<T> {
      * Updates Entity
      *
      * @param entity Entity with changed param
-     * @return 1 if the update operation was successful, otherwise 0
+     * @return updated Entity
      */
-    int update(T entity);
+    T update(T entity);
 
     /**
      * Deletes Entity by id
      *
      * @param id id of Entity
-     * @return 1 if the update operation was successful, otherwise 0
      */
-    int delete(long id);
+    void delete(long id);
 }

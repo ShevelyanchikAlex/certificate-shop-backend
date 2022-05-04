@@ -2,7 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.domain.Tag;
 import com.epam.esm.dto.TagDto;
-import com.epam.esm.dto.serialization.DtoSerializer;
+import com.epam.esm.dto.converter.DtoConverter;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exception.ServiceErrorCode;
@@ -22,16 +22,16 @@ import java.util.stream.Collectors;
 @Service
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
-    private final DtoSerializer<TagDto, Tag> tagDtoSerializer;
+    private final DtoConverter<TagDto, Tag> tagDtoConverter;
     private final TagValidator tagValidator;
     private final IdValidator idValidator;
 
     @Autowired
     public TagServiceImpl(TagRepository tagRepository,
-                          @Qualifier("tagDtoSerializer") DtoSerializer<TagDto, Tag> tagDtoSerializer,
+                          @Qualifier("tagDtoConverter") DtoConverter<TagDto, Tag> tagDtoConverter,
                           TagValidator tagValidator, IdValidator idValidator) {
         this.tagRepository = tagRepository;
-        this.tagDtoSerializer = tagDtoSerializer;
+        this.tagDtoConverter = tagDtoConverter;
         this.tagValidator = tagValidator;
         this.idValidator = idValidator;
     }
@@ -39,26 +39,26 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDto save(TagDto tagDto) {
         if (!tagValidator.validate(tagDto)) {
-            throw new ServiceException(ServiceErrorCode.TAG_VALIDATE_ERROR);
+            throw new ServiceException("Exception during TagDto validation", ServiceErrorCode.TAG_VALIDATE_ERROR);
         }
         if (tagRepository.existsTagByName(tagDto.getName())) {
-            throw new ServiceException(ServiceErrorCode.RESOURCE_ALREADY_EXIST, "TAG");
+            throw new ServiceException("Exception during TagDto save", ServiceErrorCode.RESOURCE_ALREADY_EXIST, "TAG");
         }
-        return tagDtoSerializer.serializeDtoFromEntity(tagRepository.save(tagDtoSerializer.serializeDtoToEntity(tagDto)));
+        return tagDtoConverter.convertDtoFromEntity(tagRepository.save(tagDtoConverter.convertDtoToEntity(tagDto)));
     }
 
     @Override
     public TagDto findById(long id) {
         if (!idValidator.validate(id)) {
-            throw new ServiceException(ServiceErrorCode.REQUEST_VALIDATE_ERROR, id);
+            throw new ServiceException("Exception during id of TagDto validation", ServiceErrorCode.REQUEST_VALIDATE_ERROR, id);
         }
         Tag tag = tagRepository.findById(id);
-        return tagDtoSerializer.serializeDtoFromEntity(tag);
+        return tagDtoConverter.convertDtoFromEntity(tag);
     }
 
     @Override
     public List<TagDto> findAll() {
-        return tagRepository.findAll().stream().map(tagDtoSerializer::serializeDtoFromEntity)
+        return tagRepository.findAll().stream().map(tagDtoConverter::convertDtoFromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -68,10 +68,10 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public int delete(long id) {
+    public void delete(long id) {
         if (!idValidator.validate(id)) {
-            throw new ServiceException(ServiceErrorCode.REQUEST_VALIDATE_ERROR, id);
+            throw new ServiceException("Exception during id of TagDto validation", ServiceErrorCode.REQUEST_VALIDATE_ERROR, id);
         }
-        return tagRepository.delete(id);
+        tagRepository.delete(id);
     }
 }

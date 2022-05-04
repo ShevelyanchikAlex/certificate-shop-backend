@@ -1,26 +1,17 @@
-package com.epam.esm.exception;
+package com.epam.esm.handler;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
+@AllArgsConstructor
 public class HttpExceptionResponse {
     private static final String NOT_FOUND_STATUS = "404";
     private static final String FORBIDDEN_STATUS = "403";
 
     private final String errorCode;
     private final String errorMessage;
-
-    public HttpExceptionResponse(String errorCode, String errorMessage) {
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
-    }
-
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
 
     public HttpStatus getHttpStatus() {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;

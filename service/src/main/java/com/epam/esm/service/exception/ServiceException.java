@@ -7,8 +7,8 @@ public class ServiceException extends RuntimeException {
     private final String errorCode;
     private final Object[] args;
 
-    public ServiceException(String errorCode, Object... args) {
-        super();
+    public ServiceException(String message, String errorCode, Object... args) {
+        super(message);
         this.errorCode = errorCode;
         this.args = args;
     }

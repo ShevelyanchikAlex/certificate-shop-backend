@@ -1,4 +1,4 @@
-package com.epam.esm.exception;
+package com.epam.esm.handler;
 
 import com.epam.esm.repository.exception.RepositoryException;
 import com.epam.esm.service.exception.ServiceException;

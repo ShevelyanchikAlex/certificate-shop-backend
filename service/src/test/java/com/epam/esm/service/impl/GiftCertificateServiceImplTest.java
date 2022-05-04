@@ -4,9 +4,9 @@ import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.TagDto;
-import com.epam.esm.dto.serialization.DtoSerializer;
-import com.epam.esm.dto.serialization.impl.GiftCertificateSerializer;
-import com.epam.esm.dto.serialization.impl.TagSerializer;
+import com.epam.esm.dto.converter.DtoConverter;
+import com.epam.esm.dto.converter.impl.GiftCertificateConverter;
+import com.epam.esm.dto.converter.impl.TagConverter;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
@@ -70,8 +70,8 @@ class GiftCertificateServiceImplTest {
     private GiftCertificateService giftCertificateService;
     private final GiftCertificateRepository giftCertificateRepositoryMock = Mockito.mock(GiftCertificateRepository.class);
     private final TagRepository tagRepositoryMock = Mockito.mock(TagRepository.class);
-    private final DtoSerializer<GiftCertificateDto, GiftCertificate> giftCertificateDtoSerializer = new GiftCertificateSerializer();
-    private final DtoSerializer<TagDto, Tag> tagDtoSerializer = new TagSerializer();
+    private final DtoConverter<GiftCertificateDto, GiftCertificate> giftCertificateDtoConverter = new GiftCertificateConverter();
+    private final DtoConverter<TagDto, Tag> tagDtoConverter = new TagConverter();
     private final GiftCertificateValidator giftCertificateValidator = new GiftCertificateValidator();
     private final IdValidator idValidator = new IdValidator();
     private final UpdateGiftCertificateValidator updateGiftCertificateValidator = new UpdateGiftCertificateValidator();
@@ -81,7 +81,7 @@ class GiftCertificateServiceImplTest {
     public void setUp() {
         giftCertificateService = new GiftCertificateServiceImpl(
                 giftCertificateRepositoryMock, tagRepositoryMock,
-                giftCertificateDtoSerializer, tagDtoSerializer, giftCertificateValidator, idValidator,
+                giftCertificateDtoConverter, tagDtoConverter, giftCertificateValidator, idValidator,
                 updateGiftCertificateValidator, filterConditionValidator);
     }
 
@@ -139,7 +139,7 @@ class GiftCertificateServiceImplTest {
     @Test
     void update() {
         //given
-        Mockito.when(giftCertificateRepositoryMock.update(TEST_GIFT_CERTIFICATES.get(0))).thenReturn(1);
+        Mockito.when(giftCertificateRepositoryMock.update(TEST_GIFT_CERTIFICATES.get(0))).thenReturn(TEST_GIFT_CERTIFICATES.get(0));
         Mockito.when(giftCertificateRepositoryMock.findById(1L)).thenReturn(TEST_GIFT_CERTIFICATES.get(0));
         //when
         giftCertificateService.update(TEST_GIFT_CERTIFICATES_DTO.get(0));
@@ -149,13 +149,10 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void delete() {
-        //given
-        Mockito.when(giftCertificateService.delete(1L)).thenReturn(1);
         //when
-        int actual = giftCertificateService.delete(1L);
+        giftCertificateService.delete(1L);
         //then
         Mockito.verify(giftCertificateRepositoryMock).delete(Mockito.anyLong());
-        Assertions.assertEquals(1, actual);
     }
 
     @Test
@@ -164,13 +161,5 @@ class GiftCertificateServiceImplTest {
         Mockito.when(giftCertificateRepositoryMock.findById(1L)).thenThrow(ServiceException.class);
         //then
         Assertions.assertThrows(ServiceException.class, () -> giftCertificateService.update(TEST_GIFT_CERTIFICATES_DTO.get(0)));
-    }
-
-    @Test
-    void deleteNonExistingGiftCertificateTest() {
-        //given
-        Mockito.when(giftCertificateRepositoryMock.delete(1L)).thenThrow(ServiceException.class);
-        //then
-        Assertions.assertThrows(ServiceException.class, () -> giftCertificateService.delete(1L));
     }
 }

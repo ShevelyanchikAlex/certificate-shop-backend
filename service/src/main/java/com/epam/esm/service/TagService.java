@@ -42,7 +42,6 @@ public interface TagService {
      * Deletes TagDto by id
      *
      * @param id id Of TagDto
-     * @return 1 if the update operation was successful, otherwise 0
      */
-    int delete(long id);
+    void delete(long id);
 }

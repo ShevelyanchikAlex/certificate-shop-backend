@@ -69,22 +69,21 @@ class GiftCertificateRepositoryImplTest {
     @Test
     void update() {
         //given
-        int expected = 1;
+        GiftCertificate expected = new GiftCertificate(1, "Nike", "DescriptionUpd upd", 22, 2,
+                DATE_TIME, DATE_TIME);
         //when
-        int actual = giftCertificateRepository.update(new GiftCertificate(1, "Nike", "DescriptionUpd upd", 22, 2,
-                DATE_TIME, DATE_TIME));
+        GiftCertificate actual = giftCertificateRepository.update(expected);
         //then
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void delete() {
-        //given
-        int expected = 1;
         //when
-        int actual = giftCertificateRepository.delete(2L);
+        giftCertificateRepository.delete(2L);
+        boolean actual = giftCertificateRepository.existsGiftCertificateByName("Restaurant");
         //then
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertFalse(actual);
     }
 
     @Test

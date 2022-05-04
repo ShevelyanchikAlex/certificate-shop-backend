@@ -39,12 +39,12 @@ public class GiftCertificateController {
     }
 
     @PatchMapping
-    public long update(@RequestBody GiftCertificateDto giftCertificateDto) {
+    public GiftCertificateDto update(@RequestBody GiftCertificateDto giftCertificateDto) {
         return giftCertificateService.update(giftCertificateDto);
     }
 
     @DeleteMapping("/{id}")
-    public int delete(@PathVariable long id) {
-        return giftCertificateService.delete(id);
+    public void delete(@PathVariable long id) {
+        giftCertificateService.delete(id);
     }
 }

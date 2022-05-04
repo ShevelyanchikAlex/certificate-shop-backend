@@ -1,19 +1,19 @@
-package com.epam.esm.dto.serialization.impl;
+package com.epam.esm.dto.converter.impl;
 
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.dto.serialization.DtoSerializer;
+import com.epam.esm.dto.converter.DtoConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
- * Implemented {@link DtoSerializer} for {@link GiftCertificate} entity.
+ * Implemented {@link DtoConverter} for {@link GiftCertificate} entity.
  */
 @Component
-@Qualifier("giftCertificateDtoSerializer")
-public class GiftCertificateSerializer implements DtoSerializer<GiftCertificateDto, GiftCertificate> {
+@Qualifier("giftCertificateDtoConverter")
+public class GiftCertificateConverter implements DtoConverter<GiftCertificateDto, GiftCertificate> {
     @Override
-    public GiftCertificateDto serializeDtoFromEntity(GiftCertificate giftCertificate) {
+    public GiftCertificateDto convertDtoFromEntity(GiftCertificate giftCertificate) {
         GiftCertificateDto giftCertificateDto = new GiftCertificateDto();
         giftCertificateDto.setId(giftCertificate.getId());
         giftCertificateDto.setName(giftCertificate.getName());
@@ -26,7 +26,7 @@ public class GiftCertificateSerializer implements DtoSerializer<GiftCertificateD
     }
 
     @Override
-    public GiftCertificate serializeDtoToEntity(GiftCertificateDto giftCertificateDto) {
+    public GiftCertificate convertDtoToEntity(GiftCertificateDto giftCertificateDto) {
         GiftCertificate giftCertificate = new GiftCertificate();
         giftCertificate.setId(giftCertificateDto.getId());
         giftCertificate.setName(giftCertificateDto.getName());
