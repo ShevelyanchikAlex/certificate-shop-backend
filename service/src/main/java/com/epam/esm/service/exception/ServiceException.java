@@ -4,12 +4,15 @@ import lombok.Getter;
 
 @Getter
 public class ServiceException extends RuntimeException {
-    private final String errorCode;
     private final Object[] args;
 
-    public ServiceException(String message, String errorCode, Object... args) {
+    public ServiceException(String message, Object... args) {
         super(message);
-        this.errorCode = errorCode;
+        this.args = args;
+    }
+
+    public ServiceException(String message, Throwable cause, Object... args) {
+        super(message, cause);
         this.args = args;
     }
 }

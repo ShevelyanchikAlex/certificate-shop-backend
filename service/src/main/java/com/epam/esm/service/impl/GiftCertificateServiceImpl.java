@@ -9,7 +9,6 @@ import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.service.GiftCertificateService;
-import com.epam.esm.service.exception.ServiceErrorCode;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,10 +56,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDto save(GiftCertificateDto giftCertificateDto) {
         if (!giftCertificateValidator.validate(giftCertificateDto)) {
-            throw new ServiceException("Exception during GiftCertificateDto validation", ServiceErrorCode.GIFT_CERTIFICATE_VALIDATE_ERROR);
+            throw new ServiceException("gift.certificate.validate.error");
         }
         if (giftCertificateRepository.existsGiftCertificateByName(giftCertificateDto.getName())) {
-            throw new ServiceException("Exception during GiftCertificateDto save", ServiceErrorCode.RESOURCE_ALREADY_EXIST, "GIFT_CERTIFICATE");
+            throw new ServiceException("resource.already.exist", "GIFT_CERTIFICATE");
         }
         LocalDateTime localDateTime = LocalDateTime.now();
         giftCertificateDto.setCreateDate(localDateTime);
@@ -79,7 +78,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public GiftCertificateDto findById(long id) {
         if (!idValidator.validate(id)) {
-            throw new ServiceException("Exception during id of GiftCertificateDto validation", ServiceErrorCode.REQUEST_VALIDATE_ERROR);
+            throw new ServiceException("request.validate.error");
         }
         GiftCertificateDto giftCertificateDto = giftCertificateDtoConverter.convertDtoFromEntity(giftCertificateRepository.findById(id));
         giftCertificateDto.setTagSet(tagRepository.findAllByGiftCertificateId(giftCertificateDto.getId())
@@ -98,7 +97,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificateDto> findWithFilter(GiftCertificateFilterCondition giftCertificateFilterCondition) {
         if (!filterConditionValidator.validate(giftCertificateFilterCondition)) {
-            throw new ServiceException("Exception during FilterCondition of GiftCertificate validation", ServiceErrorCode.FILTER_CONDITION_VALIDATE_ERROR);
+            throw new ServiceException("gift.certificate.filter.condition.validate.error");
         }
         List<GiftCertificateDto> giftCertificateDtoSet = giftCertificateRepository.findWithFilter(giftCertificateFilterCondition)
                 .stream().map(giftCertificateDtoConverter::convertDtoFromEntity)
@@ -111,10 +110,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDto update(GiftCertificateDto giftCertificateDto) {
         if (!updateGiftCertificateValidator.validate(giftCertificateDto)) {
-            throw new ServiceException("Exception during GiftCertificate validation", ServiceErrorCode.UPDATE_CONDITION_VALIDATE_ERROR);
+            throw new ServiceException("gift.certificate.update.condition.error");
         }
         if (giftCertificateRepository.findById(giftCertificateDto.getId()) == null) {
-            throw new ServiceException("Exception during GiftCertificate find by id", ServiceErrorCode.GIFT_CERTIFICATE_NOT_FOUND);
+            throw new ServiceException("gift.certificate.not.found");
         }
         GiftCertificate updatedGiftCertificate = giftCertificateRepository.update(giftCertificateDtoConverter.convertDtoToEntity(giftCertificateDto));
         GiftCertificateDto updatedGiftCertificateDto = giftCertificateDtoConverter.convertDtoFromEntity(updatedGiftCertificate);
@@ -129,7 +128,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public void delete(long id) {
         if (!idValidator.validate(id)) {
-            throw new ServiceException("Exception during id of GiftCertificateDto validation", ServiceErrorCode.REQUEST_VALIDATE_ERROR);
+            throw new ServiceException("request.validate.error");
         }
         giftCertificateRepository.delete(id);
     }

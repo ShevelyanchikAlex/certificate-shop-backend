@@ -2,7 +2,6 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.repository.GiftCertificateRepository;
-import com.epam.esm.repository.exception.RepositoryErrorCode;
 import com.epam.esm.repository.exception.RepositoryException;
 import com.epam.esm.repository.filter.FilterQueryBuilder;
 import com.epam.esm.repository.filter.QueryBuilderResult;
@@ -72,7 +71,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
             giftCertificate.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
             return giftCertificate;
         } catch (DuplicateKeyException e) {
-            throw new RepositoryException(e.getMessage(), RepositoryErrorCode.RESOURCE_ALREADY_EXIST, giftCertificate.getName());
+            throw new RepositoryException("resource.already.exist", giftCertificate.getName());
         }
     }
 
@@ -81,7 +80,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID_GIFT_CERTIFICATE_QUERY, new GiftCertificateMapper(), id);
         } catch (EmptyResultDataAccessException e) {
-            throw new RepositoryException(e.getMessage(), RepositoryErrorCode.GIFT_CERTIFICATE_NOT_FOUND, id);
+            throw new RepositoryException("gift.certificate.not.found", id);
         }
     }
 
@@ -109,7 +108,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     public void delete(long id) {
         int deletedRowCount = jdbcTemplate.update(DELETE_GIFT_CERTIFICATE_QUERY, id);
         if (deletedRowCount != SUCCESS_CHANGED_ROW_COUNT) {
-            throw new RepositoryException("Gift Certificate not found in time performing a delete operation", RepositoryErrorCode.GIFT_CERTIFICATE_NOT_FOUND, id);
+            throw new RepositoryException("gift.certificate.not.found", id);
         }
     }
 

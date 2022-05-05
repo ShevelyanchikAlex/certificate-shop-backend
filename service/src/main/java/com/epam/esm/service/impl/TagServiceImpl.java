@@ -5,7 +5,6 @@ import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.converter.DtoConverter;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.exception.ServiceErrorCode;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.impl.IdValidator;
 import com.epam.esm.service.validator.impl.TagValidator;
@@ -39,10 +38,10 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDto save(TagDto tagDto) {
         if (!tagValidator.validate(tagDto)) {
-            throw new ServiceException("Exception during TagDto validation", ServiceErrorCode.TAG_VALIDATE_ERROR);
+            throw new ServiceException("tag.validate.error");
         }
         if (tagRepository.existsTagByName(tagDto.getName())) {
-            throw new ServiceException("Exception during TagDto save", ServiceErrorCode.RESOURCE_ALREADY_EXIST, "TAG");
+            throw new ServiceException("resource.already.exist", "TAG");
         }
         return tagDtoConverter.convertDtoFromEntity(tagRepository.save(tagDtoConverter.convertDtoToEntity(tagDto)));
     }
@@ -50,7 +49,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDto findById(long id) {
         if (!idValidator.validate(id)) {
-            throw new ServiceException("Exception during id of TagDto validation", ServiceErrorCode.REQUEST_VALIDATE_ERROR, id);
+            throw new ServiceException("request.validate.error", id);
         }
         Tag tag = tagRepository.findById(id);
         return tagDtoConverter.convertDtoFromEntity(tag);
@@ -70,7 +69,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public void delete(long id) {
         if (!idValidator.validate(id)) {
-            throw new ServiceException("Exception during id of TagDto validation", ServiceErrorCode.REQUEST_VALIDATE_ERROR, id);
+            throw new ServiceException("request.validate.error", id);
         }
         tagRepository.delete(id);
     }
