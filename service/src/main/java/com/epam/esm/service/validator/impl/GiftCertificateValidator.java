@@ -1,12 +1,12 @@
 package com.epam.esm.service.validator.impl;
 
-import com.epam.esm.config.ServiceConfig;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.service.validator.Validator;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -15,6 +15,8 @@ import java.util.function.Predicate;
 @Component
 public class GiftCertificateValidator implements Validator<GiftCertificateDto> {
     private static final int MIN_VALUE = 0;
+    private static final String GIFT_CERTIFICATE_NAME_REGEX_PATTERN = "^([A-Za-z ]{1,45})$";
+    private static final String GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN = "^([A-Za-z ]{1,200})$";
 
     @Override
     public boolean validate(GiftCertificateDto giftCertificateDto) {
@@ -25,14 +27,14 @@ public class GiftCertificateValidator implements Validator<GiftCertificateDto> {
                 validateDescription(giftCertificateDto.getDescription()) &&
                 validatePrice(giftCertificateDto.getPrice()) &&
                 validateDuration(giftCertificateDto.getDuration()) &&
-                validateTags(giftCertificateDto.getTagSet());
+                validateTags(giftCertificateDto.getTags());
     }
 
     private boolean validateName(String name) {
         if (name == null) {
             return false;
         }
-        Predicate<String> gftCertificateNamePredicate = str -> str.matches(ServiceConfig.GIFT_CERTIFICATE_NAME_REGEX_PATTERN);
+        Predicate<String> gftCertificateNamePredicate = str -> str.matches(GIFT_CERTIFICATE_NAME_REGEX_PATTERN);
         return gftCertificateNamePredicate.test(name);
     }
 
@@ -40,15 +42,15 @@ public class GiftCertificateValidator implements Validator<GiftCertificateDto> {
         if (description == null) {
             return false;
         }
-        Predicate<String> giftCertificateDescriptionPredicate = str -> str.matches(ServiceConfig.GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN);
+        Predicate<String> giftCertificateDescriptionPredicate = str -> str.matches(GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN);
         return giftCertificateDescriptionPredicate.test(description);
     }
 
-    private boolean validatePrice(Integer price) {
+    private boolean validatePrice(BigDecimal price) {
         if (price == null) {
             return false;
         }
-        Predicate<Integer> giftCertificatePricePredicate = num -> num >= MIN_VALUE;
+        Predicate<BigDecimal> giftCertificatePricePredicate = num -> num.compareTo(BigDecimal.ZERO) >= MIN_VALUE;
         return giftCertificatePricePredicate.test(price);
     }
 
@@ -60,7 +62,7 @@ public class GiftCertificateValidator implements Validator<GiftCertificateDto> {
         return giftCertificateDurationPredicate.test(duration);
     }
 
-    private boolean validateTags(Set<TagDto> tags) {
+    private boolean validateTags(List<TagDto> tags) {
         if (tags == null) {
             return true;
         }

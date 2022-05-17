@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,9 +15,9 @@ public class GiftCertificateDto {
     private long id;
     private String name;
     private String description;
-    private int price;
-    private int duration;
+    private BigDecimal price;
+    private Integer duration;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
-    private Set<TagDto> tagSet;
+    private List<TagDto> tags;
 }

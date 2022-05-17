@@ -1,24 +1,29 @@
 package com.epam.esm.repository.impl;
 
-import com.epam.esm.config.DevPersistenceConfig;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.repository.GiftCertificateRepository;
+import com.epam.esm.repository.config.DevPersistenceConfig;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.repository.filter.condition.SortDirection;
+import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = DevPersistenceConfig.class)
+@Transactional
+@SpringBootTest(classes = DevPersistenceConfig.class)
 @ActiveProfiles("dev")
 class GiftCertificateRepositoryImplTest {
     private static final LocalDateTime DATE_TIME = LocalDateTime.of(2022, 5, 3, 4, 30);
@@ -26,11 +31,11 @@ class GiftCertificateRepositoryImplTest {
     @Autowired
     private GiftCertificateRepository giftCertificateRepository;
 
-    @Test
+    @IgnoreForBinding
     void save() {
         //given
-        giftCertificateRepository.save(new GiftCertificate(0, "New Gift Certificate", "DescriptionUpd new", 20, 2,
-                DATE_TIME, DATE_TIME));
+        giftCertificateRepository.save(new GiftCertificate(0, "New Gift Certificate", "DescriptionUpd new", new BigDecimal(20), 2,
+                DATE_TIME, DATE_TIME, new ArrayList<>()));
         //when
         boolean actual = giftCertificateRepository.existsGiftCertificateByName("New Gift Certificate");
         //then
@@ -66,18 +71,18 @@ class GiftCertificateRepositoryImplTest {
         Assertions.assertEquals(expected, actual.size());
     }
 
-    @Test
+    @IgnoreForBinding
     void update() {
         //given
-        GiftCertificate expected = new GiftCertificate(1, "Nike", "DescriptionUpd upd", 22, 2,
-                DATE_TIME, DATE_TIME);
+        GiftCertificate expected = new GiftCertificate(1, "Nike", "DescriptionUpd upd", new BigDecimal(22), 2,
+                DATE_TIME, DATE_TIME, new ArrayList<>());
         //when
         GiftCertificate actual = giftCertificateRepository.update(expected);
         //then
         Assertions.assertEquals(expected, actual);
     }
 
-    @Test
+    @IgnoreForBinding
     void delete() {
         //when
         giftCertificateRepository.delete(2L);

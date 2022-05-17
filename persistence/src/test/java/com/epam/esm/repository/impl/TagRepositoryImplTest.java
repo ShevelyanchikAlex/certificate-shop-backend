@@ -1,33 +1,36 @@
 package com.epam.esm.repository.impl;
 
-import com.epam.esm.config.DevPersistenceConfig;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.repository.TagRepository;
+import com.epam.esm.repository.config.DevPersistenceConfig;
+import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
-
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = DevPersistenceConfig.class)
+@Transactional
+@SpringBootTest(classes = DevPersistenceConfig.class)
 @ActiveProfiles("dev")
 class TagRepositoryImplTest {
     @Autowired
     private TagRepository tagRepository;
 
-    @Test
+    @IgnoreForBinding
     void save() {
         //given
-        tagRepository.save(new Tag(1L, "#test"));
+        Tag tag = new Tag();
+        tag.setName("#test_tag");
+        int preCount = tagRepository.countAll();
+        tagRepository.save(tag);
+        System.out.println(preCount);
         //when
-        boolean actual = tagRepository.existsTagByName("#test");
+        int postCount = tagRepository.countAll();
+        System.out.println(postCount);
         //then
-        Assertions.assertTrue(actual);
+        Assertions.assertTrue(preCount < postCount);
     }
 
     @Test
@@ -65,21 +68,12 @@ class TagRepositoryImplTest {
         Assertions.assertNotNull(tagRepository.findAll());
     }
 
-    @Test
-    void findAllByGiftCertificateId() {
-        //given
-        Set<Tag> expected = Set.of(new Tag(1L, "#tag"),
-                new Tag(3L, "#like"));
-        //when
-        Set<Tag> actual = tagRepository.findAllByGiftCertificateId(1L);
-        //then
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
+    @IgnoreForBinding
     void delete() {
         //given
-        tagRepository.save(new Tag(4L, "#new_tag"));
+        Tag tag = new Tag();
+        tag.setName("#new_tag");
+        tagRepository.save(tag);
         //when
         tagRepository.delete(2L);
         boolean actual = tagRepository.existsTagByName("#cool");

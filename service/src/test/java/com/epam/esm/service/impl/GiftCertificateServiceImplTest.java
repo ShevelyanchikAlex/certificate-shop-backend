@@ -22,11 +22,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 class GiftCertificateServiceImplTest {
     private static final List<Tag> TEST_TAGS = Arrays.asList(
@@ -41,23 +41,26 @@ class GiftCertificateServiceImplTest {
 
     private static final LocalDateTime DATE_TIME = LocalDateTime.of(2022, 5, 3, 4, 30);
 
-    private static final Set<TagDto> GIFT_CERTIFICATE_1_TAGS_DTO = Set.of(TEST_TAGS_DTO.get(0), TEST_TAGS_DTO.get(1));
-    private static final Set<TagDto> GIFT_CERTIFICATE_2_TAGS_DTO = Set.of(TEST_TAGS_DTO.get(1), TEST_TAGS_DTO.get(2));
+    private static final List<Tag> GIFT_CERTIFICATE_1_TAGS = List.of(TEST_TAGS.get(0), TEST_TAGS.get(1));
+    private static final List<Tag> GIFT_CERTIFICATE_2_TAGS = List.of(TEST_TAGS.get(1), TEST_TAGS.get(2));
+
+    private static final List<TagDto> GIFT_CERTIFICATE_1_TAGS_DTO = List.of(TEST_TAGS_DTO.get(0), TEST_TAGS_DTO.get(1));
+    private static final List<TagDto> GIFT_CERTIFICATE_2_TAGS_DTO = List.of(TEST_TAGS_DTO.get(1), TEST_TAGS_DTO.get(2));
 
     private static final List<GiftCertificate> TEST_GIFT_CERTIFICATES = List.of(
-            new GiftCertificate(1L, "Gift Certificate first", "Description first", 11, 1,
-                    DATE_TIME, DATE_TIME),
-            new GiftCertificate(2L, "Gift Certificate second", "DescriptionUpd second", 12, 22,
-                    DATE_TIME, DATE_TIME),
-            new GiftCertificate(3L, "Gift Certificate third", "DescriptionUpd third", 20, 2,
-                    DATE_TIME, DATE_TIME)
+            new GiftCertificate(1L, "Gift Certificate first", "Description first", new BigDecimal("11.00"), 1,
+                    DATE_TIME, DATE_TIME, new ArrayList<>()),
+            new GiftCertificate(2L, "Gift Certificate second", "DescriptionUpd second", new BigDecimal("12.34"), 22,
+                    DATE_TIME, DATE_TIME, GIFT_CERTIFICATE_1_TAGS),
+            new GiftCertificate(3L, "Gift Certificate third", "DescriptionUpd third", new BigDecimal("20.55"), 2,
+                    DATE_TIME, DATE_TIME, GIFT_CERTIFICATE_2_TAGS)
     );
 
     private static final List<GiftCertificateDto> TEST_GIFT_CERTIFICATES_DTO =
             List.of(new GiftCertificateDto(TEST_GIFT_CERTIFICATES.get(0).getId(), TEST_GIFT_CERTIFICATES.get(0).getName(),
                             TEST_GIFT_CERTIFICATES.get(0).getDescription(), TEST_GIFT_CERTIFICATES.get(0).getPrice(),
                             TEST_GIFT_CERTIFICATES.get(0).getDuration(), TEST_GIFT_CERTIFICATES.get(0).getCreateDate(),
-                            TEST_GIFT_CERTIFICATES.get(0).getLastUpdateDate(), new HashSet<>()),
+                            TEST_GIFT_CERTIFICATES.get(0).getLastUpdateDate(), new ArrayList<>()),
                     new GiftCertificateDto(TEST_GIFT_CERTIFICATES.get(1).getId(), TEST_GIFT_CERTIFICATES.get(1).getName(),
                             TEST_GIFT_CERTIFICATES.get(1).getDescription(), TEST_GIFT_CERTIFICATES.get(1).getPrice(),
                             TEST_GIFT_CERTIFICATES.get(1).getDuration(), TEST_GIFT_CERTIFICATES.get(1).getCreateDate(),
@@ -70,8 +73,7 @@ class GiftCertificateServiceImplTest {
     private GiftCertificateService giftCertificateService;
     private final GiftCertificateRepository giftCertificateRepositoryMock = Mockito.mock(GiftCertificateRepository.class);
     private final TagRepository tagRepositoryMock = Mockito.mock(TagRepository.class);
-    private final DtoConverter<GiftCertificateDto, GiftCertificate> giftCertificateDtoConverter = new GiftCertificateConverter();
-    private final DtoConverter<TagDto, Tag> tagDtoConverter = new TagConverter();
+    private final DtoConverter<GiftCertificateDto, GiftCertificate> giftCertificateDtoConverter = new GiftCertificateConverter(new TagConverter());
     private final GiftCertificateValidator giftCertificateValidator = new GiftCertificateValidator();
     private final IdValidator idValidator = new IdValidator();
     private final UpdateGiftCertificateValidator updateGiftCertificateValidator = new UpdateGiftCertificateValidator();
@@ -81,7 +83,7 @@ class GiftCertificateServiceImplTest {
     public void setUp() {
         giftCertificateService = new GiftCertificateServiceImpl(
                 giftCertificateRepositoryMock, tagRepositoryMock,
-                giftCertificateDtoConverter, tagDtoConverter, giftCertificateValidator, idValidator,
+                giftCertificateDtoConverter, giftCertificateValidator, idValidator,
                 updateGiftCertificateValidator, filterConditionValidator);
     }
 
@@ -104,11 +106,13 @@ class GiftCertificateServiceImplTest {
     void findById() {
         //given
         Mockito.when(giftCertificateRepositoryMock.findById(1L)).thenReturn(TEST_GIFT_CERTIFICATES.get(0));
+        String expectedName = TEST_GIFT_CERTIFICATES_DTO.get(0).getName();
         //when
-        GiftCertificateDto actual = giftCertificateService.findById(1L);
+        GiftCertificateDto giftCertificateDto = giftCertificateService.findById(1L);
+        String actualName = giftCertificateDto.getName();
         //then
         Mockito.verify(giftCertificateRepositoryMock).findById(1L);
-        Assertions.assertEquals(TEST_GIFT_CERTIFICATES_DTO.get(0), actual);
+        Assertions.assertEquals(expectedName, actualName);
     }
 
     @Test

@@ -3,24 +3,25 @@ package com.epam.esm.service.impl;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.converter.DtoConverter;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
+import com.epam.esm.repository.filter.condition.GiftCertificateUpdateCondition;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.validator.impl.*;
+import com.epam.esm.service.validator.impl.FilterConditionValidator;
+import com.epam.esm.service.validator.impl.GiftCertificateValidator;
+import com.epam.esm.service.validator.impl.IdValidator;
+import com.epam.esm.service.validator.impl.UpdateGiftCertificateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -31,7 +32,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateRepository giftCertificateRepository;
     private final TagRepository tagRepository;
     private final DtoConverter<GiftCertificateDto, GiftCertificate> giftCertificateDtoConverter;
-    private final DtoConverter<TagDto, Tag> tagDtoConverter;
     private final GiftCertificateValidator giftCertificateValidator;
     private final IdValidator idValidator;
     private final UpdateGiftCertificateValidator updateGiftCertificateValidator;
@@ -40,12 +40,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Autowired
     public GiftCertificateServiceImpl(GiftCertificateRepository giftCertificateRepository, TagRepository tagRepository,
                                       @Qualifier("giftCertificateDtoConverter") DtoConverter<GiftCertificateDto, GiftCertificate> giftCertificateDtoConverter,
-                                      @Qualifier("tagDtoConverter") DtoConverter<TagDto, Tag> tagDtoConverter, GiftCertificateValidator giftCertificateValidator,
-                                      IdValidator idValidator, UpdateGiftCertificateValidator updateGiftCertificateValidator, FilterConditionValidator filterConditionValidator) {
+                                      GiftCertificateValidator giftCertificateValidator, IdValidator idValidator, UpdateGiftCertificateValidator updateGiftCertificateValidator, FilterConditionValidator filterConditionValidator) {
         this.giftCertificateRepository = giftCertificateRepository;
         this.tagRepository = tagRepository;
         this.giftCertificateDtoConverter = giftCertificateDtoConverter;
-        this.tagDtoConverter = tagDtoConverter;
         this.giftCertificateValidator = giftCertificateValidator;
         this.idValidator = idValidator;
         this.updateGiftCertificateValidator = updateGiftCertificateValidator;
@@ -65,33 +63,32 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDto.setCreateDate(localDateTime);
         giftCertificateDto.setLastUpdateDate(localDateTime);
         GiftCertificate giftCertificate = giftCertificateDtoConverter.convertDtoToEntity(giftCertificateDto);
-        GiftCertificateDto savedGiftCertificateDto = giftCertificateDtoConverter.convertDtoFromEntity(giftCertificateRepository.save(giftCertificate));
-
-        Set<Tag> tagSet = fetchTagSet(Optional.ofNullable(giftCertificateDto.getTagSet()).orElse(new HashSet<>())
-                .stream().map(tagDtoConverter::convertDtoToEntity).collect(Collectors.toSet()));
-        associateGiftCertificateWithTag(savedGiftCertificateDto.getId(), tagSet);
-        savedGiftCertificateDto.setTagSet(tagSet.stream().map(tagDtoConverter::convertDtoFromEntity).collect(Collectors.toSet()));
-        return savedGiftCertificateDto;
+        giftCertificate.setTags(fetchAssociatedTags(giftCertificate.getTags()));
+        GiftCertificate savedGiftCertificate = giftCertificateRepository.save(giftCertificate);
+        return giftCertificateDtoConverter.convertDtoFromEntity(savedGiftCertificate);
     }
 
+    private List<Tag> fetchAssociatedTags(List<Tag> tags) {
+        return tags.stream()
+                .map(tag -> Optional.ofNullable(tagRepository.findByName(tag.getName()))
+                        .orElseGet(() -> tagRepository.save(tag)))
+                .collect(Collectors.toList());
+    }
 
     @Override
     public GiftCertificateDto findById(long id) {
         if (!idValidator.validate(id)) {
             throw new ServiceException("request.validate.error");
         }
-        GiftCertificateDto giftCertificateDto = giftCertificateDtoConverter.convertDtoFromEntity(giftCertificateRepository.findById(id));
-        giftCertificateDto.setTagSet(tagRepository.findAllByGiftCertificateId(giftCertificateDto.getId())
-                .stream().map(tagDtoConverter::convertDtoFromEntity).collect(Collectors.toSet()));
-        return giftCertificateDto;
+        Optional<GiftCertificate> certificateOptional = Optional.ofNullable(giftCertificateRepository.findById(id));
+        return certificateOptional.map(giftCertificateDtoConverter::convertDtoFromEntity)
+                .orElseThrow(() -> new ServiceException("gift.certificate.not.found", id));
     }
 
     @Override
     public List<GiftCertificateDto> findAll() {
-        List<GiftCertificateDto> giftCertificateDtoList = giftCertificateRepository.findAll()
+        return giftCertificateRepository.findAll()
                 .stream().map(giftCertificateDtoConverter::convertDtoFromEntity).collect(Collectors.toList());
-        addTagSetToGiftCertificateDto(giftCertificateDtoList);
-        return giftCertificateDtoList;
     }
 
     @Override
@@ -99,11 +96,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (!filterConditionValidator.validate(giftCertificateFilterCondition)) {
             throw new ServiceException("gift.certificate.filter.condition.validate.error");
         }
-        List<GiftCertificateDto> giftCertificateDtoSet = giftCertificateRepository.findWithFilter(giftCertificateFilterCondition)
-                .stream().map(giftCertificateDtoConverter::convertDtoFromEntity)
-                .distinct().collect(Collectors.toList());
-        addTagSetToGiftCertificateDto(giftCertificateDtoSet);
-        return giftCertificateDtoSet;
+        return giftCertificateRepository.findWithFilter(giftCertificateFilterCondition)
+                .stream().map(giftCertificateDtoConverter::convertDtoFromEntity).distinct().collect(Collectors.toList());
     }
 
     @Override
@@ -115,14 +109,28 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (giftCertificateRepository.findById(giftCertificateDto.getId()) == null) {
             throw new ServiceException("gift.certificate.not.found");
         }
-        GiftCertificate updatedGiftCertificate = giftCertificateRepository.update(giftCertificateDtoConverter.convertDtoToEntity(giftCertificateDto));
-        GiftCertificateDto updatedGiftCertificateDto = giftCertificateDtoConverter.convertDtoFromEntity(updatedGiftCertificate);
+        GiftCertificate giftCertificate = giftCertificateDtoConverter.convertDtoToEntity(giftCertificateDto);
+        GiftCertificateUpdateCondition updateCondition = new GiftCertificateUpdateCondition(giftCertificate.getId(), giftCertificate.getName(),
+                giftCertificate.getDescription(), giftCertificate.getPrice(), giftCertificate.getDuration(), giftCertificate.getTags());
+        GiftCertificate preUpdateGiftCertificate = createPreUpdateGiftCertificate(giftCertificateRepository.findById(giftCertificateDto.getId()), updateCondition);
+        return giftCertificateDtoConverter.convertDtoFromEntity(giftCertificateRepository.update(preUpdateGiftCertificate));
+    }
 
-        Set<Tag> tagSet = fetchTagSet(Optional.ofNullable(giftCertificateDto.getTagSet()).orElse(new HashSet<>())
-                .stream().map(tagDtoConverter::convertDtoToEntity).collect(Collectors.toSet()));
-        associateGiftCertificateWithTag(giftCertificateDto.getId(), tagSet);
-        updatedGiftCertificateDto.setTagSet(tagSet.stream().map(tagDtoConverter::convertDtoFromEntity).collect(Collectors.toSet()));
-        return updatedGiftCertificateDto;
+    public GiftCertificate createPreUpdateGiftCertificate(GiftCertificate certificate, GiftCertificateUpdateCondition giftCertificateUpdateCondition) {
+        if (giftCertificateUpdateCondition.getDescription() != null) {
+            certificate.setDescription(giftCertificateUpdateCondition.getDescription());
+        }
+        if (giftCertificateUpdateCondition.getPrice() != null) {
+            certificate.setPrice(giftCertificateUpdateCondition.getPrice());
+        }
+        if (giftCertificateUpdateCondition.getDuration() != null) {
+            certificate.setDuration(giftCertificateUpdateCondition.getDuration());
+        }
+        if (giftCertificateUpdateCondition.getTags() != null) {
+            certificate.setTags(fetchAssociatedTags(giftCertificateUpdateCondition.getTags()));
+        }
+        certificate.setLastUpdateDate(LocalDateTime.now());
+        return certificate;
     }
 
     @Override
@@ -131,69 +139,5 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             throw new ServiceException("request.validate.error");
         }
         giftCertificateRepository.delete(id);
-    }
-
-    /**
-     * Adds Set of Tags to GiftCertificateDto
-     *
-     * @param giftCertificateDtoList List of GiftCertificateDto
-     */
-    private void addTagSetToGiftCertificateDto(List<GiftCertificateDto> giftCertificateDtoList) {
-        for (GiftCertificateDto giftCertificateDto : giftCertificateDtoList) {
-            giftCertificateDto.setTagSet(tagRepository.findAllByGiftCertificateId(giftCertificateDto.getId())
-                    .stream().map(tagDtoConverter::convertDtoFromEntity).collect(Collectors.toSet()));
-        }
-    }
-
-    /**
-     * Fetch Set of Tag.
-     * Saves Tag if it not exists and adds to Set.
-     *
-     * @param tagSet New set of Tag
-     * @return Set of Tag
-     */
-    private Set<Tag> fetchTagSet(Set<Tag> tagSet) {
-        return tagSet.stream()
-                .map(tag -> {
-                    if (!tagRepository.existsTagByName(tag.getName())) {
-                        tagRepository.save(tag);
-                    }
-                    return tagRepository.findByName(tag.getName());
-                }).collect(Collectors.toSet());
-    }
-
-    /**
-     * Associate id of GiftCertificate and ids of Tags
-     *
-     * @param giftCertificateId id of GiftCertificate
-     * @param tagSet            Set of Tag
-     */
-    private void associateGiftCertificateWithTag(long giftCertificateId, Set<Tag> tagSet) {
-        Set<Tag> currentAssociateGiftCertificateWithTag = tagRepository.findAllByGiftCertificateId(giftCertificateId);
-        if (currentAssociateGiftCertificateWithTag.isEmpty()) {
-            tagSet.forEach(tag -> giftCertificateRepository.associateGiftCertificateWithTag(giftCertificateId, tag.getId()));
-        } else {
-            resolveAssociationsOfGiftCertificateWithTag(giftCertificateId, currentAssociateGiftCertificateWithTag, tagSet);
-        }
-    }
-
-    /**
-     * Deassociate id of GiftCertificate and iв of Tag if the new set no longer contains the old tags otherwise associate
-     *
-     * @param giftCertificateId                      id Of GiftCertificate
-     * @param currentAssociateGiftCertificateWithTag prev association of GiftCertificates and Tags
-     * @param tagSet                                 Set of Tag
-     */
-    private void resolveAssociationsOfGiftCertificateWithTag(long giftCertificateId, Set<Tag> currentAssociateGiftCertificateWithTag, Set<Tag> tagSet) {
-        currentAssociateGiftCertificateWithTag.forEach(tag -> {
-            if (!tagSet.contains(tag)) {
-                giftCertificateRepository.deAssociateGiftCertificateWithTag(giftCertificateId, tag.getId());
-            }
-        });
-        tagSet.forEach(tag -> {
-            if (!currentAssociateGiftCertificateWithTag.contains(tag)) {
-                giftCertificateRepository.associateGiftCertificateWithTag(giftCertificateId, tag.getId());
-            }
-        });
     }
 }

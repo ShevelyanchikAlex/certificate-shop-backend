@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -51,8 +52,9 @@ public class TagServiceImpl implements TagService {
         if (!idValidator.validate(id)) {
             throw new ServiceException("request.validate.error", id);
         }
-        Tag tag = tagRepository.findById(id);
-        return tagDtoConverter.convertDtoFromEntity(tag);
+        Optional<Tag> tagOptional = Optional.ofNullable(tagRepository.findById(id));
+        return tagOptional.map(tagDtoConverter::convertDtoFromEntity)
+                .orElseThrow(() -> new ServiceException("tag.not.found", id));
     }
 
     @Override
