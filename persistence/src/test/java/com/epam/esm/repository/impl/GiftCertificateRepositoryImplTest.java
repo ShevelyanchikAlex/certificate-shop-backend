@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Transactional
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = DevPersistenceConfig.class)
 @ActiveProfiles("dev")
 class GiftCertificateRepositoryImplTest {
@@ -31,15 +31,20 @@ class GiftCertificateRepositoryImplTest {
     @Autowired
     private GiftCertificateRepository giftCertificateRepository;
 
-    @IgnoreForBinding
+    @Test
     void save() {
         //given
-        giftCertificateRepository.save(new GiftCertificate(0, "New Gift Certificate", "DescriptionUpd new", new BigDecimal(20), 2,
-                DATE_TIME, DATE_TIME, new ArrayList<>()));
+        GiftCertificate giftCertificate = new GiftCertificate();
+        giftCertificate.setName("New Gift Certificate");
+        giftCertificate.setDescription("DescriptionUpd new");
+        giftCertificate.setPrice(new BigDecimal(20));
+        giftCertificate.setDuration(2);
+        giftCertificate.setCreateDate(DATE_TIME);
+        giftCertificate.setLastUpdateDate(DATE_TIME);
         //when
-        boolean actual = giftCertificateRepository.existsGiftCertificateByName("New Gift Certificate");
+        giftCertificate = giftCertificateRepository.save(giftCertificate);
         //then
-        Assertions.assertTrue(actual);
+        Assertions.assertNotNull(giftCertificate);
     }
 
     @Test
@@ -82,13 +87,13 @@ class GiftCertificateRepositoryImplTest {
         Assertions.assertEquals(expected, actual);
     }
 
-    @IgnoreForBinding
+    @Test
     void delete() {
         //when
         giftCertificateRepository.delete(2L);
-        boolean actual = giftCertificateRepository.existsGiftCertificateByName("Restaurant");
+        GiftCertificate actual = giftCertificateRepository.findById(2L);
         //then
-        Assertions.assertFalse(actual);
+        Assertions.assertNull(actual);
     }
 
     @Test

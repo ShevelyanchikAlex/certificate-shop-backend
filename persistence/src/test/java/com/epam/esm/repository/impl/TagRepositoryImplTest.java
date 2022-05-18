@@ -3,7 +3,6 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.config.DevPersistenceConfig;
-import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +17,15 @@ class TagRepositoryImplTest {
     @Autowired
     private TagRepository tagRepository;
 
-    @IgnoreForBinding
+    @Test
     void save() {
         //given
         Tag tag = new Tag();
         tag.setName("#test_tag");
-        int preCount = tagRepository.countAll();
-        tagRepository.save(tag);
-        System.out.println(preCount);
         //when
-        int postCount = tagRepository.countAll();
-        System.out.println(postCount);
+        tag = tagRepository.save(tag);
         //then
-        Assertions.assertTrue(preCount < postCount);
+        Assertions.assertNotNull(tag);
     }
 
     @Test
@@ -68,16 +63,12 @@ class TagRepositoryImplTest {
         Assertions.assertNotNull(tagRepository.findAll());
     }
 
-    @IgnoreForBinding
+    @Test
     void delete() {
-        //given
-        Tag tag = new Tag();
-        tag.setName("#new_tag");
-        tagRepository.save(tag);
         //when
         tagRepository.delete(2L);
-        boolean actual = tagRepository.existsTagByName("#cool");
+        Tag actual = tagRepository.findById(2L);
         //then
-        Assertions.assertFalse(actual);
+        Assertions.assertNull(actual);
     }
 }
