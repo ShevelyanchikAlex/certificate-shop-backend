@@ -3,6 +3,7 @@ package com.epam.esm.service.validator.impl;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.service.validator.Validator;
+import com.epam.esm.service.validator.ValidatorRegexPattern;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -15,8 +16,6 @@ import java.util.function.Predicate;
 @Component
 public class UpdateGiftCertificateValidator implements Validator<GiftCertificateDto> {
     public static final int MIN_VALUE = 0;
-    private static final String GIFT_CERTIFICATE_NAME_REGEX_PATTERN = "^([A-Za-z ]{1,45})$";
-    private static final String GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN = "^([A-Za-z ]{1,200})$";
 
     @Override
     public boolean validate(GiftCertificateDto giftCertificateDto) {
@@ -34,7 +33,7 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
         if (name == null) {
             return true;
         }
-        Predicate<String> gftCertificateNamePredicate = str -> str.matches(GIFT_CERTIFICATE_NAME_REGEX_PATTERN);
+        Predicate<String> gftCertificateNamePredicate = str -> str.matches(ValidatorRegexPattern.GIFT_CERTIFICATE_NAME_REGEX_PATTERN);
         return gftCertificateNamePredicate.test(name);
     }
 
@@ -42,7 +41,7 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
         if (description == null) {
             return true;
         }
-        Predicate<String> giftCertificateDescriptionPredicate = str -> str.matches(GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN);
+        Predicate<String> giftCertificateDescriptionPredicate = str -> str.matches(ValidatorRegexPattern.GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN);
         return giftCertificateDescriptionPredicate.test(description);
     }
 

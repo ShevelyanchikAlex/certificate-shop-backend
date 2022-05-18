@@ -117,6 +117,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     public GiftCertificate createPreUpdateGiftCertificate(GiftCertificate certificate, GiftCertificateUpdateCondition giftCertificateUpdateCondition) {
+        if (giftCertificateUpdateCondition.getName() != null) {
+            if (giftCertificateRepository.existsGiftCertificateByName(giftCertificateUpdateCondition.getName())) {
+                throw new ServiceException("resource.already.exist", "GIFT_CERTIFICATE");
+            }
+            certificate.setName(giftCertificateUpdateCondition.getName());
+        }
         if (giftCertificateUpdateCondition.getDescription() != null) {
             certificate.setDescription(giftCertificateUpdateCondition.getDescription());
         }

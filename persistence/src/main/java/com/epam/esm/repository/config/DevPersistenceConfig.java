@@ -2,7 +2,6 @@ package com.epam.esm.repository.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
@@ -13,11 +12,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-@SpringBootApplication(scanBasePackages = "com.epam.esm",
-        exclude = HibernateJpaAutoConfiguration.class)
+@Profile("dev")
 @EnableTransactionManagement
 @PropertySource("classpath:application-dev.properties")
-@Profile("dev")
+@SpringBootApplication(scanBasePackages = "com.epam.esm")
 public class DevPersistenceConfig {
     private final DataSource dataSource;
 

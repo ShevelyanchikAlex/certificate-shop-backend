@@ -14,10 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Implementation of {@link GiftCertificateRepository}
@@ -26,7 +23,7 @@ import java.util.Set;
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
     private static final String FIND_ALL_GIFT_CERTIFICATES_QUERY = "SELECT gift_certificate FROM GiftCertificate gift_certificate";
     private static final String EXIST_GIFT_CERTIFICATES_QUERY = "SELECT COUNT(gift_certificate) FROM GiftCertificate gift_certificate WHERE gift_certificate.name=:giftCertificateName";
-    private static final int EMPTY_COUNT_OF_GIFT_CERTIFICATE = 0;
+    private static final long EMPTY_COUNT_OF_GIFT_CERTIFICATE = 0L;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -55,18 +52,27 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     @Override
     public List<GiftCertificate> findAll() {
         return entityManager.createQuery(FIND_ALL_GIFT_CERTIFICATES_QUERY, GiftCertificate.class).getResultList();
-
     }
 
     @Override
     public List<GiftCertificate> findWithFilter(GiftCertificateFilterCondition giftCertificateFilterCondition) {
         queryBuilderResult = filterQueryBuilder.buildQuery(giftCertificateFilterCondition);
-        Query query = entityManager.createNativeQuery(queryBuilderResult.getQuery(), GiftCertificate.class);
+        Query query = entityManager.createNativeQuery(queryBuilderResult.getQuery());
         Set<Map.Entry<String, String>> entries = queryBuilderResult.getParameters().entrySet();
         for (Map.Entry<String, String> e : entries) {
             query.setParameter(e.getKey(), e.getValue());
         }
-        return query.getResultList();
+        List<Object> resultList = query.getResultList();
+        return getFilteredGiftCertificatesFromResultList(resultList);
+    }
+
+    private List<GiftCertificate> getFilteredGiftCertificatesFromResultList(List<Object> resultList) {
+        List<GiftCertificate> giftCertificates = new ArrayList<>();
+        for (Object result : resultList) {
+            long id = Long.parseLong(result.toString());
+            giftCertificates.add(findById(id));
+        }
+        return giftCertificates;
     }
 
     @Override
@@ -86,6 +92,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     public boolean existsGiftCertificateByName(String name) {
         TypedQuery<Long> query = entityManager.createQuery(EXIST_GIFT_CERTIFICATES_QUERY, Long.class);
         query.setParameter("giftCertificateName", name);
-        return query.getResultStream().findFirst().orElse(0L) != EMPTY_COUNT_OF_GIFT_CERTIFICATE;
+        return query.getResultStream().findFirst().orElse(EMPTY_COUNT_OF_GIFT_CERTIFICATE) != EMPTY_COUNT_OF_GIFT_CERTIFICATE;
     }
 }

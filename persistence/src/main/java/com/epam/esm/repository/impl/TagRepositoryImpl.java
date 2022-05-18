@@ -49,7 +49,7 @@ public class TagRepositoryImpl implements TagRepository {
     public boolean existsTagByName(String name) {
         TypedQuery<Long> query = entityManager.createQuery(EXIST_TAG_BY_NAME_QUERY, Long.class);
         query.setParameter("tagName", name);
-        return query.getResultStream().findFirst().orElse(0L) != EMPTY_COUNT_OF_TAGS;
+        return query.getResultStream().findFirst().orElse(EMPTY_COUNT_OF_TAGS) != EMPTY_COUNT_OF_TAGS;
     }
 
     @Override

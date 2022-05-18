@@ -30,6 +30,7 @@ public class ControllerExceptionHandler {
             this.put("gift.certificate.validate.error", HttpErrorCode.GIFT_CERTIFICATE_VALIDATE_ERROR_CODE);
             this.put("tag.validate.error", HttpErrorCode.TAG_VALIDATE_ERROR_CODE);
             this.put("gift.certificate.update.condition.error", HttpErrorCode.UPDATE_CONDITION_VALIDATE_ERROR_CODE);
+            this.put("gift.certificate.filter.condition.validate.error", HttpErrorCode.FILTER_CONDITION_VALIDATE_ERROR_CODE);
             this.put("bad.request", HttpErrorCode.BAD_REQUEST_CODE);
         }
     };
