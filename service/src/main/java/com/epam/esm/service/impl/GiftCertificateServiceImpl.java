@@ -76,7 +76,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public GiftCertificateDto findById(long id) {
+    public GiftCertificateDto findById(Long id) {
         if (!idValidator.validate(id)) {
             throw new ServiceException("request.validate.error");
         }
@@ -140,7 +140,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         if (!idValidator.validate(id)) {
             throw new ServiceException("request.validate.error");
         }

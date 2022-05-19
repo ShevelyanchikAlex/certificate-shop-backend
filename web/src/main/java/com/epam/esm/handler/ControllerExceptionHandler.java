@@ -31,6 +31,8 @@ public class ControllerExceptionHandler {
             this.put("tag.validate.error", HttpErrorCode.TAG_VALIDATE_ERROR_CODE);
             this.put("gift.certificate.update.condition.error", HttpErrorCode.UPDATE_CONDITION_VALIDATE_ERROR_CODE);
             this.put("gift.certificate.filter.condition.validate.error", HttpErrorCode.FILTER_CONDITION_VALIDATE_ERROR_CODE);
+            this.put("order.not.found", HttpErrorCode.ORDER_NOT_FOUND_CODE);
+            this.put("user.not.found", HttpErrorCode.USER_NOT_FOUND_CODE);
             this.put("bad.request", HttpErrorCode.BAD_REQUEST_CODE);
         }
     };

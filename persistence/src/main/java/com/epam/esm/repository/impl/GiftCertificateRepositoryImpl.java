@@ -23,6 +23,7 @@ import java.util.*;
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
     private static final String FIND_ALL_GIFT_CERTIFICATES_QUERY = "SELECT gift_certificate FROM GiftCertificate gift_certificate";
     private static final String EXIST_GIFT_CERTIFICATES_QUERY = "SELECT COUNT(gift_certificate) FROM GiftCertificate gift_certificate WHERE gift_certificate.name=:giftCertificateName";
+    private static final String GIFT_CERTIFICATE_NAME = "giftCertificateName";
     private static final long EMPTY_COUNT_OF_GIFT_CERTIFICATE = 0L;
 
     @PersistenceContext
@@ -45,7 +46,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public GiftCertificate findById(long id) {
+    public GiftCertificate findById(Long id) {
         return entityManager.find(GiftCertificate.class, id);
     }
 
@@ -82,7 +83,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     @Transactional
-    public void delete(long id) {
+    public void delete(Long id) {
         GiftCertificate certificate = Optional.ofNullable(entityManager.find(GiftCertificate.class, id))
                 .orElseThrow(() -> new RepositoryException("gift.certificate.not.found", id));
         entityManager.remove(certificate);
@@ -91,7 +92,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     @Override
     public boolean existsGiftCertificateByName(String name) {
         TypedQuery<Long> query = entityManager.createQuery(EXIST_GIFT_CERTIFICATES_QUERY, Long.class);
-        query.setParameter("giftCertificateName", name);
+        query.setParameter(GIFT_CERTIFICATE_NAME, name);
         return query.getResultStream().findFirst().orElse(EMPTY_COUNT_OF_GIFT_CERTIFICATE) != EMPTY_COUNT_OF_GIFT_CERTIFICATE;
     }
 }

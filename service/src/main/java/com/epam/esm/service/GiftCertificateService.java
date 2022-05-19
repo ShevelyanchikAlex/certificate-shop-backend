@@ -23,7 +23,7 @@ public interface GiftCertificateService {
      * @param id if of GiftCertificateDto
      * @return GiftCertificateDto
      */
-    GiftCertificateDto findById(long id);
+    GiftCertificateDto findById(Long id);
 
     /**
      * Finds all GiftCertificateDtos
@@ -53,5 +53,5 @@ public interface GiftCertificateService {
      *
      * @param id id of GiftCertificate
      */
-    void delete(long id);
+    void delete(Long id);
 }

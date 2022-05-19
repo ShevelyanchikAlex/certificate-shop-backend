@@ -35,10 +35,10 @@ public class GiftCertificate {
     private Integer duration;
 
     @Column(name = "create_date", nullable = false)
-    private LocalDateTime createDate = LocalDateTime.now();
+    private LocalDateTime createDate;
 
     @Column(name = "last_update_date", nullable = false)
-    private LocalDateTime lastUpdateDate = LocalDateTime.now();
+    private LocalDateTime lastUpdateDate;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "gift_certificate_has_tag",

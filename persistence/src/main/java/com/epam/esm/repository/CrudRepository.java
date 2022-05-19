@@ -22,7 +22,7 @@ public interface CrudRepository<T> {
      * @param id id of Entity
      * @return Found Entity
      */
-    T findById(long id);
+    T findById(Long id);
 
     /**
      * Finds all Entity
@@ -44,5 +44,5 @@ public interface CrudRepository<T> {
      *
      * @param id id of Entity
      */
-    void delete(long id);
+    void delete(Long id);
 }

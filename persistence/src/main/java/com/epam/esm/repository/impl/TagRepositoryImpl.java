@@ -34,7 +34,7 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public Tag findById(long id) {
+    public Tag findById(Long id) {
         return entityManager.find(Tag.class, id);
     }
 
@@ -64,7 +64,7 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     @Transactional
-    public void delete(long id) {
+    public void delete(Long id) {
         Tag tag = Optional.ofNullable(entityManager.find(Tag.class, id))
                 .orElseThrow(() -> new RepositoryException("tag.not.found", id));
         entityManager.remove(tag);

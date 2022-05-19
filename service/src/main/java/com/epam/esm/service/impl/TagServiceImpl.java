@@ -48,7 +48,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagDto findById(long id) {
+    public TagDto findById(Long id) {
         if (!idValidator.validate(id)) {
             throw new ServiceException("request.validate.error", id);
         }
@@ -69,7 +69,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         if (!idValidator.validate(id)) {
             throw new ServiceException("request.validate.error", id);
         }

@@ -22,7 +22,7 @@ public interface TagService {
      * @param id id of TagDto
      * @return TagDto
      */
-    TagDto findById(long id);
+    TagDto findById(Long id);
 
     /**
      * Finds all TagDtos
@@ -43,5 +43,5 @@ public interface TagService {
      *
      * @param id id Of TagDto
      */
-    void delete(long id);
+    void delete(Long id);
 }
