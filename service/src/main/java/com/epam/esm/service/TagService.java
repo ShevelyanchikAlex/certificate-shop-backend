@@ -31,6 +31,14 @@ public interface TagService {
      */
     List<TagDto> findAll();
 
+
+    /**
+     * Finds most popular TagDtos which are included in Certificates included in Orders
+     *
+     * @return List of TagDto
+     */
+    List<TagDto> findMostPopularTags();
+
     /**
      * Counts all TagDtos
      *

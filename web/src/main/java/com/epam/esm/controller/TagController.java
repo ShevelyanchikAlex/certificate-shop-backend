@@ -32,6 +32,11 @@ public class TagController {
         return tagService.findAll();
     }
 
+    @GetMapping("/most-popular")
+    public List<TagDto> findMostPopularTags() {
+        return tagService.findMostPopularTags();
+    }
+
     @GetMapping("/count")
     public int countAll() {
         return tagService.countAll();

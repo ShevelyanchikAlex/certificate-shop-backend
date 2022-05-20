@@ -64,6 +64,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public List<TagDto> findMostPopularTags() {
+        return tagRepository.findMostPopularTags()
+                .stream().map(tagDtoConverter::convertDtoFromEntity).collect(Collectors.toList());
+    }
+
+    @Override
     public int countAll() {
         return tagRepository.countAll();
     }

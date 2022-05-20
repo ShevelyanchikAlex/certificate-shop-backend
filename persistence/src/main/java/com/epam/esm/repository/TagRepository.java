@@ -2,6 +2,8 @@ package com.epam.esm.repository;
 
 import com.epam.esm.domain.Tag;
 
+import java.util.List;
+
 /**
  * {@link TagRepository} is an interface that contains all operations available for {@link Tag} of the API.
  */
@@ -20,6 +22,13 @@ public interface TagRepository extends CrudRepository<Tag> {
      * @return Founded Tag
      */
     Tag findByName(String name);
+
+    /**
+     * Finds most popular Tags which are included in Certificates included in Orders
+     *
+     * @return List of Tags
+     */
+    List<Tag> findMostPopularTags();
 
     /**
      * Checks if there is a Tag with name
