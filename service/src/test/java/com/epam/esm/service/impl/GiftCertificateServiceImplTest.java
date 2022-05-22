@@ -13,6 +13,7 @@ import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.repository.filter.condition.SortDirection;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.pagination.Page;
 import com.epam.esm.service.validator.impl.FilterConditionValidator;
 import com.epam.esm.service.validator.impl.GiftCertificateValidator;
 import com.epam.esm.service.validator.impl.IdValidator;
@@ -118,12 +119,11 @@ class GiftCertificateServiceImplTest {
     @Test
     void findAll() {
         //given
-        Mockito.when(giftCertificateRepositoryMock.findAll()).thenReturn(TEST_GIFT_CERTIFICATES);
+        Mockito.when(giftCertificateRepositoryMock.findAll(1, 10)).thenReturn(TEST_GIFT_CERTIFICATES);
         //when
-        List<GiftCertificateDto> actual = giftCertificateService.findAll();
+        Page<GiftCertificateDto> actual = giftCertificateService.findAll(1, 10);
         //then
-        Mockito.verify(giftCertificateRepositoryMock).findAll();
-        Assertions.assertEquals(TEST_GIFT_CERTIFICATES.size(), actual.size());
+        Mockito.verify(giftCertificateRepositoryMock).findAll(1, 10);
     }
 
     @Test
@@ -132,12 +132,11 @@ class GiftCertificateServiceImplTest {
         GiftCertificateFilterCondition giftCertificateFilterCondition = new GiftCertificateFilterCondition();
         giftCertificateFilterCondition.setDescription("Description");
         giftCertificateFilterCondition.setSortDirection(SortDirection.ASC);
-        Mockito.when(giftCertificateRepositoryMock.findWithFilter(giftCertificateFilterCondition)).thenReturn(TEST_GIFT_CERTIFICATES);
+        Mockito.when(giftCertificateRepositoryMock.findWithFilter(1, 10, giftCertificateFilterCondition)).thenReturn(TEST_GIFT_CERTIFICATES);
         //when
-        List<GiftCertificateDto> actual = giftCertificateService.findWithFilter(giftCertificateFilterCondition);
+        Page<GiftCertificateDto> actual = giftCertificateService.findWithFilter(1, 10, giftCertificateFilterCondition);
         //then
-        Mockito.verify(giftCertificateRepositoryMock).findWithFilter(giftCertificateFilterCondition);
-        Assertions.assertEquals(TEST_GIFT_CERTIFICATES.size(), actual.size());
+        Mockito.verify(giftCertificateRepositoryMock).findWithFilter(1, 10, giftCertificateFilterCondition);
     }
 
     @Test

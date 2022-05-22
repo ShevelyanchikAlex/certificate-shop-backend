@@ -9,13 +9,7 @@ import java.util.List;
  * {@link GiftCertificateRepository} is an interface that contains all operations available for {@link GiftCertificate} of the API.
  */
 public interface GiftCertificateRepository extends CrudRepository<GiftCertificate> {
-    /**
-     * Finds all certificates by filter
-     *
-     * @param giftCertificateFilterCondition Condition for filtering
-     * @return List with filtered GiftCertificates
-     */
-    List<GiftCertificate> findWithFilter(GiftCertificateFilterCondition giftCertificateFilterCondition);
+    List<GiftCertificate> findWithFilter(Integer page, Integer size, GiftCertificateFilterCondition giftCertificateFilterCondition);
 
     /**
      * Checks if there is an GiftCertificate with name

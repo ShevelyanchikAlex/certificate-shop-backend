@@ -8,7 +8,7 @@ import java.util.List;
 public interface UserService {
     UserDto findById(Long id);
 
-    List<UserDto> findAll();
+    List<UserDto> findAll(Integer page, Integer size);
 
     List<OrderDto> findUserOrders(Long id);
 }

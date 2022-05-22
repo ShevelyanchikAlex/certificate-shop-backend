@@ -60,7 +60,7 @@ class TagRepositoryImplTest {
 
     @Test
     void findAll() {
-        Assertions.assertNotNull(tagRepository.findAll());
+        Assertions.assertNotNull(tagRepository.findAll(1,10));
     }
 
     @Test

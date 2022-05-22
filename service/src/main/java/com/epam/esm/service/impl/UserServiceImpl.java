@@ -45,8 +45,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findAll() {
-        return userRepository.findAll()
+    public List<UserDto> findAll(Integer page, Integer size) {
+        return userRepository.findAll(page, size)
                 .stream().map(userDtoUserDtoConverter::convertDtoFromEntity).collect(Collectors.toList());
     }
 

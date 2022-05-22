@@ -59,7 +59,7 @@ class GiftCertificateRepositoryImplTest {
 
     @Test
     void findAll() {
-        Assertions.assertNotNull(giftCertificateRepository.findAll());
+        Assertions.assertNotNull(giftCertificateRepository.findAll(1, 10));
     }
 
     @Test
@@ -70,7 +70,7 @@ class GiftCertificateRepositoryImplTest {
         giftCertificateFilterCondition.setSortDirection(SortDirection.DESC);
         int expected = 1;
         //when
-        List<GiftCertificate> actual = giftCertificateRepository.findWithFilter(giftCertificateFilterCondition)
+        List<GiftCertificate> actual = giftCertificateRepository.findWithFilter(1, 10, giftCertificateFilterCondition)
                 .stream().distinct().collect(Collectors.toList());
         //then
         Assertions.assertEquals(expected, actual.size());

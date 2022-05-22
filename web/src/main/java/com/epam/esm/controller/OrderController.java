@@ -24,8 +24,9 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderDto> findAll() {
-        return orderService.findAll();
+    public List<OrderDto> findAll(@RequestParam(name = "page", defaultValue = "1") Integer page,
+                                  @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        return orderService.findAll(page, size);
     }
 
     @GetMapping("/{id}")

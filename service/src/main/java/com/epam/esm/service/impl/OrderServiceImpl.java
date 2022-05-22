@@ -71,8 +71,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDto> findAll() {
-        return orderRepository.findAll()
+    public List<OrderDto> findAll(Integer page, Integer size) {
+        return orderRepository.findAll(page, size)
                 .stream().map(orderDtoOrderDtoConverter::convertDtoFromEntity).collect(Collectors.toList());
     }
 }

@@ -2,6 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
+import com.epam.esm.service.pagination.Page;
 
 import java.util.List;
 
@@ -25,20 +26,9 @@ public interface GiftCertificateService {
      */
     GiftCertificateDto findById(Long id);
 
-    /**
-     * Finds all GiftCertificateDtos
-     *
-     * @return List of all GiftCertificateDtos
-     */
-    List<GiftCertificateDto> findAll();
+    Page<GiftCertificateDto> findAll(Integer page, Integer size);
 
-    /**
-     * Finds GiftCertificateDtos by {@link GiftCertificateFilterCondition}
-     *
-     * @param giftCertificateFilterCondition Condition for filter according to specific parameters
-     * @return List with filtered GiftCertificateDtos
-     */
-    List<GiftCertificateDto> findWithFilter(GiftCertificateFilterCondition giftCertificateFilterCondition);
+    Page<GiftCertificateDto> findWithFilter(Integer page, Integer size, GiftCertificateFilterCondition giftCertificateFilterCondition);
 
     /**
      * Updates GiftCertificateDto

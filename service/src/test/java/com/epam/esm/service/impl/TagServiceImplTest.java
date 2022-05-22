@@ -7,6 +7,7 @@ import com.epam.esm.dto.converter.impl.TagConverter;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.exception.RepositoryException;
 import com.epam.esm.service.TagService;
+import com.epam.esm.service.pagination.Page;
 import com.epam.esm.service.validator.impl.IdValidator;
 import com.epam.esm.service.validator.impl.TagValidator;
 import org.junit.jupiter.api.Assertions;
@@ -67,12 +68,11 @@ class TagServiceImplTest {
     @Test
     void findAll() {
         //given
-        Mockito.when(tagRepositoryMock.findAll()).thenReturn(TEST_TAGS);
+        Mockito.when(tagRepositoryMock.findAll(1, 10)).thenReturn(TEST_TAGS);
         //when
-        List<TagDto> actual = tagService.findAll();
+        Page<TagDto> actual = tagService.findAll(1, 10);
         //then
-        Mockito.verify(tagRepositoryMock).findAll();
-        Assertions.assertEquals(TEST_TAGS_DTO, actual);
+        Mockito.verify(tagRepositoryMock).findAll(1, 10);
     }
 
     @Test

@@ -3,6 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.converter.DtoConverter;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.TagRepository;
@@ -10,6 +11,8 @@ import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.repository.filter.condition.GiftCertificateUpdateCondition;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.pagination.Page;
+import com.epam.esm.service.pagination.PaginationUtil;
 import com.epam.esm.service.validator.impl.FilterConditionValidator;
 import com.epam.esm.service.validator.impl.GiftCertificateValidator;
 import com.epam.esm.service.validator.impl.IdValidator;
@@ -86,18 +89,24 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<GiftCertificateDto> findAll() {
-        return giftCertificateRepository.findAll()
-                .stream().map(giftCertificateDtoConverter::convertDtoFromEntity).collect(Collectors.toList());
+    public Page<GiftCertificateDto> findAll(Integer page, Integer size) {
+        page = PaginationUtil.correctPageIndex(page, size, giftCertificateRepository::countAll);
+        List<GiftCertificateDto> giftCertificateDtoList = giftCertificateRepository.findAll(page, size)
+                .stream().map(giftCertificateDtoConverter::convertDtoFromEntity)
+                .collect(Collectors.toList());
+        return new Page<>(page, size, tagRepository.countAll(), giftCertificateDtoList);
     }
 
     @Override
-    public List<GiftCertificateDto> findWithFilter(GiftCertificateFilterCondition giftCertificateFilterCondition) {
+    public Page<GiftCertificateDto> findWithFilter(Integer page, Integer size, GiftCertificateFilterCondition giftCertificateFilterCondition) {
         if (!filterConditionValidator.validate(giftCertificateFilterCondition)) {
             throw new ServiceException("gift.certificate.filter.condition.validate.error");
         }
-        return giftCertificateRepository.findWithFilter(giftCertificateFilterCondition)
-                .stream().map(giftCertificateDtoConverter::convertDtoFromEntity).distinct().collect(Collectors.toList());
+        page = PaginationUtil.correctPageIndex(page, size, giftCertificateRepository::countAll);
+        List<GiftCertificateDto> giftCertificateDtoList = giftCertificateRepository.findWithFilter(page, size, giftCertificateFilterCondition)
+                .stream().map(giftCertificateDtoConverter::convertDtoFromEntity)
+                .collect(Collectors.toList());
+        return new Page<>(page, size, tagRepository.countAll(), giftCertificateDtoList);
     }
 
     @Override

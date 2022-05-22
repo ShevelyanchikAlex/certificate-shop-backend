@@ -23,6 +23,7 @@ import java.util.*;
 public class GiftCertificateRepositoryImpl implements GiftCertificateRepository {
     private static final String FIND_ALL_GIFT_CERTIFICATES_QUERY = "SELECT gift_certificate FROM GiftCertificate gift_certificate";
     private static final String EXIST_GIFT_CERTIFICATES_QUERY = "SELECT COUNT(gift_certificate) FROM GiftCertificate gift_certificate WHERE gift_certificate.name=:giftCertificateName";
+    private static final String COUNT_ALL_GIFT_CERTIFICATES_QUERY = "SELECT COUNT(gift_certificate) FROM GiftCertificate gift_certificate";
     private static final String GIFT_CERTIFICATE_NAME = "giftCertificateName";
     private static final long EMPTY_COUNT_OF_GIFT_CERTIFICATE = 0L;
 
@@ -51,19 +52,22 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public List<GiftCertificate> findAll() {
-        return entityManager.createQuery(FIND_ALL_GIFT_CERTIFICATES_QUERY, GiftCertificate.class).getResultList();
+    public List<GiftCertificate> findAll(Integer page, Integer size) {
+        return entityManager.createQuery(FIND_ALL_GIFT_CERTIFICATES_QUERY, GiftCertificate.class)
+                .setFirstResult((page - 1) * size)
+                .setMaxResults(size).getResultList();
     }
 
     @Override
-    public List<GiftCertificate> findWithFilter(GiftCertificateFilterCondition giftCertificateFilterCondition) {
+    public List<GiftCertificate> findWithFilter(Integer page, Integer size, GiftCertificateFilterCondition giftCertificateFilterCondition) {
         queryBuilderResult = filterQueryBuilder.buildQuery(giftCertificateFilterCondition);
         Query query = entityManager.createNativeQuery(queryBuilderResult.getQuery());
         Set<Map.Entry<String, String>> entries = queryBuilderResult.getParameters().entrySet();
         for (Map.Entry<String, String> e : entries) {
             query.setParameter(e.getKey(), e.getValue());
         }
-        List<Object> resultList = query.getResultList();
+        List<Object> resultList = query.setFirstResult((page - 1) * size)
+                .setMaxResults(size).getResultList();
         return getFilteredGiftCertificatesFromResultList(resultList);
     }
 
@@ -87,6 +91,11 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         GiftCertificate certificate = Optional.ofNullable(entityManager.find(GiftCertificate.class, id))
                 .orElseThrow(() -> new RepositoryException("gift.certificate.not.found", id));
         entityManager.remove(certificate);
+    }
+
+    @Override
+    public int countAll() {
+        return entityManager.createQuery(COUNT_ALL_GIFT_CERTIFICATES_QUERY, Long.class).getSingleResult().intValue();
     }
 
     @Override

@@ -85,11 +85,6 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public List<Tag> findAll() {
-        return entityManager.createQuery(FIND_ALL_TAGS_QUERY, Tag.class).getResultList();
-    }
-
-    @Override
     public Tag update(Tag tag) {
         throw new RepositoryException("operation.not.supported", "UPDATE");
     }

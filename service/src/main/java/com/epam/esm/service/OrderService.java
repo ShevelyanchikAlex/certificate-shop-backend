@@ -9,5 +9,5 @@ public interface OrderService {
 
     OrderDto findById(Long id);
 
-    List<OrderDto> findAll();
+    List<OrderDto> findAll(Integer page, Integer size);
 }

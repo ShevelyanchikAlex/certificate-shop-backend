@@ -38,26 +38,6 @@ class FilterConditionValidatorTest {
     }
 
     @Test
-    void testInvalidTagName() {
-        //given
-        giftCertificateFilterCondition.setTagName("4fdss");
-        //when
-        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
-        //then
-        assertFalse(actual);
-    }
-
-    @Test
-    void testValidTagName() {
-        //given
-        giftCertificateFilterCondition.setTagName("#tagName");
-        //when
-        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
-        //then
-        assertTrue(actual);
-    }
-
-    @Test
     void testInvalidDescription() {
         //given
         giftCertificateFilterCondition.setDescription("Desc_$#@");

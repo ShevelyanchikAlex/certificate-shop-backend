@@ -14,6 +14,8 @@ import java.util.Optional;
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
     private static final String FIND_ALL_ORDERS_QUERY = "SELECT order FROM Order order";
+    private static final String COUNT_ALL_ORDERS_QUERY = "SELECT COUNT(order) FROM Order order";
+
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -31,7 +33,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> findAll() {
+    public List<Order> findAll(Integer page, Integer size) {
         return entityManager.createQuery(FIND_ALL_ORDERS_QUERY, Order.class).getResultList();
     }
 
@@ -46,5 +48,10 @@ public class OrderRepositoryImpl implements OrderRepository {
         Order order = Optional.ofNullable(entityManager.find(Order.class, id))
                 .orElseThrow(() -> new RepositoryException("order.not.found", id));
         entityManager.remove(order);
+    }
+
+    @Override
+    public int countAll() {
+        return entityManager.createQuery(COUNT_ALL_ORDERS_QUERY, Long.class).getSingleResult().intValue();
     }
 }

@@ -9,28 +9,12 @@ import java.util.List;
  */
 public interface TagRepository extends CrudRepository<Tag> {
     /**
-     * Counts all Tags
-     *
-     * @return count of Tags
-     */
-    int countAll();
-
-    /**
      * Finds Tag with name
      *
      * @param name Name of Tag
      * @return Founded Tag
      */
     Tag findByName(String name);
-
-    /**
-     * Finds all TagDtos
-     *
-     * @param page number of Page
-     * @param size size of Page
-     * @return List of found Tags
-     */
-    List<Tag> findAll(Integer page, Integer size);
 
     /**
      * Finds most popular Tags which are included in Certificates included in Orders

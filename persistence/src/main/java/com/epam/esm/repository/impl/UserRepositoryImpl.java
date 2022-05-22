@@ -12,6 +12,7 @@ import java.util.List;
 @Repository
 public class UserRepositoryImpl implements UserRepository {
     private static final String FIND_ALL_USERS_QUERY = "SELECT user FROM User user";
+    private static final String COUNT_ALL_USERS_QUERY = "SELECT COUNT(user) FROM User user";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -27,7 +28,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> findAll() {
+    public List<User> findAll(Integer page, Integer size) {
         return entityManager.createQuery(FIND_ALL_USERS_QUERY, User.class).getResultList();
     }
 
@@ -39,5 +40,10 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void delete(Long id) {
         throw new RepositoryException("operation.not.supported", "DELETE");
+    }
+
+    @Override
+    public int countAll() {
+        return entityManager.createQuery(COUNT_ALL_USERS_QUERY, Long.class).getSingleResult().intValue();
     }
 }

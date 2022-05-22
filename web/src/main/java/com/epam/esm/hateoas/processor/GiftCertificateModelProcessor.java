@@ -1,7 +1,8 @@
 package com.epam.esm.hateoas.processor;
 
-import com.epam.esm.controller.TagController;
-import com.epam.esm.dto.TagDto;
+import com.epam.esm.controller.GiftCertificateController;
+import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.hateoas.model.GiftCertificateModel;
 import com.epam.esm.hateoas.model.TagModel;
 import com.epam.esm.service.pagination.Page;
 import org.springframework.hateoas.CollectionModel;
@@ -13,13 +14,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class TagModelProcessor implements RepresentationModelProcessor<TagModel> {
+public class GiftCertificateModelProcessor implements RepresentationModelProcessor<TagModel> {
     @Override
     public TagModel process(TagModel model) {
         return model;
     }
 
-    public CollectionModel<TagModel> process(Page<TagDto> page, int size, CollectionModel<TagModel> collectionModel) {
+    public CollectionModel<GiftCertificateModel> process(Page<GiftCertificateDto> page, int size, CollectionModel<GiftCertificateModel> collectionModel) {
         int nextPage = page.getNextPageIndex();
         int previousPage = page.getPreviousPageIndex();
         int lastPage = page.getTotalPages();
@@ -38,7 +39,7 @@ public class TagModelProcessor implements RepresentationModelProcessor<TagModel>
         return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
     }
 
-    private CollectionModel<TagModel> findAllMethod(int page, int size) {
-        return methodOn(TagController.class).findAll(page, size);
+    private CollectionModel<GiftCertificateModel> findAllMethod(int page, int size) {
+        return methodOn(GiftCertificateController.class).findAll(page, size);
     }
 }
