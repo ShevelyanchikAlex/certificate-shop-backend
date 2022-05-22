@@ -1,8 +1,7 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.TagDto;
-
-import java.util.List;
+import com.epam.esm.service.pagination.Page;
 
 /**
  * {@link TagService} is an interface that contains all operations available for {@link TagDto} of the API.
@@ -27,17 +26,20 @@ public interface TagService {
     /**
      * Finds all TagDtos
      *
-     * @return List of TagDto
+     * @param page number of Page
+     * @param size size of Page
+     * @return List of found TagDtos
      */
-    List<TagDto> findAll();
-
+    Page<TagDto> findAll(Integer page, Integer size);
 
     /**
      * Finds most popular TagDtos which are included in Certificates included in Orders
      *
+     * @param page number of Page
+     * @param size size of Page
      * @return List of TagDto
      */
-    List<TagDto> findMostPopularTags();
+    Page<TagDto> findMostPopularTags(Integer page, Integer size);
 
     /**
      * Counts all TagDtos

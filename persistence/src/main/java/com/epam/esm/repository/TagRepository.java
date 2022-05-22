@@ -24,11 +24,22 @@ public interface TagRepository extends CrudRepository<Tag> {
     Tag findByName(String name);
 
     /**
+     * Finds all TagDtos
+     *
+     * @param page number of Page
+     * @param size size of Page
+     * @return List of found Tags
+     */
+    List<Tag> findAll(Integer page, Integer size);
+
+    /**
      * Finds most popular Tags which are included in Certificates included in Orders
      *
+     * @param page number of Page
+     * @param size size of Page
      * @return List of Tags
      */
-    List<Tag> findMostPopularTags();
+    List<Tag> findMostPopularTags(Integer page, Integer size);
 
     /**
      * Checks if there is a Tag with name

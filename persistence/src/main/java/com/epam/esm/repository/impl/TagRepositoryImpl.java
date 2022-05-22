@@ -68,8 +68,17 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public List<Tag> findMostPopularTags() {
-        Query query = entityManager.createNativeQuery(FIND_MOST_POPULAR_TAGS_QUERY, Tag.class);
+    public List<Tag> findAll(Integer page, Integer size) {
+        return entityManager.createQuery(FIND_ALL_TAGS_QUERY, Tag.class)
+                .setFirstResult((page - 1) * size)
+                .setMaxResults(size).getResultList();
+    }
+
+    @Override
+    public List<Tag> findMostPopularTags(Integer page, Integer size) {
+        Query query = entityManager.createNativeQuery(FIND_MOST_POPULAR_TAGS_QUERY, Tag.class)
+                .setFirstResult((page - 1) * size)
+                .setMaxResults(size);
         List<Tag> tags = new ArrayList<>();
         query.getResultStream().filter(Tag.class::isInstance).forEach(obj -> tags.add((Tag) obj));
         return tags;

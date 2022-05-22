@@ -6,6 +6,8 @@ import com.epam.esm.dto.converter.DtoConverter;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.pagination.Page;
+import com.epam.esm.service.pagination.PaginationUtil;
 import com.epam.esm.service.validator.impl.IdValidator;
 import com.epam.esm.service.validator.impl.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,15 +60,20 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDto> findAll() {
-        return tagRepository.findAll().stream().map(tagDtoConverter::convertDtoFromEntity)
+    public Page<TagDto> findAll(Integer page, Integer size) {
+        page = PaginationUtil.correctPageIndex(page, size, tagRepository::countAll);
+        List<TagDto> tags = tagRepository.findAll(page, size)
+                .stream().map(tagDtoConverter::convertDtoFromEntity)
                 .collect(Collectors.toList());
+        return new Page<>(page, size, tagRepository.countAll(), tags);
     }
 
     @Override
-    public List<TagDto> findMostPopularTags() {
-        return tagRepository.findMostPopularTags()
-                .stream().map(tagDtoConverter::convertDtoFromEntity).collect(Collectors.toList());
+    public Page<TagDto> findMostPopularTags(Integer page, Integer size) {
+        List<TagDto> tags = tagRepository.findMostPopularTags(page, size)
+                .stream().map(tagDtoConverter::convertDtoFromEntity)
+                .collect(Collectors.toList());
+        return new Page<>(page, size, tagRepository.countAll(), tags);
     }
 
     @Override
