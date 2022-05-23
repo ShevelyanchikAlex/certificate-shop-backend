@@ -1,7 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.hateoas.assembler.GiftCertificateAssembler;
+import com.epam.esm.hateoas.assembler.GiftCertificateModelAssembler;
 import com.epam.esm.hateoas.model.GiftCertificateModel;
 import com.epam.esm.hateoas.processor.GiftCertificateModelProcessor;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
@@ -11,17 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/certificates")
 public class GiftCertificateController {
     private final GiftCertificateService giftCertificateService;
-    private final GiftCertificateAssembler giftCertificateAssembler;
+    private final GiftCertificateModelAssembler giftCertificateAssembler;
     private final GiftCertificateModelProcessor giftCertificateModelProcessor;
 
     @Autowired
-    public GiftCertificateController(GiftCertificateService giftCertificateService, GiftCertificateAssembler giftCertificateAssembler, GiftCertificateModelProcessor giftCertificateModelProcessor) {
+    public GiftCertificateController(GiftCertificateService giftCertificateService, GiftCertificateModelAssembler giftCertificateAssembler, GiftCertificateModelProcessor giftCertificateModelProcessor) {
         this.giftCertificateService = giftCertificateService;
         this.giftCertificateAssembler = giftCertificateAssembler;
         this.giftCertificateModelProcessor = giftCertificateModelProcessor;

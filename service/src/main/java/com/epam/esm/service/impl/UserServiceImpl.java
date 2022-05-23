@@ -8,6 +8,7 @@ import com.epam.esm.dto.converter.DtoConverter;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.pagination.Page;
 import com.epam.esm.service.validator.impl.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -45,9 +46,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findAll(Integer page, Integer size) {
-        return userRepository.findAll(page, size)
+    public Page<UserDto> findAll(Integer page, Integer size) {
+        List<UserDto> users = userRepository.findAll(page, size)
                 .stream().map(userDtoUserDtoConverter::convertDtoFromEntity).collect(Collectors.toList());
+        return new Page<>(page, size, userRepository.countAll(), users);
     }
 
     @Override

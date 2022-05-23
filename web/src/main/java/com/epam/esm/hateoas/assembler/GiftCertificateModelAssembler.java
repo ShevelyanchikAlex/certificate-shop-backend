@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class GiftCertificateAssembler extends RepresentationModelAssemblerSupport<GiftCertificateDto, GiftCertificateModel> {
+public class GiftCertificateModelAssembler extends RepresentationModelAssemblerSupport<GiftCertificateDto, GiftCertificateModel> {
     private final TagModelAssembler tagModelAssembler;
 
     @Autowired
-    public GiftCertificateAssembler(TagModelAssembler tagModelAssembler) {
+    public GiftCertificateModelAssembler(TagModelAssembler tagModelAssembler) {
         super(GiftCertificateController.class, GiftCertificateModel.class);
         this.tagModelAssembler = tagModelAssembler;
     }
