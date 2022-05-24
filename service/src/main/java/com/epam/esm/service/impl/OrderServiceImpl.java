@@ -10,6 +10,8 @@ import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.pagination.Page;
+import com.epam.esm.service.pagination.PaginationUtil;
 import com.epam.esm.service.validator.impl.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,8 +73,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDto> findAll(Integer page, Integer size) {
-        return orderRepository.findAll(page, size)
+    public Page<OrderDto> findAll(Integer pageIndex, Integer size) {
+        pageIndex = PaginationUtil.correctPageIndex(pageIndex, size, orderRepository::countAll);
+        List<OrderDto> orderDtoList = orderRepository.findAll(pageIndex, size)
                 .stream().map(orderDtoOrderDtoConverter::convertDtoFromEntity).collect(Collectors.toList());
+        return new Page<>(pageIndex, size, orderRepository.countAll(), orderDtoList);
     }
 }

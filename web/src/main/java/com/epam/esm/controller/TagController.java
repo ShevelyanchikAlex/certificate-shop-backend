@@ -35,17 +35,17 @@ public class TagController {
     }
 
     @GetMapping(produces = "application/json")
-    public CollectionModel<TagModel> findAll(@RequestParam(name = "page", defaultValue = "1") Integer page,
+    public CollectionModel<TagModel> findAll(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                              @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        Page<TagDto> tagsPage = tagService.findAll(page, size);
+        Page<TagDto> tagsPage = tagService.findAll(pageIndex, size);
         CollectionModel<TagModel> collectionModel = tagModelAssembler.toCollectionModel(tagsPage.getContent());
         return tagModelProcessor.process(tagsPage, size, collectionModel);
     }
 
     @GetMapping("/most-popular")
-    public CollectionModel<TagModel> findMostPopularTags(@RequestParam(name = "page", defaultValue = "1") Integer page,
+    public CollectionModel<TagModel> findMostPopularTags(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                                          @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        Page<TagDto> tagsPage = tagService.findMostPopularTags(page, size);
+        Page<TagDto> tagsPage = tagService.findMostPopularTags(pageIndex, size);
         CollectionModel<TagModel> collectionModel = tagModelAssembler.toCollectionModel(tagsPage.getContent());
         return tagModelProcessor.process(tagsPage, size, collectionModel);
     }

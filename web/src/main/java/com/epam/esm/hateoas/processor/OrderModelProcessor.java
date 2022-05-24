@@ -1,8 +1,8 @@
 package com.epam.esm.hateoas.processor;
 
-import com.epam.esm.controller.UserController;
-import com.epam.esm.dto.UserDto;
-import com.epam.esm.hateoas.model.UserModel;
+import com.epam.esm.controller.OrderController;
+import com.epam.esm.dto.OrderDto;
+import com.epam.esm.hateoas.model.OrderModel;
 import com.epam.esm.service.pagination.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
@@ -13,13 +13,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class UserModelProcessor implements RepresentationModelProcessor<UserModel> {
+public class OrderModelProcessor implements RepresentationModelProcessor<OrderModel> {
     @Override
-    public UserModel process(UserModel model) {
+    public OrderModel process(OrderModel model) {
         return model;
     }
 
-    public CollectionModel<UserModel> process(Page<UserDto> page, int size, CollectionModel<UserModel> collectionModel) {
+    public CollectionModel<OrderModel> process(Page<OrderDto> page, int size, CollectionModel<OrderModel> collectionModel) {
         int nextPage = page.getNextPageIndex();
         int previousPage = page.getPreviousPageIndex();
         int lastPage = page.getTotalPages();
@@ -38,7 +38,7 @@ public class UserModelProcessor implements RepresentationModelProcessor<UserMode
         return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
     }
 
-    private CollectionModel<UserModel> findAllMethod(int pageIndex, int size) {
-        return methodOn(UserController.class).findAll(pageIndex, size);
+    private CollectionModel<OrderModel> findAllMethod(int pageIndex, int size) {
+        return methodOn(OrderController.class).findAll(pageIndex, size);
     }
 }

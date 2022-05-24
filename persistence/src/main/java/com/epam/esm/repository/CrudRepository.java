@@ -29,7 +29,7 @@ public interface CrudRepository<T> {
      *
      * @return List of entity
      */
-    List<T> findAll(Integer page, Integer size);
+    List<T> findAll(Integer pageIndex, Integer size);
 
     /**
      * Updates Entity

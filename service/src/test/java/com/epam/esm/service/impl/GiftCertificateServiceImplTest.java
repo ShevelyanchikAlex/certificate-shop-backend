@@ -124,6 +124,7 @@ class GiftCertificateServiceImplTest {
         Page<GiftCertificateDto> actual = giftCertificateService.findAll(1, 10);
         //then
         Mockito.verify(giftCertificateRepositoryMock).findAll(1, 10);
+        Assertions.assertFalse(actual.hasNext());
     }
 
     @Test
@@ -137,6 +138,7 @@ class GiftCertificateServiceImplTest {
         Page<GiftCertificateDto> actual = giftCertificateService.findWithFilter(1, 10, giftCertificateFilterCondition);
         //then
         Mockito.verify(giftCertificateRepositoryMock).findWithFilter(1, 10, giftCertificateFilterCondition);
+        Assertions.assertFalse(actual.hasNext());
     }
 
     @Test

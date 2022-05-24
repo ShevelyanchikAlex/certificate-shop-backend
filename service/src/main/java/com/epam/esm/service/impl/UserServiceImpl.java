@@ -46,17 +46,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserDto> findAll(Integer page, Integer size) {
-        List<UserDto> users = userRepository.findAll(page, size)
+    public Page<UserDto> findAll(Integer pageIndex, Integer size) {
+        List<UserDto> users = userRepository.findAll(pageIndex, size)
                 .stream().map(userDtoUserDtoConverter::convertDtoFromEntity).collect(Collectors.toList());
-        return new Page<>(page, size, userRepository.countAll(), users);
+        return new Page<>(pageIndex, size, userRepository.countAll(), users);
     }
 
     @Override
-    public List<OrderDto> findUserOrders(Long id) {
+    public Page<OrderDto> findUserOrders(Integer pageIndex, Integer size, Long id) {
         User user = Optional.ofNullable(userRepository.findById(id))
                 .orElseThrow(() -> new ServiceException("user.not.found", id));
-        return user.getOrders()
-                .stream().map(orderDtoOrderDtoConverter::convertDtoFromEntity).collect(Collectors.toList());
+        List<OrderDto> orders = user.getOrders()
+                .stream().skip((long) (pageIndex - 1) * size).limit(size)
+                .map(orderDtoOrderDtoConverter::convertDtoFromEntity).collect(Collectors.toList());
+        return new Page<>(pageIndex, size, orders.size(), orders);
     }
 }

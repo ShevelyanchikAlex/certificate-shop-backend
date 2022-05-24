@@ -26,20 +26,20 @@ public interface TagService {
     /**
      * Finds all TagDtos
      *
-     * @param page number of Page
-     * @param size size of Page
+     * @param pageIndex Number of Page
+     * @param size Size of Page
      * @return List of found TagDtos
      */
-    Page<TagDto> findAll(Integer page, Integer size);
+    Page<TagDto> findAll(Integer pageIndex, Integer size);
 
     /**
      * Finds most popular TagDtos which are included in Certificates included in Orders
      *
-     * @param page number of Page
-     * @param size size of Page
+     * @param pageIndex Number of Page
+     * @param size Size of Page
      * @return List of TagDto
      */
-    Page<TagDto> findMostPopularTags(Integer page, Integer size);
+    Page<TagDto> findMostPopularTags(Integer pageIndex, Integer size);
 
     /**
      * Counts all TagDtos

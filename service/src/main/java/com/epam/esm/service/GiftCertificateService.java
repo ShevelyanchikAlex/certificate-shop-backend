@@ -26,9 +26,24 @@ public interface GiftCertificateService {
      */
     GiftCertificateDto findById(Long id);
 
-    Page<GiftCertificateDto> findAll(Integer page, Integer size);
+    /**
+     * Finds all GiftCertificatesDto
+     *
+     * @param pageIndex Number of Page
+     * @param size Size of Page
+     * @return Page with GiftCertificatesDto
+     */
+    Page<GiftCertificateDto> findAll(Integer pageIndex, Integer size);
 
-    Page<GiftCertificateDto> findWithFilter(Integer page, Integer size, GiftCertificateFilterCondition giftCertificateFilterCondition);
+    /**
+     * Finds GiftCertificatesDto by FilterCondition
+     *
+     * @param pageIndex Number of Page
+     * @param size Size of Page
+     * @param giftCertificateFilterCondition Filter Condition
+     * @return Page with filtered GiftCertificatesDto
+     */
+    Page<GiftCertificateDto> findWithFilter(Integer pageIndex, Integer size, GiftCertificateFilterCondition giftCertificateFilterCondition);
 
     /**
      * Updates GiftCertificateDto

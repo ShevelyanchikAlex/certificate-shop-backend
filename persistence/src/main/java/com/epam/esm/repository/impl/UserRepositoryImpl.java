@@ -28,9 +28,9 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> findAll(Integer page, Integer size) {
+    public List<User> findAll(Integer pageIndex, Integer size) {
         return entityManager.createQuery(FIND_ALL_USERS_QUERY, User.class)
-                .setFirstResult((page - 1) * size)
+                .setFirstResult((pageIndex - 1) * size)
                 .setMaxResults(size).getResultList();
     }
 

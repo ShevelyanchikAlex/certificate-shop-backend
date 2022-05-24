@@ -68,11 +68,12 @@ class TagServiceImplTest {
     @Test
     void findAll() {
         //given
-        Mockito.when(tagRepositoryMock.findAll(1, 10)).thenReturn(TEST_TAGS);
+        Mockito.when(tagRepositoryMock.findAll(1, 3)).thenReturn(TEST_TAGS);
         //when
-        Page<TagDto> actual = tagService.findAll(1, 10);
+        Page<TagDto> actual = tagService.findAll(1, 3);
         //then
-        Mockito.verify(tagRepositoryMock).findAll(1, 10);
+        Mockito.verify(tagRepositoryMock).findAll(1, 3);
+        Assertions.assertFalse(actual.hasNext());
     }
 
     @Test

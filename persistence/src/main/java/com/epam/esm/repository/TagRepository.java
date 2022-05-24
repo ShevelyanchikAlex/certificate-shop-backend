@@ -19,11 +19,11 @@ public interface TagRepository extends CrudRepository<Tag> {
     /**
      * Finds most popular Tags which are included in Certificates included in Orders
      *
-     * @param page number of Page
-     * @param size size of Page
+     * @param pageIndex Number of Page
+     * @param size Size of Page
      * @return List of Tags
      */
-    List<Tag> findMostPopularTags(Integer page, Integer size);
+    List<Tag> findMostPopularTags(Integer pageIndex, Integer size);
 
     /**
      * Checks if there is a Tag with name

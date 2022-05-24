@@ -38,7 +38,7 @@ public class TagModelProcessor implements RepresentationModelProcessor<TagModel>
         return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
     }
 
-    private CollectionModel<TagModel> findAllMethod(int page, int size) {
-        return methodOn(TagController.class).findAll(page, size);
+    private CollectionModel<TagModel> findAllMethod(int pageIndex, int size) {
+        return methodOn(TagController.class).findAll(pageIndex, size);
     }
 }

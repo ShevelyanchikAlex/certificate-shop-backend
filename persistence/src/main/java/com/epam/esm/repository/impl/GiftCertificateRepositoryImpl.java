@@ -52,21 +52,21 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public List<GiftCertificate> findAll(Integer page, Integer size) {
+    public List<GiftCertificate> findAll(Integer pageIndex, Integer size) {
         return entityManager.createQuery(FIND_ALL_GIFT_CERTIFICATES_QUERY, GiftCertificate.class)
-                .setFirstResult((page - 1) * size)
+                .setFirstResult((pageIndex - 1) * size)
                 .setMaxResults(size).getResultList();
     }
 
     @Override
-    public List<GiftCertificate> findWithFilter(Integer page, Integer size, GiftCertificateFilterCondition giftCertificateFilterCondition) {
+    public List<GiftCertificate> findWithFilter(Integer pageIndex, Integer size, GiftCertificateFilterCondition giftCertificateFilterCondition) {
         queryBuilderResult = filterQueryBuilder.buildQuery(giftCertificateFilterCondition);
         Query query = entityManager.createNativeQuery(queryBuilderResult.getQuery());
         Set<Map.Entry<String, String>> entries = queryBuilderResult.getParameters().entrySet();
         for (Map.Entry<String, String> e : entries) {
             query.setParameter(e.getKey(), e.getValue());
         }
-        List<Object> resultList = query.setFirstResult((page - 1) * size)
+        List<Object> resultList = query.setFirstResult((pageIndex - 1) * size)
                 .setMaxResults(size).getResultList();
         return getFilteredGiftCertificatesFromResultList(resultList);
     }

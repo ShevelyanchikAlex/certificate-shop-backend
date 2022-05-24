@@ -60,20 +60,21 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Page<TagDto> findAll(Integer page, Integer size) {
-        page = PaginationUtil.correctPageIndex(page, size, tagRepository::countAll);
-        List<TagDto> tags = tagRepository.findAll(page, size)
+    public Page<TagDto> findAll(Integer pageIndex, Integer size) {
+        pageIndex = PaginationUtil.correctPageIndex(pageIndex, size, tagRepository::countAll);
+        List<TagDto> tags = tagRepository.findAll(pageIndex, size)
                 .stream().map(tagDtoConverter::convertDtoFromEntity)
                 .collect(Collectors.toList());
-        return new Page<>(page, size, tagRepository.countAll(), tags);
+        return new Page<>(pageIndex, size, tagRepository.countAll(), tags);
     }
 
     @Override
-    public Page<TagDto> findMostPopularTags(Integer page, Integer size) {
-        List<TagDto> tags = tagRepository.findMostPopularTags(page, size)
+    public Page<TagDto> findMostPopularTags(Integer pageIndex, Integer size) {
+        pageIndex = PaginationUtil.correctPageIndex(pageIndex, size, tagRepository::countAll);
+        List<TagDto> tags = tagRepository.findMostPopularTags(pageIndex, size)
                 .stream().map(tagDtoConverter::convertDtoFromEntity)
                 .collect(Collectors.toList());
-        return new Page<>(page, size, tagRepository.countAll(), tags);
+        return new Page<>(pageIndex, size, tagRepository.countAll(), tags);
     }
 
     @Override

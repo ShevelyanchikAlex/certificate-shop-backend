@@ -89,24 +89,24 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public Page<GiftCertificateDto> findAll(Integer page, Integer size) {
-        page = PaginationUtil.correctPageIndex(page, size, giftCertificateRepository::countAll);
-        List<GiftCertificateDto> giftCertificateDtoList = giftCertificateRepository.findAll(page, size)
+    public Page<GiftCertificateDto> findAll(Integer pageIndex, Integer size) {
+        pageIndex = PaginationUtil.correctPageIndex(pageIndex, size, giftCertificateRepository::countAll);
+        List<GiftCertificateDto> giftCertificateDtoList = giftCertificateRepository.findAll(pageIndex, size)
                 .stream().map(giftCertificateDtoConverter::convertDtoFromEntity)
                 .collect(Collectors.toList());
-        return new Page<>(page, size, tagRepository.countAll(), giftCertificateDtoList);
+        return new Page<>(pageIndex, size, tagRepository.countAll(), giftCertificateDtoList);
     }
 
     @Override
-    public Page<GiftCertificateDto> findWithFilter(Integer page, Integer size, GiftCertificateFilterCondition giftCertificateFilterCondition) {
+    public Page<GiftCertificateDto> findWithFilter(Integer pageIndex, Integer size, GiftCertificateFilterCondition giftCertificateFilterCondition) {
         if (!filterConditionValidator.validate(giftCertificateFilterCondition)) {
             throw new ServiceException("gift.certificate.filter.condition.validate.error");
         }
-        page = PaginationUtil.correctPageIndex(page, size, giftCertificateRepository::countAll);
-        List<GiftCertificateDto> giftCertificateDtoList = giftCertificateRepository.findWithFilter(page, size, giftCertificateFilterCondition)
+        pageIndex = PaginationUtil.correctPageIndex(pageIndex, size, giftCertificateRepository::countAll);
+        List<GiftCertificateDto> giftCertificateDtoList = giftCertificateRepository.findWithFilter(pageIndex, size, giftCertificateFilterCondition)
                 .stream().map(giftCertificateDtoConverter::convertDtoFromEntity)
                 .collect(Collectors.toList());
-        return new Page<>(page, size, tagRepository.countAll(), giftCertificateDtoList);
+        return new Page<>(pageIndex, size, tagRepository.countAll(), giftCertificateDtoList);
     }
 
     @Override

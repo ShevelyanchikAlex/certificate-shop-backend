@@ -36,20 +36,20 @@ public class GiftCertificateController {
     }
 
     @GetMapping(produces = "application/json")
-    public CollectionModel<GiftCertificateModel> findAll(@RequestParam(name = "page", defaultValue = "1") Integer page,
+    public CollectionModel<GiftCertificateModel> findAll(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                                          @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        Page<GiftCertificateDto> giftCertificatePage = giftCertificateService.findAll(page, size);
+        Page<GiftCertificateDto> giftCertificatePage = giftCertificateService.findAll(pageIndex, size);
         CollectionModel<GiftCertificateModel> collectionModel = giftCertificateAssembler.toCollectionModel(giftCertificatePage.getContent());
         return giftCertificateModelProcessor.process(giftCertificatePage, size, collectionModel);
     }
 
     @GetMapping("/filter")
-    public CollectionModel<GiftCertificateModel> findWithFilter(@RequestParam(name = "page", defaultValue = "1") Integer page,
+    public CollectionModel<GiftCertificateModel> findWithFilter(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                                                 @RequestParam(name = "size", defaultValue = "10") Integer size,
                                                                 @RequestBody GiftCertificateFilterCondition giftCertificateFilterCondition) {
-        Page<GiftCertificateDto> giftCertificatePage = giftCertificateService.findWithFilter(page, size, giftCertificateFilterCondition);
+        Page<GiftCertificateDto> giftCertificatePage = giftCertificateService.findWithFilter(pageIndex, size, giftCertificateFilterCondition);
         CollectionModel<GiftCertificateModel> collectionModel = giftCertificateAssembler.toCollectionModel(giftCertificatePage.getContent());
-        return giftCertificateModelProcessor.process(giftCertificatePage, size, collectionModel);
+        return giftCertificateModelProcessor.process(giftCertificatePage, size, giftCertificateFilterCondition, collectionModel);
     }
 
     @PatchMapping

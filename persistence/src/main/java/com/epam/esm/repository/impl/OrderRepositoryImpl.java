@@ -13,9 +13,8 @@ import java.util.Optional;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
-    private static final String FIND_ALL_ORDERS_QUERY = "SELECT order FROM Order order";
-    private static final String COUNT_ALL_ORDERS_QUERY = "SELECT COUNT(order) FROM Order order";
-
+    private static final String FIND_ALL_ORDERS_QUERY = "SELECT o FROM Order o";
+    private static final String COUNT_ALL_ORDERS_QUERY = "SELECT COUNT(o) FROM Order o";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -33,8 +32,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> findAll(Integer page, Integer size) {
-        return entityManager.createQuery(FIND_ALL_ORDERS_QUERY, Order.class).getResultList();
+    public List<Order> findAll(Integer pageIndex, Integer size) {
+        return entityManager.createQuery(FIND_ALL_ORDERS_QUERY, Order.class)
+                .setFirstResult((pageIndex - 1) * size)
+                .setMaxResults(size).getResultList();
     }
 
     @Override

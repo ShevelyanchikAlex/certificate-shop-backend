@@ -2,20 +2,27 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.CreateOrderDto;
 import com.epam.esm.dto.OrderDto;
+import com.epam.esm.hateoas.assembler.OrderModelAssembler;
+import com.epam.esm.hateoas.model.OrderModel;
+import com.epam.esm.hateoas.processor.OrderModelProcessor;
 import com.epam.esm.service.OrderService;
+import com.epam.esm.service.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
     private final OrderService orderService;
+    private final OrderModelAssembler orderModelAssembler;
+    private final OrderModelProcessor orderModelProcessor;
 
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, OrderModelAssembler orderModelAssembler, OrderModelProcessor orderModelProcessor) {
         this.orderService = orderService;
+        this.orderModelAssembler = orderModelAssembler;
+        this.orderModelProcessor = orderModelProcessor;
     }
 
     @PostMapping
@@ -24,9 +31,11 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderDto> findAll(@RequestParam(name = "page", defaultValue = "1") Integer page,
-                                  @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        return orderService.findAll(page, size);
+    public CollectionModel<OrderModel> findAll(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
+                                               @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        Page<OrderDto> orderPage = orderService.findAll(pageIndex, size);
+        CollectionModel<OrderModel> collectionModel = orderModelAssembler.toCollectionModel(orderPage.getContent());
+        return orderModelProcessor.process(orderPage, size, collectionModel);
     }
 
     @GetMapping("/{id}")
