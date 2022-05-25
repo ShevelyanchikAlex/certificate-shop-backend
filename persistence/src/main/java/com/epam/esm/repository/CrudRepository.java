@@ -45,11 +45,4 @@ public interface CrudRepository<T> {
      * @param id id of Entity
      */
     void delete(Long id);
-
-    /**
-     * Counts all Entity
-     *
-     * @return count of Entity
-     */
-    int countAll();
 }

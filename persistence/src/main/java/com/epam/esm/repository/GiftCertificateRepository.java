@@ -8,12 +8,12 @@ import java.util.List;
 /**
  * {@link GiftCertificateRepository} is an interface that contains all operations available for {@link GiftCertificate} of the API.
  */
-public interface GiftCertificateRepository extends CrudRepository<GiftCertificate> {
+public interface GiftCertificateRepository extends CrudRepository<GiftCertificate>, CounterRepository {
     /**
      * Finds GiftCertificates by FilterCondition
      *
-     * @param pageIndex Number of Page
-     * @param size Size of Page
+     * @param pageIndex                      Number of Page
+     * @param size                           Size of Page
      * @param giftCertificateFilterCondition Condition for Filtering
      * @return List of GiftCertificates
      */

@@ -3,7 +3,6 @@ package com.epam.esm.domain;
 import com.epam.esm.audit.AuditListener;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;

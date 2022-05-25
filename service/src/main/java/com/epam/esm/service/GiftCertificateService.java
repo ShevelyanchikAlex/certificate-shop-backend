@@ -4,8 +4,6 @@ import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.service.pagination.Page;
 
-import java.util.List;
-
 /**
  * {@link GiftCertificateService} is an interface that contains all operations available for {@link GiftCertificateDto} of the API.
  */
