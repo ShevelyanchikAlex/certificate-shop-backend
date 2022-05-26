@@ -30,8 +30,8 @@ public class OrderModelAssembler extends RepresentationModelAssemblerSupport<Ord
         orderModel.setId(entity.getId());
         orderModel.setCreateDate(entity.getCreateDate());
         orderModel.setTotalPrice(entity.getTotalPrice());
-        orderModel.setUser(userModelAssembler.toModel(entity.getUserDto()));
-        orderModel.setGiftCertificates(entity.getGiftCertificatesDto()
+        orderModel.setUser(userModelAssembler.toModel(entity.getUser()));
+        orderModel.setGiftCertificates(entity.getGiftCertificates()
                 .stream().map(giftCertificateModelAssembler::toModel).collect(Collectors.toList()));
         return orderModel;
     }
@@ -39,9 +39,7 @@ public class OrderModelAssembler extends RepresentationModelAssemblerSupport<Ord
     @Override
     public CollectionModel<OrderModel> toCollectionModel(Iterable<? extends OrderDto> entities) {
         List<OrderModel> orderModels = new ArrayList<>();
-        entities.forEach(orderDto -> {
-            orderModels.add(toModel(orderDto));
-        });
+        entities.forEach(orderDto -> orderModels.add(toModel(orderDto)));
         return CollectionModel.of(orderModels);
     }
 }

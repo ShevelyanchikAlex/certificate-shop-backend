@@ -15,6 +15,6 @@ public class OrderDto {
     private long id;
     private BigDecimal totalPrice;
     private LocalDateTime createDate;
-    private UserDto userDto;
-    private List<GiftCertificateDto> giftCertificatesDto;
+    private UserDto user;
+    private List<GiftCertificateDto> giftCertificates;
 }

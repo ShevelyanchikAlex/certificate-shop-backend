@@ -2,8 +2,8 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.domain.Tag;
 import com.epam.esm.dto.TagDto;
-import com.epam.esm.dto.converter.DtoConverter;
-import com.epam.esm.dto.converter.impl.TagConverter;
+import com.epam.esm.mapper.TagMapper;
+import com.epam.esm.mapper.TagMapperImpl;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.exception.RepositoryException;
 import com.epam.esm.service.TagService;
@@ -13,11 +13,17 @@ import com.epam.esm.service.validator.impl.TagValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {TagMapperImpl.class})
 class TagServiceImplTest {
     private static final List<Tag> TEST_TAGS = Arrays.asList(
             new Tag(1L, "#tag1"),
@@ -32,13 +38,18 @@ class TagServiceImplTest {
 
     private TagService tagService;
     private final TagRepository tagRepositoryMock = Mockito.mock(TagRepository.class);
-    private final DtoConverter<TagDto, Tag> tagDtoConverter = new TagConverter();
+    private final TagMapper tagMapper;
     private final TagValidator tagValidator = new TagValidator();
     private final IdValidator idValidator = new IdValidator();
 
+    @Autowired
+    TagServiceImplTest(TagMapper tagMapper) {
+        this.tagMapper = tagMapper;
+    }
+
     @BeforeEach
     public void setUp() {
-        tagService = new TagServiceImpl(tagRepositoryMock, tagDtoConverter, tagValidator, idValidator);
+        tagService = new TagServiceImpl(tagRepositoryMock, tagMapper, tagValidator, idValidator);
     }
 
     @Test

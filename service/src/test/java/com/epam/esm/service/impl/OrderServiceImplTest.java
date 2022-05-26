@@ -6,11 +6,7 @@ import com.epam.esm.domain.User;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.UserDto;
-import com.epam.esm.dto.converter.DtoConverter;
-import com.epam.esm.dto.converter.impl.GiftCertificateConverter;
-import com.epam.esm.dto.converter.impl.OrderConverter;
-import com.epam.esm.dto.converter.impl.TagConverter;
-import com.epam.esm.dto.converter.impl.UserConverter;
+import com.epam.esm.mapper.*;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.repository.UserRepository;
@@ -20,13 +16,19 @@ import com.epam.esm.service.validator.impl.IdValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {OrderMapperImpl.class, UserMapperImpl.class, GiftCertificateMapperImpl.class, TagMapperImpl.class})
 class OrderServiceImplTest {
     private static final List<User> TEST_USERS = List.of(
             new User(1L, "User first", Collections.emptyList()),
@@ -69,14 +71,18 @@ class OrderServiceImplTest {
     private final OrderRepository orderRepositoryMock = Mockito.mock(OrderRepository.class);
     private final GiftCertificateRepository giftCertificateRepository = Mockito.mock(GiftCertificateRepository.class);
     private final UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
-    private final DtoConverter<OrderDto, Order> orderDtoConverterMock = new OrderConverter(
-            new GiftCertificateConverter(new TagConverter()), new UserConverter());
+    private final OrderMapper orderMapper;
     private final IdValidator idValidator = new IdValidator();
+
+    @Autowired
+    OrderServiceImplTest(OrderMapper orderMapper, UserMapper userMapper, GiftCertificateMapper giftCertificateMapper, TagMapper tagMapper) {
+        this.orderMapper = orderMapper;
+    }
 
     @BeforeEach
     public void setUp() {
         orderService = new OrderServiceImpl(orderRepositoryMock, giftCertificateRepository,
-                userRepositoryMock, orderDtoConverterMock, idValidator);
+                userRepositoryMock, orderMapper, idValidator);
     }
 
     @Test
@@ -85,12 +91,12 @@ class OrderServiceImplTest {
         Mockito.when(userRepositoryMock.findById(1L)).thenReturn(TEST_USERS.get(0));
         Mockito.when(giftCertificateRepository.findById(1L)).thenReturn(TEST_GIFT_CERTIFICATES.get(0));
         Mockito.when(orderRepositoryMock.save(TEST_ORDERS.get(0))).thenReturn(TEST_ORDERS.get(0));
-        UserDto expectedUserDto = TEST_ORDERS_DTO.get(0).getUserDto();
-        GiftCertificateDto expectedGiftCertificate = TEST_ORDERS_DTO.get(0).getGiftCertificatesDto().get(0);
+        UserDto expectedUserDto = TEST_ORDERS_DTO.get(0).getUser();
+        GiftCertificateDto expectedGiftCertificate = TEST_ORDERS_DTO.get(0).getGiftCertificates().get(0);
         //when
         OrderDto orderDto = orderService.save(1L, List.of(1L));
-        UserDto actualUser = orderDto.getUserDto();
-        GiftCertificateDto actualGiftCertificate = orderDto.getGiftCertificatesDto().get(0);
+        UserDto actualUser = orderDto.getUser();
+        GiftCertificateDto actualGiftCertificate = orderDto.getGiftCertificates().get(0);
         //then
         Assertions.assertEquals(expectedUserDto, actualUser);
         Assertions.assertEquals(expectedGiftCertificate, actualGiftCertificate);

@@ -40,9 +40,7 @@ public class GiftCertificateModelAssembler extends RepresentationModelAssemblerS
     @Override
     public CollectionModel<GiftCertificateModel> toCollectionModel(Iterable<? extends GiftCertificateDto> entities) {
         List<GiftCertificateModel> giftCertificateModels = new ArrayList<>();
-        entities.forEach(certificateDto -> {
-            giftCertificateModels.add(toModel(certificateDto));
-        });
+        entities.forEach(certificateDto -> giftCertificateModels.add(toModel(certificateDto)));
         return CollectionModel.of(giftCertificateModels);
     }
 }

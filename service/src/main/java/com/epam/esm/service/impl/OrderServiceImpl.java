@@ -4,7 +4,7 @@ import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Order;
 import com.epam.esm.domain.User;
 import com.epam.esm.dto.OrderDto;
-import com.epam.esm.dto.converter.DtoConverter;
+import com.epam.esm.mapper.OrderMapper;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.repository.UserRepository;
@@ -28,15 +28,16 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final GiftCertificateRepository certificateRepository;
     private final UserRepository userRepository;
-    private final DtoConverter<OrderDto, Order> orderDtoOrderDtoConverter;
+    private final OrderMapper orderMapper;
     private final IdValidator idValidator;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, GiftCertificateRepository certificateRepository, UserRepository userRepository, DtoConverter<OrderDto, Order> orderDtoOrderDtoConverter, IdValidator idValidator) {
+    public OrderServiceImpl(OrderRepository orderRepository, GiftCertificateRepository certificateRepository, UserRepository userRepository,
+                            OrderMapper orderMapper, IdValidator idValidator) {
         this.orderRepository = orderRepository;
         this.certificateRepository = certificateRepository;
         this.userRepository = userRepository;
-        this.orderDtoOrderDtoConverter = orderDtoOrderDtoConverter;
+        this.orderMapper = orderMapper;
         this.idValidator = idValidator;
     }
 
@@ -59,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
         order.setUser(user);
         order.setTotalPrice(totalPrice);
         orderRepository.save(order);
-        return orderDtoOrderDtoConverter.convertDtoFromEntity(order);
+        return orderMapper.toDto(order);
     }
 
     @Override
@@ -69,14 +70,15 @@ public class OrderServiceImpl implements OrderService {
         }
         Order order = Optional.ofNullable(orderRepository.findById(id))
                 .orElseThrow(() -> new ServiceException("order.not.found", id));
-        return orderDtoOrderDtoConverter.convertDtoFromEntity(order);
+        return orderMapper.toDto(order);
     }
 
     @Override
     public Page<OrderDto> findAll(Integer pageIndex, Integer size) {
         pageIndex = PaginationUtil.correctPageIndex(pageIndex, size, orderRepository::countAll);
         List<OrderDto> orderDtoList = orderRepository.findAll(pageIndex, size)
-                .stream().map(orderDtoOrderDtoConverter::convertDtoFromEntity).collect(Collectors.toList());
+                .stream().map(orderMapper::toDto)
+                .collect(Collectors.toList());
         return new Page<>(pageIndex, size, orderRepository.countAll(), orderDtoList);
     }
 }

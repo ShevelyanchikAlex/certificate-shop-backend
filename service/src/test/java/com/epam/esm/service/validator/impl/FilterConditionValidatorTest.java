@@ -40,7 +40,7 @@ class FilterConditionValidatorTest {
     @Test
     void testInvalidDescription() {
         //given
-        giftCertificateFilterCondition.setDescription("Desc_$#@");
+        giftCertificateFilterCondition.setDescription("Desc$#@");
         //when
         boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
         //then

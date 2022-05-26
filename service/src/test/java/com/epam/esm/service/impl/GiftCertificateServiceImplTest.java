@@ -4,9 +4,10 @@ import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.TagDto;
-import com.epam.esm.dto.converter.DtoConverter;
-import com.epam.esm.dto.converter.impl.GiftCertificateConverter;
-import com.epam.esm.dto.converter.impl.TagConverter;
+import com.epam.esm.mapper.GiftCertificateMapper;
+import com.epam.esm.mapper.GiftCertificateMapperImpl;
+import com.epam.esm.mapper.TagMapper;
+import com.epam.esm.mapper.TagMapperImpl;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
@@ -21,7 +22,11 @@ import com.epam.esm.service.validator.impl.UpdateGiftCertificateValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -29,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {GiftCertificateMapperImpl.class, TagMapperImpl.class})
 class GiftCertificateServiceImplTest {
     private static final List<Tag> TEST_TAGS = Arrays.asList(
             new Tag(1L, "#tag1"),
@@ -74,17 +81,22 @@ class GiftCertificateServiceImplTest {
     private GiftCertificateService giftCertificateService;
     private final GiftCertificateRepository giftCertificateRepositoryMock = Mockito.mock(GiftCertificateRepository.class);
     private final TagRepository tagRepositoryMock = Mockito.mock(TagRepository.class);
-    private final DtoConverter<GiftCertificateDto, GiftCertificate> giftCertificateDtoConverter = new GiftCertificateConverter(new TagConverter());
+    private final GiftCertificateMapper giftCertificateMapper;
     private final GiftCertificateValidator giftCertificateValidator = new GiftCertificateValidator();
     private final IdValidator idValidator = new IdValidator();
     private final UpdateGiftCertificateValidator updateGiftCertificateValidator = new UpdateGiftCertificateValidator();
     private final FilterConditionValidator filterConditionValidator = new FilterConditionValidator();
 
+    @Autowired
+    GiftCertificateServiceImplTest(TagMapper tagMapper, GiftCertificateMapper giftCertificateMapper) {
+        this.giftCertificateMapper = giftCertificateMapper;
+    }
+
     @BeforeEach
     public void setUp() {
         giftCertificateService = new GiftCertificateServiceImpl(
                 giftCertificateRepositoryMock, tagRepositoryMock,
-                giftCertificateDtoConverter, giftCertificateValidator, idValidator,
+                giftCertificateMapper, giftCertificateValidator, idValidator,
                 updateGiftCertificateValidator, filterConditionValidator);
     }
 

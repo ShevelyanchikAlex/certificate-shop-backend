@@ -28,9 +28,7 @@ public class TagModelAssembler extends RepresentationModelAssemblerSupport<TagDt
     @Override
     public CollectionModel<TagModel> toCollectionModel(Iterable<? extends TagDto> entities) {
         List<TagModel> tagModels = new ArrayList<>();
-        entities.forEach(tagDto -> {
-            tagModels.add(toModel(tagDto));
-        });
+        entities.forEach(tagDto -> tagModels.add(toModel(tagDto)));
         return CollectionModel.of(tagModels);
     }
 }

@@ -1,17 +1,16 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.domain.Order;
 import com.epam.esm.domain.User;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.UserDto;
-import com.epam.esm.dto.converter.DtoConverter;
+import com.epam.esm.mapper.OrderMapper;
+import com.epam.esm.mapper.UserMapper;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.pagination.Page;
 import com.epam.esm.service.validator.impl.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,17 +20,16 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final DtoConverter<UserDto, User> userDtoUserDtoConverter;
-    private final DtoConverter<OrderDto, Order> orderDtoOrderDtoConverter;
+    private final UserMapper userMapper;
+    private final OrderMapper orderMapper;
     private final IdValidator idValidator;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           @Qualifier("userDtoConverter") DtoConverter<UserDto, User> userDtoUserDtoConverter,
-                           @Qualifier("orderDtoConverter") DtoConverter<OrderDto, Order> orderDtoOrderDtoConverter, IdValidator idValidator) {
+                           UserMapper userMapper, OrderMapper orderMapper, IdValidator idValidator) {
         this.userRepository = userRepository;
-        this.userDtoUserDtoConverter = userDtoUserDtoConverter;
-        this.orderDtoOrderDtoConverter = orderDtoOrderDtoConverter;
+        this.userMapper = userMapper;
+        this.orderMapper = orderMapper;
         this.idValidator = idValidator;
     }
 
@@ -42,13 +40,15 @@ public class UserServiceImpl implements UserService {
         }
         User user = Optional.ofNullable(userRepository.findById(id))
                 .orElseThrow(() -> new ServiceException("user.not.found", id));
-        return userDtoUserDtoConverter.convertDtoFromEntity(user);
+        return userMapper.toDto(user);
     }
 
     @Override
     public Page<UserDto> findAll(Integer pageIndex, Integer size) {
         List<UserDto> users = userRepository.findAll(pageIndex, size)
-                .stream().map(userDtoUserDtoConverter::convertDtoFromEntity).collect(Collectors.toList());
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
         return new Page<>(pageIndex, size, userRepository.countAll(), users);
     }
 
@@ -58,7 +58,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ServiceException("user.not.found", id));
         List<OrderDto> orders = user.getOrders()
                 .stream().skip((long) (pageIndex - 1) * size).limit(size)
-                .map(orderDtoOrderDtoConverter::convertDtoFromEntity).collect(Collectors.toList());
+                .map(orderMapper::toDto)
+                .collect(Collectors.toList());
         return new Page<>(pageIndex, size, orders.size(), orders);
     }
 }

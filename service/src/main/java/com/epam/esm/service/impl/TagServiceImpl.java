@@ -2,7 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.domain.Tag;
 import com.epam.esm.dto.TagDto;
-import com.epam.esm.dto.converter.DtoConverter;
+import com.epam.esm.mapper.TagMapper;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exception.ServiceException;
@@ -11,7 +11,6 @@ import com.epam.esm.service.pagination.PaginationUtil;
 import com.epam.esm.service.validator.impl.IdValidator;
 import com.epam.esm.service.validator.impl.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,16 +23,15 @@ import java.util.stream.Collectors;
 @Service
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
-    private final DtoConverter<TagDto, Tag> tagDtoConverter;
+    private final TagMapper tagMapper;
     private final TagValidator tagValidator;
     private final IdValidator idValidator;
 
     @Autowired
-    public TagServiceImpl(TagRepository tagRepository,
-                          @Qualifier("tagDtoConverter") DtoConverter<TagDto, Tag> tagDtoConverter,
+    public TagServiceImpl(TagRepository tagRepository, TagMapper tagMapper,
                           TagValidator tagValidator, IdValidator idValidator) {
         this.tagRepository = tagRepository;
-        this.tagDtoConverter = tagDtoConverter;
+        this.tagMapper = tagMapper;
         this.tagValidator = tagValidator;
         this.idValidator = idValidator;
     }
@@ -46,7 +44,7 @@ public class TagServiceImpl implements TagService {
         if (tagRepository.existsTagByName(tagDto.getName())) {
             throw new ServiceException("resource.already.exist", "TAG");
         }
-        return tagDtoConverter.convertDtoFromEntity(tagRepository.save(tagDtoConverter.convertDtoToEntity(tagDto)));
+        return tagMapper.toDto(tagRepository.save(tagMapper.toEntity(tagDto)));
     }
 
     @Override
@@ -55,7 +53,7 @@ public class TagServiceImpl implements TagService {
             throw new ServiceException("request.validate.error", id);
         }
         Optional<Tag> tagOptional = Optional.ofNullable(tagRepository.findById(id));
-        return tagOptional.map(tagDtoConverter::convertDtoFromEntity)
+        return tagOptional.map(tagMapper::toDto)
                 .orElseThrow(() -> new ServiceException("tag.not.found", id));
     }
 
@@ -63,7 +61,7 @@ public class TagServiceImpl implements TagService {
     public Page<TagDto> findAll(Integer pageIndex, Integer size) {
         pageIndex = PaginationUtil.correctPageIndex(pageIndex, size, tagRepository::countAll);
         List<TagDto> tags = tagRepository.findAll(pageIndex, size)
-                .stream().map(tagDtoConverter::convertDtoFromEntity)
+                .stream().map(tagMapper::toDto)
                 .collect(Collectors.toList());
         return new Page<>(pageIndex, size, tagRepository.countAll(), tags);
     }
@@ -72,7 +70,7 @@ public class TagServiceImpl implements TagService {
     public Page<TagDto> findMostPopularTags(Integer pageIndex, Integer size) {
         pageIndex = PaginationUtil.correctPageIndex(pageIndex, size, tagRepository::countAll);
         List<TagDto> tags = tagRepository.findMostPopularTags(pageIndex, size)
-                .stream().map(tagDtoConverter::convertDtoFromEntity)
+                .stream().map(tagMapper::toDto)
                 .collect(Collectors.toList());
         return new Page<>(pageIndex, size, tagRepository.countAll(), tags);
     }

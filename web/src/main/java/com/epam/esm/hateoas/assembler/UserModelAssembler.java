@@ -28,9 +28,7 @@ public class UserModelAssembler extends RepresentationModelAssemblerSupport<User
     @Override
     public CollectionModel<UserModel> toCollectionModel(Iterable<? extends UserDto> entities) {
         List<UserModel> userModels = new ArrayList<>();
-        entities.forEach(tagDto -> {
-            userModels.add(toModel(tagDto));
-        });
+        entities.forEach(tagDto -> userModels.add(toModel(tagDto)));
         return CollectionModel.of(userModels);
     }
 }

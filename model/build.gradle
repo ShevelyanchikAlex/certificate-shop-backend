@@ -9,7 +9,10 @@ repositories {
     mavenCentral()
 }
 
-dependencies {}
+dependencies {
+    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+}
 
 test {
     useJUnitPlatform()
