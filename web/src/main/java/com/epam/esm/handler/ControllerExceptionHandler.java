@@ -20,27 +20,29 @@ import java.util.concurrent.ConcurrentHashMap;
 @ControllerAdvice
 public class ControllerExceptionHandler {
     private static final String BAD_REQUEST_MESSAGE_KEY = "bad.request";
-    private final Map<String, String> exceptionCodeMap = new ConcurrentHashMap<>() {
-        {
-            this.put("operation.not.supported", HttpErrorCode.OPERATION_NOT_SUPPORTED_CODE);
-            this.put("gift.certificate.not.found", HttpErrorCode.GIFT_CERTIFICATE_NOT_FOUND_CODE);
-            this.put("tag.not.found", HttpErrorCode.TAG_NOT_FOUND_CODE);
-            this.put("resource.already.exist", HttpErrorCode.RESOURCE_ALREADY_EXIST_CODE);
-            this.put("request.validate.error", HttpErrorCode.REQUEST_VALIDATE_ERROR_CODE);
-            this.put("gift.certificate.validate.error", HttpErrorCode.GIFT_CERTIFICATE_VALIDATE_ERROR_CODE);
-            this.put("tag.validate.error", HttpErrorCode.TAG_VALIDATE_ERROR_CODE);
-            this.put("gift.certificate.update.condition.error", HttpErrorCode.UPDATE_CONDITION_VALIDATE_ERROR_CODE);
-            this.put("gift.certificate.filter.condition.validate.error", HttpErrorCode.FILTER_CONDITION_VALIDATE_ERROR_CODE);
-            this.put("order.not.found", HttpErrorCode.ORDER_NOT_FOUND_CODE);
-            this.put("user.not.found", HttpErrorCode.USER_NOT_FOUND_CODE);
-            this.put("bad.request", HttpErrorCode.BAD_REQUEST_CODE);
-        }
-    };
-
+    private final Map<String, String> exceptionCodeMap;
     private final MessageSource messageSource;
 
     public ControllerExceptionHandler(MessageSource messageSource) {
         this.messageSource = messageSource;
+        this.exceptionCodeMap = initExceptionCodeMap();
+    }
+
+    private Map<String, String> initExceptionCodeMap() {
+        Map<String, String> codeMap = new ConcurrentHashMap<>();
+        codeMap.put("operation.not.supported", HttpErrorCode.OPERATION_NOT_SUPPORTED_CODE);
+        codeMap.put("gift.certificate.not.found", HttpErrorCode.GIFT_CERTIFICATE_NOT_FOUND_CODE);
+        codeMap.put("tag.not.found", HttpErrorCode.TAG_NOT_FOUND_CODE);
+        codeMap.put("resource.already.exist", HttpErrorCode.RESOURCE_ALREADY_EXIST_CODE);
+        codeMap.put("request.validate.error", HttpErrorCode.REQUEST_VALIDATE_ERROR_CODE);
+        codeMap.put("gift.certificate.validate.error", HttpErrorCode.GIFT_CERTIFICATE_VALIDATE_ERROR_CODE);
+        codeMap.put("tag.validate.error", HttpErrorCode.TAG_VALIDATE_ERROR_CODE);
+        codeMap.put("gift.certificate.update.condition.error", HttpErrorCode.UPDATE_CONDITION_VALIDATE_ERROR_CODE);
+        codeMap.put("gift.certificate.filter.condition.validate.error", HttpErrorCode.FILTER_CONDITION_VALIDATE_ERROR_CODE);
+        codeMap.put("order.not.found", HttpErrorCode.ORDER_NOT_FOUND_CODE);
+        codeMap.put("user.not.found", HttpErrorCode.USER_NOT_FOUND_CODE);
+        codeMap.put(BAD_REQUEST_MESSAGE_KEY, HttpErrorCode.BAD_REQUEST_CODE);
+        return codeMap;
     }
 
     @ExceptionHandler(ServiceException.class)

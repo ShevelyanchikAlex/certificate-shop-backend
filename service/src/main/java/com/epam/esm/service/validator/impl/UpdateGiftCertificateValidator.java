@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
 /**
@@ -57,7 +58,7 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
         if (duration == null) {
             return true;
         }
-        Predicate<Integer> giftCertificateDurationPredicate = num -> num > MIN_VALUE;
+        IntPredicate giftCertificateDurationPredicate = num -> num > MIN_VALUE;
         return giftCertificateDurationPredicate.test(duration);
     }
 

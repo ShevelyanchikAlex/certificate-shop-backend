@@ -67,7 +67,6 @@ class GiftCertificateRepositoryImplTest {
         GiftCertificateFilterCondition giftCertificateFilterCondition = new GiftCertificateFilterCondition();
         giftCertificateFilterCondition.setDescription("Swim");
         giftCertificateFilterCondition.setSortDirection(SortDirection.DESC);
-        int expected = 1;
         //when
         List<GiftCertificate> actual = giftCertificateRepository.findWithFilter(1, 10, giftCertificateFilterCondition)
                 .stream().distinct().collect(Collectors.toList());

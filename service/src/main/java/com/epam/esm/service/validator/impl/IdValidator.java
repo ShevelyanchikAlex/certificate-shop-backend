@@ -4,7 +4,7 @@ import com.epam.esm.service.validator.Validator;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.LongPredicate;
 
 /**
  * Implemented {@link Validator} for {@link Long}
@@ -35,7 +35,7 @@ public class IdValidator implements Validator<Long> {
         if (id == null) {
             return false;
         }
-        Predicate<Long> idPredicate = checkedId -> checkedId > MIN_ID && checkedId < MAX_ID;
+        LongPredicate idPredicate = checkedId -> checkedId > MIN_ID && checkedId < MAX_ID;
         return idPredicate.test(id);
     }
 }
