@@ -2,7 +2,7 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.repository.GiftCertificateRepository;
-import com.epam.esm.repository.config.DevPersistenceConfig;
+import com.epam.esm.repository.config.TestConfig;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.repository.filter.condition.SortDirection;
 import org.junit.jupiter.api.Assertions;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Transactional
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = DevPersistenceConfig.class)
+@SpringBootTest(classes = TestConfig.class)
 @ActiveProfiles("dev")
 class GiftCertificateRepositoryImplTest {
     private static final LocalDateTime DATE_TIME = LocalDateTime.of(2022, 5, 3, 4, 30);

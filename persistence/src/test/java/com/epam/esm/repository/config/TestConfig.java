@@ -16,11 +16,11 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 @PropertySource("classpath:application-dev.properties")
 @SpringBootApplication(scanBasePackages = "com.epam.esm")
-public class DevPersistenceConfig {
+public class TestConfig {
     private final DataSource dataSource;
 
     @Autowired
-    public DevPersistenceConfig(DataSource dataSource) {
+    public TestConfig(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 

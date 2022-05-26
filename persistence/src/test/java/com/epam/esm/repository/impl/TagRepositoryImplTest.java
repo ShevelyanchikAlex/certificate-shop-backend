@@ -2,7 +2,7 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.domain.Tag;
 import com.epam.esm.repository.TagRepository;
-import com.epam.esm.repository.config.DevPersistenceConfig;
+import com.epam.esm.repository.config.TestConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-@SpringBootTest(classes = DevPersistenceConfig.class)
+@SpringBootTest(classes = TestConfig.class)
 @ActiveProfiles("dev")
 class TagRepositoryImplTest {
     @Autowired
