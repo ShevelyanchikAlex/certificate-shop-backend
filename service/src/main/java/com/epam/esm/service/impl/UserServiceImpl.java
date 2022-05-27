@@ -10,7 +10,7 @@ import com.epam.esm.service.UserService;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.pagination.Page;
 import com.epam.esm.service.validator.impl.IdValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,20 +18,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final OrderMapper orderMapper;
     private final IdValidator idValidator;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository,
-                           UserMapper userMapper, OrderMapper orderMapper, IdValidator idValidator) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-        this.orderMapper = orderMapper;
-        this.idValidator = idValidator;
-    }
 
     @Override
     public UserDto findById(Long id) {

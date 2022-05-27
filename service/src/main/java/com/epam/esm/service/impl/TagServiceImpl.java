@@ -10,7 +10,7 @@ import com.epam.esm.service.pagination.Page;
 import com.epam.esm.service.pagination.PaginationUtil;
 import com.epam.esm.service.validator.impl.IdValidator;
 import com.epam.esm.service.validator.impl.TagValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,20 +21,12 @@ import java.util.stream.Collectors;
  * Implemented {@link TagService}
  */
 @Service
+@RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final TagMapper tagMapper;
     private final TagValidator tagValidator;
     private final IdValidator idValidator;
-
-    @Autowired
-    public TagServiceImpl(TagRepository tagRepository, TagMapper tagMapper,
-                          TagValidator tagValidator, IdValidator idValidator) {
-        this.tagRepository = tagRepository;
-        this.tagMapper = tagMapper;
-        this.tagValidator = tagValidator;
-        this.idValidator = idValidator;
-    }
 
     @Override
     public TagDto save(TagDto tagDto) {

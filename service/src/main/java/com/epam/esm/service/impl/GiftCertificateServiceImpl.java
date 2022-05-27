@@ -16,7 +16,7 @@ import com.epam.esm.service.validator.impl.FilterConditionValidator;
 import com.epam.esm.service.validator.impl.GiftCertificateValidator;
 import com.epam.esm.service.validator.impl.IdValidator;
 import com.epam.esm.service.validator.impl.UpdateGiftCertificateValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
  * Implemented {@link GiftCertificateService}
  */
 @Service
+@RequiredArgsConstructor
 public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateRepository giftCertificateRepository;
     private final TagRepository tagRepository;
@@ -37,19 +38,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final IdValidator idValidator;
     private final UpdateGiftCertificateValidator updateGiftCertificateValidator;
     private final FilterConditionValidator filterConditionValidator;
-
-    @Autowired
-    public GiftCertificateServiceImpl(GiftCertificateRepository giftCertificateRepository, TagRepository tagRepository,
-                                      GiftCertificateMapper giftCertificateMapper, GiftCertificateValidator giftCertificateValidator,
-                                      IdValidator idValidator, UpdateGiftCertificateValidator updateGiftCertificateValidator, FilterConditionValidator filterConditionValidator) {
-        this.giftCertificateRepository = giftCertificateRepository;
-        this.tagRepository = tagRepository;
-        this.giftCertificateMapper = giftCertificateMapper;
-        this.giftCertificateValidator = giftCertificateValidator;
-        this.idValidator = idValidator;
-        this.updateGiftCertificateValidator = updateGiftCertificateValidator;
-        this.filterConditionValidator = filterConditionValidator;
-    }
 
     @Override
     @Transactional
@@ -67,13 +55,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificate.setTags(fetchAssociatedTags(giftCertificate.getTags()));
         GiftCertificate savedGiftCertificate = giftCertificateRepository.save(giftCertificate);
         return giftCertificateMapper.toDto(savedGiftCertificate);
-    }
-
-    private List<Tag> fetchAssociatedTags(List<Tag> tags) {
-        return tags.stream()
-                .map(tag -> Optional.ofNullable(tagRepository.findByName(tag.getName()))
-                        .orElseGet(() -> tagRepository.save(tag)))
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -152,5 +133,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             throw new ServiceException("request.validate.error");
         }
         giftCertificateRepository.delete(id);
+    }
+
+    private List<Tag> fetchAssociatedTags(List<Tag> tags) {
+        return tags.stream()
+                .map(tag -> Optional.ofNullable(tagRepository.findByName(tag.getName()))
+                        .orElseGet(() -> tagRepository.save(tag)))
+                .collect(Collectors.toList());
     }
 }

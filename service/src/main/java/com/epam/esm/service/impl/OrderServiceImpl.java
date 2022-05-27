@@ -13,7 +13,7 @@ import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.pagination.Page;
 import com.epam.esm.service.pagination.PaginationUtil;
 import com.epam.esm.service.validator.impl.IdValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,22 +24,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final GiftCertificateRepository certificateRepository;
     private final UserRepository userRepository;
     private final OrderMapper orderMapper;
     private final IdValidator idValidator;
-
-    @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, GiftCertificateRepository certificateRepository, UserRepository userRepository,
-                            OrderMapper orderMapper, IdValidator idValidator) {
-        this.orderRepository = orderRepository;
-        this.certificateRepository = certificateRepository;
-        this.userRepository = userRepository;
-        this.orderMapper = orderMapper;
-        this.idValidator = idValidator;
-    }
 
     @Override
     public OrderDto save(Long userId, List<Long> giftCertificatesId) {

@@ -7,23 +7,17 @@ import com.epam.esm.hateoas.processor.GiftCertificateModelProcessor;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.pagination.Page;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/certificates")
 public class GiftCertificateController {
     private final GiftCertificateService giftCertificateService;
     private final GiftCertificateModelAssembler giftCertificateAssembler;
     private final GiftCertificateModelProcessor giftCertificateModelProcessor;
-
-    @Autowired
-    public GiftCertificateController(GiftCertificateService giftCertificateService, GiftCertificateModelAssembler giftCertificateAssembler, GiftCertificateModelProcessor giftCertificateModelProcessor) {
-        this.giftCertificateService = giftCertificateService;
-        this.giftCertificateAssembler = giftCertificateAssembler;
-        this.giftCertificateModelProcessor = giftCertificateModelProcessor;
-    }
 
     @PostMapping
     public GiftCertificateDto save(@RequestBody GiftCertificateDto giftCertificateDto) {

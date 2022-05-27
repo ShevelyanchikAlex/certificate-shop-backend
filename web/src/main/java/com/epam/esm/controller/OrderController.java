@@ -7,23 +7,17 @@ import com.epam.esm.hateoas.model.OrderModel;
 import com.epam.esm.hateoas.processor.OrderModelProcessor;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.pagination.Page;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/orders")
 public class OrderController {
     private final OrderService orderService;
     private final OrderModelAssembler orderModelAssembler;
     private final OrderModelProcessor orderModelProcessor;
-
-    @Autowired
-    public OrderController(OrderService orderService, OrderModelAssembler orderModelAssembler, OrderModelProcessor orderModelProcessor) {
-        this.orderService = orderService;
-        this.orderModelAssembler = orderModelAssembler;
-        this.orderModelProcessor = orderModelProcessor;
-    }
 
     @PostMapping
     public OrderDto save(@RequestBody CreateOrderDto createOrderDto) {

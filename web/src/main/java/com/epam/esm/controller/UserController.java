@@ -10,11 +10,12 @@ import com.epam.esm.hateoas.processor.OrderModelProcessor;
 import com.epam.esm.hateoas.processor.UserModelProcessor;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.pagination.Page;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
@@ -22,15 +23,6 @@ public class UserController {
     private final UserModelProcessor userModelProcessor;
     private final OrderModelAssembler orderModelAssembler;
     private final OrderModelProcessor orderModelProcessor;
-
-    @Autowired
-    public UserController(UserService userService, UserModelAssembler userModelAssembler, UserModelProcessor userModelProcessor, OrderModelAssembler orderModelAssembler, OrderModelProcessor orderModelProcessor) {
-        this.userService = userService;
-        this.userModelAssembler = userModelAssembler;
-        this.userModelProcessor = userModelProcessor;
-        this.orderModelAssembler = orderModelAssembler;
-        this.orderModelProcessor = orderModelProcessor;
-    }
 
     @GetMapping("/{id}")
     public UserDto findById(@PathVariable Long id) {

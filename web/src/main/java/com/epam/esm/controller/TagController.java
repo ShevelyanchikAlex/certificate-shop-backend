@@ -6,23 +6,17 @@ import com.epam.esm.hateoas.model.TagModel;
 import com.epam.esm.hateoas.processor.TagModelProcessor;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.pagination.Page;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/tags")
 public class TagController {
     private final TagService tagService;
     private final TagModelAssembler tagModelAssembler;
     private final TagModelProcessor tagModelProcessor;
-
-    @Autowired
-    public TagController(TagService tagService, TagModelAssembler tagModelAssembler, TagModelProcessor tagModelProcessor) {
-        this.tagService = tagService;
-        this.tagModelAssembler = tagModelAssembler;
-        this.tagModelProcessor = tagModelProcessor;
-    }
 
     @PostMapping
     public TagDto save(@RequestBody TagDto tagDto) {
