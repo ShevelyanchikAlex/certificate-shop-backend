@@ -14,6 +14,7 @@ public class AuditListener {
     private static final String POST_UPDATE_OPERATION = "Post update";
     private static final String PRE_REMOVE_OPERATION = "Pre remove";
     private static final String POST_REMOVE_OPERATION = "Post remove";
+    private static final String ID = "id";
 
     private final Logger logger = LoggerFactory.getLogger(AuditListener.class);
 
@@ -48,6 +49,6 @@ public class AuditListener {
     }
 
     private String getMessage(String operation, AbstractEntity abstractEntity) {
-        return String.format("%s, %s, %tc", operation, abstractEntity.getClass(), new Date());
+        return String.format("%s, %s, %s: %d, %tc", operation, abstractEntity.getClass(), ID, abstractEntity.getId(), new Date());
     }
 }
