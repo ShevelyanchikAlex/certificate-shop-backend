@@ -1,6 +1,7 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.domain.Tag;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -19,11 +20,10 @@ public interface TagRepository extends CrudRepository<Tag>, CounterRepository {
     /**
      * Finds most popular Tags which are included in Certificates included in Orders
      *
-     * @param pageIndex Number of Page
-     * @param size      Size of Page
+     * @param pageable Pageable
      * @return List of Tags
      */
-    List<Tag> findMostPopularTags(Integer pageIndex, Integer size);
+    List<Tag> findMostPopularTags(Pageable pageable);
 
     /**
      * Checks if there is a Tag with name

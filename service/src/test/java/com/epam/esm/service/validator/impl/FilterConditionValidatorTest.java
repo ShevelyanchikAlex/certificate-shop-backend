@@ -20,7 +20,7 @@ class FilterConditionValidatorTest {
     @Test
     void testInvalidName() {
         //given
-        giftCertificateFilterCondition.setName("43243dsada");
+        giftCertificateFilterCondition.setName("43243dsada@#");
         //when
         boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
         //then

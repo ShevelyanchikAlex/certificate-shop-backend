@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +59,7 @@ class GiftCertificateRepositoryImplTest {
 
     @Test
     void findAll() {
-        Assertions.assertNotNull(giftCertificateRepository.findAll(1, 10));
+        Assertions.assertNotNull(giftCertificateRepository.findAll(PageRequest.of(1, 10)));
     }
 
     @Test
@@ -68,7 +69,7 @@ class GiftCertificateRepositoryImplTest {
         giftCertificateFilterCondition.setDescription("Swim");
         giftCertificateFilterCondition.setSortDirection(SortDirection.DESC);
         //when
-        List<GiftCertificate> actual = giftCertificateRepository.findWithFilter(1, 10, giftCertificateFilterCondition)
+        List<GiftCertificate> actual = giftCertificateRepository.findWithFilter(PageRequest.of(1, 10), giftCertificateFilterCondition)
                 .stream().distinct().collect(Collectors.toList());
         //then
         Assertions.assertNotNull(actual);
@@ -77,8 +78,8 @@ class GiftCertificateRepositoryImplTest {
     @Test
     void update() {
         //given
-        GiftCertificate expected = new GiftCertificate(1, "Nike", "DescriptionUpd upd", new BigDecimal(22), 2,
-                DATE_TIME, DATE_TIME, new ArrayList<>());
+        GiftCertificate expected = new GiftCertificate(1, "Nike", "DescriptionUpd upd", new BigDecimal(22),
+                2, DATE_TIME, DATE_TIME, new ArrayList<>());
         //when
         GiftCertificate actual = giftCertificateRepository.update(expected);
         //then

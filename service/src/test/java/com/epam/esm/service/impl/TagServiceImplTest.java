@@ -7,7 +7,6 @@ import com.epam.esm.mapper.TagMapperImpl;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.exception.RepositoryException;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.pagination.Page;
 import com.epam.esm.service.validator.impl.IdValidator;
 import com.epam.esm.service.validator.impl.TagValidator;
 import org.junit.jupiter.api.Assertions;
@@ -16,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -79,12 +80,11 @@ class TagServiceImplTest {
     @Test
     void findAll() {
         //given
-        Mockito.when(tagRepositoryMock.findAll(1, 3)).thenReturn(TEST_TAGS);
+        Mockito.when(tagRepositoryMock.findAll(PageRequest.of(1, 3))).thenReturn(TEST_TAGS);
         //when
-        Page<TagDto> actual = tagService.findAll(1, 3);
+        Page<TagDto> actual = tagService.findAll(PageRequest.of(1, 3));
         //then
-        Mockito.verify(tagRepositoryMock).findAll(1, 3);
-        Assertions.assertFalse(actual.hasNext());
+        Mockito.verify(tagRepositoryMock).findAll(PageRequest.of(1, 3));
     }
 
     @Test

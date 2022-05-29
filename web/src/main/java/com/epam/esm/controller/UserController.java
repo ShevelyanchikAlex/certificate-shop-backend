@@ -6,11 +6,11 @@ import com.epam.esm.hateoas.assembler.OrderModelAssembler;
 import com.epam.esm.hateoas.assembler.UserModelAssembler;
 import com.epam.esm.hateoas.model.OrderModel;
 import com.epam.esm.hateoas.model.UserModel;
-import com.epam.esm.hateoas.processor.OrderModelProcessor;
 import com.epam.esm.hateoas.processor.UserModelProcessor;
 import com.epam.esm.service.UserService;
-import com.epam.esm.service.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +22,6 @@ public class UserController {
     private final UserModelAssembler userModelAssembler;
     private final UserModelProcessor userModelProcessor;
     private final OrderModelAssembler orderModelAssembler;
-    private final OrderModelProcessor orderModelProcessor;
 
     @GetMapping("/{id}")
     public UserDto findById(@PathVariable Long id) {
@@ -32,17 +31,17 @@ public class UserController {
     @GetMapping
     public CollectionModel<UserModel> findAll(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                               @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        Page<UserDto> userPage = userService.findAll(pageIndex, size);
+        Page<UserDto> userPage = userService.findAll(PageRequest.of(pageIndex, size));
         CollectionModel<UserModel> collectionModel = userModelAssembler.toCollectionModel(userPage.getContent());
-        return userModelProcessor.process(userPage, size, collectionModel);
+        return userModelProcessor.process(userPage, collectionModel);
     }
 
     @GetMapping("/{id}/orders")
     public CollectionModel<OrderModel> findUserOrders(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                                       @RequestParam(name = "size", defaultValue = "10") Integer size,
                                                       @PathVariable Long id) {
-        Page<OrderDto> orderPage = userService.findUserOrders(pageIndex, size, id);
+        Page<OrderDto> orderPage = userService.findUserOrders(PageRequest.of(pageIndex, size), id);
         CollectionModel<OrderModel> collectionModel = orderModelAssembler.toCollectionModel(orderPage.getContent());
-        return orderModelProcessor.process(orderPage, size, collectionModel);
+        return userModelProcessor.process(orderPage, collectionModel, id);
     }
 }

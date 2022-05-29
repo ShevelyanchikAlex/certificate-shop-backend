@@ -1,5 +1,7 @@
 package com.epam.esm.repository;
 
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 /**
@@ -27,9 +29,10 @@ public interface CrudRepository<T> {
     /**
      * Finds all Entity
      *
+     * @param pageable Pageable
      * @return List of entity
      */
-    List<T> findAll(Integer pageIndex, Integer size);
+    List<T> findAll(Pageable pageable);
 
     /**
      * Updates Entity

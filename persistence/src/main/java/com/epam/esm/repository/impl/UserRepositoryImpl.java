@@ -3,6 +3,7 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.domain.User;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.repository.exception.RepositoryException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -13,6 +14,7 @@ import java.util.List;
 public class UserRepositoryImpl implements UserRepository {
     private static final String FIND_ALL_USERS_QUERY = "SELECT user FROM User user";
     private static final String COUNT_ALL_USERS_QUERY = "SELECT COUNT(user) FROM User user";
+    private static final int ONE_PAGE = 1;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -28,10 +30,10 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> findAll(Integer pageIndex, Integer size) {
+    public List<User> findAll(Pageable pageable) {
         return entityManager.createQuery(FIND_ALL_USERS_QUERY, User.class)
-                .setFirstResult((pageIndex - 1) * size)
-                .setMaxResults(size).getResultList();
+                .setFirstResult((pageable.getPageNumber() - ONE_PAGE) * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize()).getResultList();
     }
 
     @Override

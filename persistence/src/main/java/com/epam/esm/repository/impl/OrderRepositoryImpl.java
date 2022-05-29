@@ -3,6 +3,7 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.domain.Order;
 import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.repository.exception.RepositoryException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class OrderRepositoryImpl implements OrderRepository {
     private static final String FIND_ALL_ORDERS_QUERY = "SELECT o FROM Order o";
     private static final String COUNT_ALL_ORDERS_QUERY = "SELECT COUNT(o) FROM Order o";
+    private static final int ONE_PAGE = 1;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -32,10 +34,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> findAll(Integer pageIndex, Integer size) {
+    public List<Order> findAll(Pageable pageable) {
         return entityManager.createQuery(FIND_ALL_ORDERS_QUERY, Order.class)
-                .setFirstResult((pageIndex - 1) * size)
-                .setMaxResults(size).getResultList();
+                .setFirstResult((pageable.getPageNumber() - ONE_PAGE) * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize()).getResultList();
     }
 
     @Override

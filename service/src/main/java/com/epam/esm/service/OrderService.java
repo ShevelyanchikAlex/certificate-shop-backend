@@ -1,15 +1,16 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.OrderDto;
-import com.epam.esm.service.pagination.Page;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface OrderService {
     /**
-     *
      * Saves Order
-     * @param userId Id of User
+     *
+     * @param userId             Id of User
      * @param giftCertificatesId List with Ids of GiftCertificates
      * @return Saved OrderDto
      */
@@ -26,9 +27,8 @@ public interface OrderService {
     /**
      * Finds all OrdersDto
      *
-     * @param pageIndex Number of Page
-     * @param size Size of Page
+     * @param pageable Pageable
      * @return Page with OrdersDto
      */
-    Page<OrderDto> findAll(Integer pageIndex, Integer size);
+    Page<OrderDto> findAll(Pageable pageable);
 }

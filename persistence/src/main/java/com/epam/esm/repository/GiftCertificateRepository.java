@@ -2,6 +2,7 @@ package com.epam.esm.repository;
 
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -12,12 +13,11 @@ public interface GiftCertificateRepository extends CrudRepository<GiftCertificat
     /**
      * Finds GiftCertificates by FilterCondition
      *
-     * @param pageIndex                      Number of Page
-     * @param size                           Size of Page
+     * @param pageable                       Pageable
      * @param giftCertificateFilterCondition Condition for Filtering
      * @return List of GiftCertificates
      */
-    List<GiftCertificate> findWithFilter(Integer pageIndex, Integer size, GiftCertificateFilterCondition giftCertificateFilterCondition);
+    List<GiftCertificate> findWithFilter(Pageable pageable, GiftCertificateFilterCondition giftCertificateFilterCondition);
 
     /**
      * Checks if there is an GiftCertificate with name

@@ -11,7 +11,6 @@ import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.OrderService;
-import com.epam.esm.service.pagination.Page;
 import com.epam.esm.service.validator.impl.IdValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -115,9 +116,9 @@ class OrderServiceImplTest {
     @Test
     void findAll() {
         //given
-        Mockito.when(orderRepositoryMock.findAll(1, 10)).thenReturn(TEST_ORDERS);
+        Mockito.when(orderRepositoryMock.findAll(PageRequest.of(1, 10))).thenReturn(TEST_ORDERS);
         //when
-        Page<OrderDto> orders = orderService.findAll(1, 10);
+        Page<OrderDto> orders = orderService.findAll(PageRequest.of(1, 10));
         //then
         Assertions.assertEquals(TEST_ORDERS_DTO, orders.getContent());
     }

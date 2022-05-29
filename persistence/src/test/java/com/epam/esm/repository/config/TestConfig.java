@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 
 @Profile("dev")
 @EnableTransactionManagement
-@PropertySource("classpath:application-dev.properties")
+@PropertySource("classpath:application-dev.yml")
 @SpringBootApplication(scanBasePackages = "com.epam.esm")
 public class TestConfig {
     private final DataSource dataSource;

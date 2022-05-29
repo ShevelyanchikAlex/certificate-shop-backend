@@ -14,7 +14,6 @@ import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.repository.filter.condition.SortDirection;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.pagination.Page;
 import com.epam.esm.service.validator.impl.FilterConditionValidator;
 import com.epam.esm.service.validator.impl.GiftCertificateValidator;
 import com.epam.esm.service.validator.impl.IdValidator;
@@ -25,6 +24,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -37,6 +38,8 @@ import java.util.List;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {GiftCertificateMapperImpl.class, TagMapperImpl.class})
 class GiftCertificateServiceImplTest {
+    private static final LocalDateTime DATE_TIME = LocalDateTime.of(2022, 5, 3, 4, 30);
+
     private static final List<Tag> TEST_TAGS = Arrays.asList(
             new Tag(1L, "#tag1"),
             new Tag(2L, "#tag2"),
@@ -46,8 +49,6 @@ class GiftCertificateServiceImplTest {
             new TagDto(1L, "#tag1"),
             new TagDto(2L, "#tag2"),
             new TagDto(3L, "#tag3"));
-
-    private static final LocalDateTime DATE_TIME = LocalDateTime.of(2022, 5, 3, 4, 30);
 
     private static final List<Tag> GIFT_CERTIFICATE_1_TAGS = List.of(TEST_TAGS.get(0), TEST_TAGS.get(1));
     private static final List<Tag> GIFT_CERTIFICATE_2_TAGS = List.of(TEST_TAGS.get(1), TEST_TAGS.get(2));
@@ -131,11 +132,11 @@ class GiftCertificateServiceImplTest {
     @Test
     void findAll() {
         //given
-        Mockito.when(giftCertificateRepositoryMock.findAll(1, 10)).thenReturn(TEST_GIFT_CERTIFICATES);
+        Mockito.when(giftCertificateRepositoryMock.findAll(PageRequest.of(1, 10))).thenReturn(TEST_GIFT_CERTIFICATES);
         //when
-        Page<GiftCertificateDto> actual = giftCertificateService.findAll(1, 10);
+        Page<GiftCertificateDto> actual = giftCertificateService.findAll(PageRequest.of(1, 10));
         //then
-        Mockito.verify(giftCertificateRepositoryMock).findAll(1, 10);
+        Mockito.verify(giftCertificateRepositoryMock).findAll(PageRequest.of(1, 10));
         Assertions.assertFalse(actual.hasNext());
     }
 
@@ -145,11 +146,11 @@ class GiftCertificateServiceImplTest {
         GiftCertificateFilterCondition giftCertificateFilterCondition = new GiftCertificateFilterCondition();
         giftCertificateFilterCondition.setDescription("Description");
         giftCertificateFilterCondition.setSortDirection(SortDirection.ASC);
-        Mockito.when(giftCertificateRepositoryMock.findWithFilter(1, 10, giftCertificateFilterCondition)).thenReturn(TEST_GIFT_CERTIFICATES);
+        Mockito.when(giftCertificateRepositoryMock.findWithFilter(PageRequest.of(1, 10), giftCertificateFilterCondition)).thenReturn(TEST_GIFT_CERTIFICATES);
         //when
-        Page<GiftCertificateDto> actual = giftCertificateService.findWithFilter(1, 10, giftCertificateFilterCondition);
+        Page<GiftCertificateDto> actual = giftCertificateService.findWithFilter(PageRequest.of(1, 10), giftCertificateFilterCondition);
         //then
-        Mockito.verify(giftCertificateRepositoryMock).findWithFilter(1, 10, giftCertificateFilterCondition);
+        Mockito.verify(giftCertificateRepositoryMock).findWithFilter(PageRequest.of(1, 10), giftCertificateFilterCondition);
         Assertions.assertFalse(actual.hasNext());
     }
 

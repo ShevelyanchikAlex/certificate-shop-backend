@@ -10,13 +10,14 @@ import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.repository.filter.condition.GiftCertificateUpdateCondition;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.pagination.Page;
-import com.epam.esm.service.pagination.PaginationUtil;
 import com.epam.esm.service.validator.impl.FilterConditionValidator;
 import com.epam.esm.service.validator.impl.GiftCertificateValidator;
 import com.epam.esm.service.validator.impl.IdValidator;
 import com.epam.esm.service.validator.impl.UpdateGiftCertificateValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,24 +69,22 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public Page<GiftCertificateDto> findAll(Integer pageIndex, Integer size) {
-        pageIndex = PaginationUtil.correctPageIndex(pageIndex, size, giftCertificateRepository::countAll);
-        List<GiftCertificateDto> giftCertificateDtoList = giftCertificateRepository.findAll(pageIndex, size)
+    public Page<GiftCertificateDto> findAll(Pageable pageable) {
+        List<GiftCertificateDto> giftCertificateDtoList = giftCertificateRepository.findAll(pageable)
                 .stream().map(giftCertificateMapper::toDto)
                 .collect(Collectors.toList());
-        return new Page<>(pageIndex, size, tagRepository.countAll(), giftCertificateDtoList);
+        return new PageImpl<>(giftCertificateDtoList, pageable, giftCertificateRepository.countAll());
     }
 
     @Override
-    public Page<GiftCertificateDto> findWithFilter(Integer pageIndex, Integer size, GiftCertificateFilterCondition giftCertificateFilterCondition) {
+    public Page<GiftCertificateDto> findWithFilter(Pageable pageable, GiftCertificateFilterCondition giftCertificateFilterCondition) {
         if (!filterConditionValidator.validate(giftCertificateFilterCondition)) {
             throw new ServiceException("gift.certificate.filter.condition.validate.error");
         }
-        pageIndex = PaginationUtil.correctPageIndex(pageIndex, size, giftCertificateRepository::countAll);
-        List<GiftCertificateDto> giftCertificateDtoList = giftCertificateRepository.findWithFilter(pageIndex, size, giftCertificateFilterCondition)
+        List<GiftCertificateDto> giftCertificateDtoList = giftCertificateRepository.findWithFilter(pageable, giftCertificateFilterCondition)
                 .stream().map(giftCertificateMapper::toDto)
                 .collect(Collectors.toList());
-        return new Page<>(pageIndex, size, tagRepository.countAll(), giftCertificateDtoList);
+        return new PageImpl<>(giftCertificateDtoList, pageable, giftCertificateRepository.countAll());
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.epam.esm.repository.filter.FilterQueryBuilder;
 import com.epam.esm.repository.filter.QueryBuilderResult;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private static final String COUNT_ALL_GIFT_CERTIFICATES_QUERY = "SELECT COUNT(gift_certificate) FROM GiftCertificate gift_certificate";
     private static final String GIFT_CERTIFICATE_NAME = "giftCertificateName";
     private static final long EMPTY_COUNT_OF_GIFT_CERTIFICATE = 0L;
+    private static final int ONE_PAGE = 1;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -52,22 +54,22 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public List<GiftCertificate> findAll(Integer pageIndex, Integer size) {
+    public List<GiftCertificate> findAll(Pageable pageable) {
         return entityManager.createQuery(FIND_ALL_GIFT_CERTIFICATES_QUERY, GiftCertificate.class)
-                .setFirstResult((pageIndex - 1) * size)
-                .setMaxResults(size).getResultList();
+                .setFirstResult((pageable.getPageNumber() - ONE_PAGE) * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize()).getResultList();
     }
 
     @Override
-    public List<GiftCertificate> findWithFilter(Integer pageIndex, Integer size, GiftCertificateFilterCondition giftCertificateFilterCondition) {
+    public List<GiftCertificate> findWithFilter(Pageable pageable, GiftCertificateFilterCondition giftCertificateFilterCondition) {
         queryBuilderResult = filterQueryBuilder.buildQuery(giftCertificateFilterCondition);
         Query query = entityManager.createNativeQuery(queryBuilderResult.getQuery());
         Set<Map.Entry<String, String>> entries = queryBuilderResult.getParameters().entrySet();
         for (Map.Entry<String, String> e : entries) {
             query.setParameter(e.getKey(), e.getValue());
         }
-        List<Object> resultList = query.setFirstResult((pageIndex - 1) * size)
-                .setMaxResults(size).getResultList();
+        List<Object> resultList = query.setFirstResult((pageable.getPageNumber() - ONE_PAGE) * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize()).getResultList();
         return getFilteredGiftCertificatesFromResultList(resultList);
     }
 

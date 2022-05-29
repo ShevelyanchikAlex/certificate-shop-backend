@@ -5,8 +5,9 @@ import com.epam.esm.hateoas.assembler.TagModelAssembler;
 import com.epam.esm.hateoas.model.TagModel;
 import com.epam.esm.hateoas.processor.TagModelProcessor;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,17 +32,17 @@ public class TagController {
     @GetMapping(produces = "application/json")
     public CollectionModel<TagModel> findAll(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                              @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        Page<TagDto> tagsPage = tagService.findAll(pageIndex, size);
+        Page<TagDto> tagsPage = tagService.findAll(PageRequest.of(pageIndex, size));
         CollectionModel<TagModel> collectionModel = tagModelAssembler.toCollectionModel(tagsPage.getContent());
-        return tagModelProcessor.process(tagsPage, size, collectionModel);
+        return tagModelProcessor.process(tagsPage, collectionModel);
     }
 
     @GetMapping("/most-popular")
-    public CollectionModel<TagModel> findMostPopularTags(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
+    public CollectionModel<TagModel> findMostPopularTags(@RequestParam(name = "pageIndex", defaultValue = "0") Integer pageIndex,
                                                          @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        Page<TagDto> tagsPage = tagService.findMostPopularTags(pageIndex, size);
+        Page<TagDto> tagsPage = tagService.findMostPopularTags(PageRequest.of(pageIndex, size));
         CollectionModel<TagModel> collectionModel = tagModelAssembler.toCollectionModel(tagsPage.getContent());
-        return tagModelProcessor.process(tagsPage, size, collectionModel);
+        return tagModelProcessor.process(tagsPage, collectionModel);
     }
 
     @GetMapping("/count")

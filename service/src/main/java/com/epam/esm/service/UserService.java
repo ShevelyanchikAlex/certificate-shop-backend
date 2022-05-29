@@ -2,7 +2,8 @@ package com.epam.esm.service;
 
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.UserDto;
-import com.epam.esm.service.pagination.Page;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface UserService {
     /**
@@ -16,19 +17,17 @@ public interface UserService {
     /**
      * Finds all UsersDto
      *
-     * @param pageIndex Number of Page
-     * @param size Size of Page
+     * @param pageable Pageable
      * @return Page with UsersDto
      */
-    Page<UserDto> findAll(Integer pageIndex, Integer size);
+    Page<UserDto> findAll(Pageable pageable);
 
     /**
      * Finds UserOrders
      *
-     * @param pageIndex Number of Page
-     * @param size Size of Page
-     * @param id Id of User
+     * @param pageable Pageable
+     * @param id       Id of User
      * @return Page with UserOrders
      */
-    Page<OrderDto> findUserOrders(Integer pageIndex, Integer size, Long id);
+    Page<OrderDto> findUserOrders(Pageable pageable, Long id);
 }

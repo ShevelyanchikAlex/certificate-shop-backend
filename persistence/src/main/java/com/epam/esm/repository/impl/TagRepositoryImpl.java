@@ -3,6 +3,7 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.exception.RepositoryException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,7 @@ public class TagRepositoryImpl implements TagRepository {
             GROUP BY gcht.tag_id
             ORDER BY COUNT(gcht.gift_certificate_id) DESC""";
     private static final long EMPTY_COUNT_OF_TAGS = 0L;
+    private static final int ONE_PAGE = 1;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -68,17 +70,17 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public List<Tag> findAll(Integer pageIndex, Integer size) {
+    public List<Tag> findAll(Pageable pageable) {
         return entityManager.createQuery(FIND_ALL_TAGS_QUERY, Tag.class)
-                .setFirstResult((pageIndex - 1) * size)
-                .setMaxResults(size).getResultList();
+                .setFirstResult((pageable.getPageNumber() - ONE_PAGE) * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize()).getResultList();
     }
 
     @Override
-    public List<Tag> findMostPopularTags(Integer pageIndex, Integer size) {
+    public List<Tag> findMostPopularTags(Pageable pageable) {
         Query query = entityManager.createNativeQuery(FIND_MOST_POPULAR_TAGS_QUERY, Tag.class)
-                .setFirstResult((pageIndex - 1) * size)
-                .setMaxResults(size);
+                .setFirstResult((pageable.getPageNumber() - ONE_PAGE) * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize());
         List<Tag> tags = new ArrayList<>();
         query.getResultStream().filter(Tag.class::isInstance).forEach(obj -> tags.add((Tag) obj));
         return tags;

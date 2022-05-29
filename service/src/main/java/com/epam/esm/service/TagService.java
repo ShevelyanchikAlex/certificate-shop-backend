@@ -1,7 +1,8 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.TagDto;
-import com.epam.esm.service.pagination.Page;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * {@link TagService} is an interface that contains all operations available for {@link TagDto} of the API.
@@ -24,27 +25,25 @@ public interface TagService {
     TagDto findById(Long id);
 
     /**
-     * Finds all TagDtos
+     * Finds all TagsDto
      *
-     * @param pageIndex Number of Page
-     * @param size Size of Page
-     * @return List of found TagDtos
+     * @param pageable Pageable
+     * @return List of found TagsDto
      */
-    Page<TagDto> findAll(Integer pageIndex, Integer size);
+    Page<TagDto> findAll(Pageable pageable);
 
     /**
-     * Finds most popular TagDtos which are included in Certificates included in Orders
+     * Finds most popular TagsDto which are included in Certificates included in Orders
      *
-     * @param pageIndex Number of Page
-     * @param size Size of Page
+     * @param pageable Pageable
      * @return List of TagDto
      */
-    Page<TagDto> findMostPopularTags(Integer pageIndex, Integer size);
+    Page<TagDto> findMostPopularTags(Pageable pageable);
 
     /**
-     * Counts all TagDtos
+     * Counts all TagsDto
      *
-     * @return count of TagDtos
+     * @return count of TagsDto
      */
     int countAll();
 

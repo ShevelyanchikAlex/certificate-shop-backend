@@ -1,8 +1,8 @@
 package com.epam.esm.domain;
 
 import com.epam.esm.audit.AuditListener;
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -13,14 +13,10 @@ import java.util.List;
 @Data
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "orders")
+@EqualsAndHashCode(callSuper = true)
 @EntityListeners(AuditListener.class)
-public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
+public class Order extends AbstractEntity {
     @Column(name = "total_price", nullable = false)
     private BigDecimal totalPrice;
 
@@ -36,4 +32,12 @@ public class Order {
             joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "gift_certificate_id", referencedColumnName = "id"))
     private List<GiftCertificate> giftCertificates;
+
+    public Order(long id, BigDecimal totalPrice, LocalDateTime createDate, User user, List<GiftCertificate> giftCertificates) {
+        super(id);
+        this.totalPrice = totalPrice;
+        this.createDate = createDate;
+        this.user = user;
+        this.giftCertificates = giftCertificates;
+    }
 }

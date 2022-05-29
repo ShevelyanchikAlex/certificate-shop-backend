@@ -6,8 +6,9 @@ import com.epam.esm.hateoas.assembler.OrderModelAssembler;
 import com.epam.esm.hateoas.model.OrderModel;
 import com.epam.esm.hateoas.processor.OrderModelProcessor;
 import com.epam.esm.service.OrderService;
-import com.epam.esm.service.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +28,9 @@ public class OrderController {
     @GetMapping
     public CollectionModel<OrderModel> findAll(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                                @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        Page<OrderDto> orderPage = orderService.findAll(pageIndex, size);
+        Page<OrderDto> orderPage = orderService.findAll(PageRequest.of(pageIndex, size));
         CollectionModel<OrderModel> collectionModel = orderModelAssembler.toCollectionModel(orderPage.getContent());
-        return orderModelProcessor.process(orderPage, size, collectionModel);
+        return orderModelProcessor.process(orderPage, collectionModel);
     }
 
     @GetMapping("/{id}")

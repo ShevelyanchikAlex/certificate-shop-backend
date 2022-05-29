@@ -6,11 +6,12 @@ import com.epam.esm.mapper.TagMapper;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.pagination.Page;
-import com.epam.esm.service.pagination.PaginationUtil;
 import com.epam.esm.service.validator.impl.IdValidator;
 import com.epam.esm.service.validator.impl.TagValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,21 +51,19 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Page<TagDto> findAll(Integer pageIndex, Integer size) {
-        pageIndex = PaginationUtil.correctPageIndex(pageIndex, size, tagRepository::countAll);
-        List<TagDto> tags = tagRepository.findAll(pageIndex, size)
+    public Page<TagDto> findAll(Pageable pageable) {
+        List<TagDto> tags = tagRepository.findAll(pageable)
                 .stream().map(tagMapper::toDto)
                 .collect(Collectors.toList());
-        return new Page<>(pageIndex, size, tagRepository.countAll(), tags);
+        return new PageImpl<>(tags, pageable, tagRepository.countAll());
     }
 
     @Override
-    public Page<TagDto> findMostPopularTags(Integer pageIndex, Integer size) {
-        pageIndex = PaginationUtil.correctPageIndex(pageIndex, size, tagRepository::countAll);
-        List<TagDto> tags = tagRepository.findMostPopularTags(pageIndex, size)
+    public Page<TagDto> findMostPopularTags(Pageable pageable) {
+        List<TagDto> tags = tagRepository.findMostPopularTags(pageable)
                 .stream().map(tagMapper::toDto)
                 .collect(Collectors.toList());
-        return new Page<>(pageIndex, size, tagRepository.countAll(), tags);
+        return new PageImpl<>(tags, pageable, tagRepository.countAll());
     }
 
     @Override

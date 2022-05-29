@@ -10,10 +10,11 @@ import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.pagination.Page;
-import com.epam.esm.service.pagination.PaginationUtil;
 import com.epam.esm.service.validator.impl.IdValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -65,11 +66,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderDto> findAll(Integer pageIndex, Integer size) {
-        pageIndex = PaginationUtil.correctPageIndex(pageIndex, size, orderRepository::countAll);
-        List<OrderDto> orderDtoList = orderRepository.findAll(pageIndex, size)
+    public Page<OrderDto> findAll(Pageable pageable) {
+        List<OrderDto> orderDtoList = orderRepository.findAll(pageable)
                 .stream().map(orderMapper::toDto)
                 .collect(Collectors.toList());
-        return new Page<>(pageIndex, size, orderRepository.countAll(), orderDtoList);
+        return new PageImpl<>(orderDtoList, pageable, orderRepository.countAll());
     }
 }

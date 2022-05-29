@@ -5,7 +5,6 @@ import com.epam.esm.dto.UserDto;
 import com.epam.esm.mapper.*;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.UserService;
-import com.epam.esm.service.pagination.Page;
 import com.epam.esm.service.validator.impl.IdValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -59,10 +60,10 @@ class UserServiceImplTest {
     @Test
     void findAll() {
         //given
-        Mockito.when(userRepositoryMock.findAll(1, 10)).thenReturn(TEST_USERS);
+        Mockito.when(userRepositoryMock.findAll(PageRequest.of(1, 10))).thenReturn(TEST_USERS);
         int expected = TEST_USERS.size();
         //when
-        Page<UserDto> userPage = userService.findAll(1, 10);
+        Page<UserDto> userPage = userService.findAll(PageRequest.of(1, 10));
         int actual = userPage.getContent().size();
         //then
         Assertions.assertNotNull(userPage);

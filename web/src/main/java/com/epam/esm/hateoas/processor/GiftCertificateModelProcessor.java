@@ -5,7 +5,7 @@ import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.hateoas.model.GiftCertificateModel;
 import com.epam.esm.hateoas.model.TagModel;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
-import com.epam.esm.service.pagination.Page;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
@@ -16,25 +16,27 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class GiftCertificateModelProcessor implements RepresentationModelProcessor<TagModel> {
+    private static final int FIRST_PAGE = 1;
+
     @Override
     public TagModel process(TagModel model) {
         return model;
     }
 
-    public CollectionModel<GiftCertificateModel> process(Page<GiftCertificateDto> page, int size, CollectionModel<GiftCertificateModel> collectionModel) {
-        int nextPage = page.getNextPageIndex();
-        int previousPage = page.getPreviousPageIndex();
+    public CollectionModel<GiftCertificateModel> process(Page<GiftCertificateDto> page, CollectionModel<GiftCertificateModel> collectionModel) {
+        int nextPage = page.nextPageable().getPageNumber();
+        int previousPage = page.previousPageable().getPageNumber();
         int lastPage = page.getTotalPages();
-        Link previousPageLink = linkTo(findAllMethod(previousPage, size))
+        Link previousPageLink = linkTo(findAllMethod(previousPage, page.getSize()))
                 .withRel("prev")
                 .expand();
-        Link nextPageLink = linkTo(findAllMethod(nextPage, size))
+        Link nextPageLink = linkTo(findAllMethod(nextPage, page.getSize()))
                 .withRel("next")
                 .expand();
-        Link firstPageLink = linkTo(findAllMethod(Page.FIRST_PAGE, size))
+        Link firstPageLink = linkTo(findAllMethod(FIRST_PAGE, page.getSize()))
                 .withRel("first")
                 .expand();
-        Link lastPageLink = linkTo(findAllMethod(lastPage, size))
+        Link lastPageLink = linkTo(findAllMethod(lastPage, page.getSize()))
                 .withRel("last")
                 .expand();
         return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);
@@ -44,22 +46,22 @@ public class GiftCertificateModelProcessor implements RepresentationModelProcess
         return methodOn(GiftCertificateController.class).findAll(pageIndex, size);
     }
 
-    public CollectionModel<GiftCertificateModel> process(Page<GiftCertificateDto> page, int size,
+    public CollectionModel<GiftCertificateModel> process(Page<GiftCertificateDto> page,
                                                          GiftCertificateFilterCondition giftCertificateFilterCondition,
                                                          CollectionModel<GiftCertificateModel> collectionModel) {
-        int nextPage = page.getNextPageIndex();
-        int previousPage = page.getPreviousPageIndex();
+        int nextPage = page.nextPageable().getPageNumber();
+        int previousPage = page.previousPageable().getPageNumber();
         int lastPage = page.getTotalPages();
-        Link previousPageLink = linkTo(findWithFilterMethod(previousPage, size, giftCertificateFilterCondition))
+        Link previousPageLink = linkTo(findWithFilterMethod(previousPage, page.getSize(), giftCertificateFilterCondition))
                 .withRel("prev")
                 .expand();
-        Link nextPageLink = linkTo(findWithFilterMethod(nextPage, size, giftCertificateFilterCondition))
+        Link nextPageLink = linkTo(findWithFilterMethod(nextPage, page.getSize(), giftCertificateFilterCondition))
                 .withRel("next")
                 .expand();
-        Link firstPageLink = linkTo(findWithFilterMethod(Page.FIRST_PAGE, size, giftCertificateFilterCondition))
+        Link firstPageLink = linkTo(findWithFilterMethod(FIRST_PAGE, page.getSize(), giftCertificateFilterCondition))
                 .withRel("first")
                 .expand();
-        Link lastPageLink = linkTo(findWithFilterMethod(lastPage, size, giftCertificateFilterCondition))
+        Link lastPageLink = linkTo(findWithFilterMethod(lastPage, page.getSize(), giftCertificateFilterCondition))
                 .withRel("last")
                 .expand();
         return collectionModel.add(previousPageLink, nextPageLink, firstPageLink, lastPageLink);

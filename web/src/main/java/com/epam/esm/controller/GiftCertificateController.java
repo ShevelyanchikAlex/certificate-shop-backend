@@ -6,8 +6,9 @@ import com.epam.esm.hateoas.model.GiftCertificateModel;
 import com.epam.esm.hateoas.processor.GiftCertificateModelProcessor;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.service.GiftCertificateService;
-import com.epam.esm.service.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,18 +33,18 @@ public class GiftCertificateController {
     @GetMapping(produces = "application/json")
     public CollectionModel<GiftCertificateModel> findAll(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                                          @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        Page<GiftCertificateDto> giftCertificatePage = giftCertificateService.findAll(pageIndex, size);
+        Page<GiftCertificateDto> giftCertificatePage = giftCertificateService.findAll(PageRequest.of(pageIndex, size));
         CollectionModel<GiftCertificateModel> collectionModel = giftCertificateAssembler.toCollectionModel(giftCertificatePage.getContent());
-        return giftCertificateModelProcessor.process(giftCertificatePage, size, collectionModel);
+        return giftCertificateModelProcessor.process(giftCertificatePage, collectionModel);
     }
 
     @GetMapping("/filter")
     public CollectionModel<GiftCertificateModel> findWithFilter(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                                                 @RequestParam(name = "size", defaultValue = "10") Integer size,
                                                                 @RequestBody GiftCertificateFilterCondition giftCertificateFilterCondition) {
-        Page<GiftCertificateDto> giftCertificatePage = giftCertificateService.findWithFilter(pageIndex, size, giftCertificateFilterCondition);
+        Page<GiftCertificateDto> giftCertificatePage = giftCertificateService.findWithFilter(PageRequest.of(pageIndex, size), giftCertificateFilterCondition);
         CollectionModel<GiftCertificateModel> collectionModel = giftCertificateAssembler.toCollectionModel(giftCertificatePage.getContent());
-        return giftCertificateModelProcessor.process(giftCertificatePage, size, giftCertificateFilterCondition, collectionModel);
+        return giftCertificateModelProcessor.process(giftCertificatePage, giftCertificateFilterCondition, collectionModel);
     }
 
     @PatchMapping

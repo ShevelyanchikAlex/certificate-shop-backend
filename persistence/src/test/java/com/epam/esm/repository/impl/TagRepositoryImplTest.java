@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,7 +61,7 @@ class TagRepositoryImplTest {
 
     @Test
     void findAll() {
-        Assertions.assertNotNull(tagRepository.findAll(1,10));
+        Assertions.assertNotNull(tagRepository.findAll(PageRequest.of(1, 10)));
     }
 
     @Test
