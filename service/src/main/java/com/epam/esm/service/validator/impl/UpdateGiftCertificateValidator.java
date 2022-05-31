@@ -1,12 +1,14 @@
 package com.epam.esm.service.validator.impl;
 
-import com.epam.esm.config.ServiceConfig;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.service.validator.Validator;
+import com.epam.esm.service.validator.ValidatorRegexPattern;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
 /**
@@ -25,14 +27,14 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
                 validateDescription(giftCertificateDto.getDescription()) &&
                 validatePrice(giftCertificateDto.getPrice()) &&
                 validateDuration(giftCertificateDto.getDuration()) &&
-                validateTags(giftCertificateDto.getTagSet());
+                validateTags(giftCertificateDto.getTags());
     }
 
     private boolean validateName(String name) {
         if (name == null) {
             return true;
         }
-        Predicate<String> gftCertificateNamePredicate = str -> str.matches(ServiceConfig.GIFT_CERTIFICATE_NAME_REGEX_PATTERN);
+        Predicate<String> gftCertificateNamePredicate = str -> str.matches(ValidatorRegexPattern.GIFT_CERTIFICATE_NAME_REGEX_PATTERN);
         return gftCertificateNamePredicate.test(name);
     }
 
@@ -40,15 +42,15 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
         if (description == null) {
             return true;
         }
-        Predicate<String> giftCertificateDescriptionPredicate = str -> str.matches(ServiceConfig.GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN);
+        Predicate<String> giftCertificateDescriptionPredicate = str -> str.matches(ValidatorRegexPattern.GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN);
         return giftCertificateDescriptionPredicate.test(description);
     }
 
-    private boolean validatePrice(Integer price) {
+    private boolean validatePrice(BigDecimal price) {
         if (price == null) {
             return true;
         }
-        Predicate<Integer> giftCertificatePricePredicate = num -> num >= MIN_VALUE;
+        Predicate<BigDecimal> giftCertificatePricePredicate = num -> num.compareTo(BigDecimal.ZERO) > MIN_VALUE;
         return giftCertificatePricePredicate.test(price);
     }
 
@@ -56,11 +58,11 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
         if (duration == null) {
             return true;
         }
-        Predicate<Integer> giftCertificateDurationPredicate = num -> num >= MIN_VALUE;
+        IntPredicate giftCertificateDurationPredicate = num -> num > MIN_VALUE;
         return giftCertificateDurationPredicate.test(duration);
     }
 
-    private boolean validateTags(Set<TagDto> tags) {
+    private boolean validateTags(List<TagDto> tags) {
         if (tags == null) {
             return true;
         }

@@ -1,8 +1,8 @@
 package com.epam.esm.service.validator.impl;
 
-import com.epam.esm.config.ServiceConfig;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.service.validator.Validator;
+import com.epam.esm.service.validator.ValidatorRegexPattern;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Predicate;
@@ -24,7 +24,7 @@ public class TagValidator implements Validator<TagDto> {
         if (name == null) {
             return false;
         }
-        Predicate<String> tagNamePredicate = str -> str.matches(ServiceConfig.TAG_NAME_REGEX_PATTERN);
+        Predicate<String> tagNamePredicate = str -> str.matches(ValidatorRegexPattern.TAG_NAME_REGEX_PATTERN);
         return tagNamePredicate.test(name);
     }
 }

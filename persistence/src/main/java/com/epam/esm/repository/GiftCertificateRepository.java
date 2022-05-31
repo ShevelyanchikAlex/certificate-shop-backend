@@ -2,36 +2,22 @@ package com.epam.esm.repository;
 
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 /**
  * {@link GiftCertificateRepository} is an interface that contains all operations available for {@link GiftCertificate} of the API.
  */
-public interface GiftCertificateRepository extends CrudRepository<GiftCertificate> {
+public interface GiftCertificateRepository extends CrudRepository<GiftCertificate>, CounterRepository {
     /**
-     * Finds all certificates by filter
+     * Finds GiftCertificates by FilterCondition
      *
-     * @param giftCertificateFilterCondition Condition for filtering
-     * @return List with filtered GiftCertificates
+     * @param pageable                       Pageable
+     * @param giftCertificateFilterCondition Condition for Filtering
+     * @return List of GiftCertificates
      */
-    List<GiftCertificate> findWithFilter(GiftCertificateFilterCondition giftCertificateFilterCondition);
-
-    /**
-     * Associate id of GiftCertificate and id of Tag
-     *
-     * @param giftCertificateId id of GiftCertificate
-     * @param tagId             id of Tag
-     */
-    void associateGiftCertificateWithTag(long giftCertificateId, long tagId);
-
-    /**
-     * Deassociate  id of GiftCertificate and id of Tag
-     *
-     * @param giftCertificateId id of GiftCertificate
-     * @param tagId             id of Tag
-     */
-    void deAssociateGiftCertificateWithTag(long giftCertificateId, long tagId);
+    List<GiftCertificate> findWithFilter(Pageable pageable, GiftCertificateFilterCondition giftCertificateFilterCondition);
 
     /**
      * Checks if there is an GiftCertificate with name

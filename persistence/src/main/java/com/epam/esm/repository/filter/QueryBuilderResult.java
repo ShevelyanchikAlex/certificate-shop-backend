@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
+import java.util.Map;
 
 /**
  * {@link QueryBuilderResult} contains resulting Query and Set with parameters
@@ -16,5 +16,5 @@ import java.util.Set;
 @AllArgsConstructor
 public class QueryBuilderResult {
     private String query;
-    private Set<String> parameters;
+    private Map<String, String> parameters;
 }

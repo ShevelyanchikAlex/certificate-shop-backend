@@ -25,7 +25,7 @@ class IdValidatorTest {
     @Test
     void testInvalidId() {
         //when
-        boolean actual = idValidator.validate(null);
+        boolean actual = idValidator.validate(-10L);
         //then
         assertFalse(actual);
     }

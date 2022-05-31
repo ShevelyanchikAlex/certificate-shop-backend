@@ -5,8 +5,9 @@ import com.epam.esm.dto.TagDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -20,8 +21,8 @@ class GiftCertificateValidatorTest {
     public void setUp() {
         giftCertificateValidator = new GiftCertificateValidator();
         giftCertificateDto = new GiftCertificateDto(3L, "Gift Certificate third",
-                "DescriptionUpd third", 20, 2,
-                DATE_TIME, DATE_TIME, Set.of(new TagDto(1L, "#tag1"),
+                "DescriptionUpd third", new BigDecimal(20), 2,
+                DATE_TIME, DATE_TIME, List.of(new TagDto(1L, "#tag1"),
                 new TagDto(2L, "#tag2")));
     }
 

@@ -1,20 +1,18 @@
 package com.epam.esm.repository.impl;
 
-import com.epam.esm.config.DevPersistenceConfig;
 import com.epam.esm.domain.Tag;
 import com.epam.esm.repository.TagRepository;
+import com.epam.esm.repository.config.TestConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
-
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = DevPersistenceConfig.class)
+@Transactional
+@SpringBootTest(classes = TestConfig.class)
 @ActiveProfiles("dev")
 class TagRepositoryImplTest {
     @Autowired
@@ -23,11 +21,12 @@ class TagRepositoryImplTest {
     @Test
     void save() {
         //given
-        tagRepository.save(new Tag(1L, "#test"));
+        Tag tag = new Tag();
+        tag.setName("#test_tag");
         //when
-        boolean actual = tagRepository.existsTagByName("#test");
+        tag = tagRepository.save(tag);
         //then
-        Assertions.assertTrue(actual);
+        Assertions.assertNotNull(tag);
     }
 
     @Test
@@ -62,28 +61,15 @@ class TagRepositoryImplTest {
 
     @Test
     void findAll() {
-        Assertions.assertNotNull(tagRepository.findAll());
-    }
-
-    @Test
-    void findAllByGiftCertificateId() {
-        //given
-        Set<Tag> expected = Set.of(new Tag(1L, "#tag"),
-                new Tag(3L, "#like"));
-        //when
-        Set<Tag> actual = tagRepository.findAllByGiftCertificateId(1L);
-        //then
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertNotNull(tagRepository.findAll(PageRequest.of(1, 10)));
     }
 
     @Test
     void delete() {
-        //given
-        tagRepository.save(new Tag(4L, "#new_tag"));
         //when
         tagRepository.delete(2L);
-        boolean actual = tagRepository.existsTagByName("#cool");
+        Tag actual = tagRepository.findById(2L);
         //then
-        Assertions.assertFalse(actual);
+        Assertions.assertNull(actual);
     }
 }

@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'war'
 }
 
 group 'com.epam.esm'
@@ -15,20 +14,8 @@ dependencies {
     implementation project(":service")
     implementation project(":persistence")
 
-    compileOnly 'org.projectlombok:lombok:1.18.8'
-    annotationProcessor 'org.projectlombok:lombok:1.18.8'
-    implementation 'org.springframework:spring-core:5.3.18'
-    implementation 'org.springframework:spring-context:5.3.18'
-    implementation 'org.springframework:spring-beans:5.3.18'
-    implementation 'org.springframework:spring-web:5.3.18'
-    implementation 'org.springframework:spring-webmvc:5.3.18'
-    implementation 'javax.servlet:javax.servlet-api:4.0.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2'
-
-
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
 
 test {
