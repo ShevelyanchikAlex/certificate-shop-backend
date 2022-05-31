@@ -5,7 +5,6 @@ import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.repository.exception.RepositoryException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,7 +21,6 @@ public class OrderRepositoryImpl implements OrderRepository {
     private EntityManager entityManager;
 
     @Override
-    @Transactional
     public Order save(Order order) {
         entityManager.persist(order);
         return order;
@@ -46,7 +44,6 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    @Transactional
     public void delete(Long id) {
         Order order = Optional.ofNullable(entityManager.find(Order.class, id))
                 .orElseThrow(() -> new RepositoryException("order.not.found", id));

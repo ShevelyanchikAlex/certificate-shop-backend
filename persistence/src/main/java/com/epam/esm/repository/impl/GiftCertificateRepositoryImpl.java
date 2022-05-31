@@ -9,7 +9,6 @@ import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -42,7 +41,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    @Transactional
     public GiftCertificate save(GiftCertificate giftCertificate) {
         entityManager.persist(giftCertificate);
         return giftCertificate;
@@ -88,7 +86,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    @Transactional
     public void delete(Long id) {
         GiftCertificate certificate = Optional.ofNullable(entityManager.find(GiftCertificate.class, id))
                 .orElseThrow(() -> new RepositoryException("gift.certificate.not.found", id));

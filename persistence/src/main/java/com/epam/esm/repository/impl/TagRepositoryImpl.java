@@ -5,7 +5,6 @@ import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.exception.RepositoryException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -44,7 +43,6 @@ public class TagRepositoryImpl implements TagRepository {
     private EntityManager entityManager;
 
     @Override
-    @Transactional
     public Tag save(Tag tag) {
         entityManager.persist(tag);
         return tag;
@@ -92,7 +90,6 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    @Transactional
     public void delete(Long id) {
         Tag tag = Optional.ofNullable(entityManager.find(Tag.class, id))
                 .orElseThrow(() -> new RepositoryException("tag.not.found", id));

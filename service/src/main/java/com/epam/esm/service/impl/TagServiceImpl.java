@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,7 @@ public class TagServiceImpl implements TagService {
     private final IdValidator idValidator;
 
     @Override
+    @Transactional
     public TagDto save(TagDto tagDto) {
         if (!tagValidator.validate(tagDto)) {
             throw new ServiceException("tag.validate.error");
@@ -72,6 +74,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         if (!idValidator.validate(id)) {
             throw new ServiceException("request.validate.error", id);

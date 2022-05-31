@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
     private final IdValidator idValidator;
 
     @Override
+    @Transactional
     public OrderDto save(Long userId, List<Long> giftCertificatesId) {
         if (!idValidator.validate(userId) || !idValidator.validate(giftCertificatesId)) {
             throw new ServiceException("request.validate.error");

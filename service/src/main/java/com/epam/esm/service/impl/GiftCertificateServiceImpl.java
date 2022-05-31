@@ -103,6 +103,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return giftCertificateMapper.toDto(giftCertificateRepository.update(preUpdateGiftCertificate));
     }
 
+    @Transactional
     public GiftCertificate createPreUpdateGiftCertificate(GiftCertificate certificate, GiftCertificateUpdateCondition giftCertificateUpdateCondition) {
         if (giftCertificateUpdateCondition.getName() != null) {
             if (giftCertificateRepository.existsGiftCertificateByName(giftCertificateUpdateCondition.getName())) {
@@ -127,6 +128,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         if (!idValidator.validate(id)) {
             throw new ServiceException("request.validate.error");
