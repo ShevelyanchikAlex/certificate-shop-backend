@@ -1,28 +1,14 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.domain.Tag;
+import org.springframework.data.domain.Pageable;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * {@link TagRepository} is an interface that contains all operations available for {@link Tag} of the API.
  */
-public interface TagRepository extends CrudRepository<Tag> {
-    /**
-     * Counts all Tags
-     *
-     * @return count of Tags
-     */
-    int countAll();
-
-    /**
-     * Finds all Tags with id of GiftsCertificate
-     *
-     * @param giftCertificateId id of GiftsCertificate
-     * @return Set of founded Tags
-     */
-    Set<Tag> findAllByGiftCertificateId(long giftCertificateId);
-
+public interface TagRepository extends CrudRepository<Tag>, CounterRepository {
     /**
      * Finds Tag with name
      *
@@ -30,6 +16,14 @@ public interface TagRepository extends CrudRepository<Tag> {
      * @return Founded Tag
      */
     Tag findByName(String name);
+
+    /**
+     * Finds most popular Tags which are included in Certificates included in Orders
+     *
+     * @param pageable Pageable
+     * @return List of Tags
+     */
+    List<Tag> findMostPopularTags(Pageable pageable);
 
     /**
      * Checks if there is a Tag with name

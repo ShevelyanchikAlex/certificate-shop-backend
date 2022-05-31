@@ -6,7 +6,7 @@ create table gift_certificate
         primary key,
     name             varchar(45)                         not null,
     description      varchar(250)                        not null,
-    price            int                                 not null,
+    price            decimal(10, 2)                      not null,
     duration         int                                 not null,
     create_date      timestamp default CURRENT_TIMESTAMP not null,
     last_update_date timestamp default CURRENT_TIMESTAMP not null

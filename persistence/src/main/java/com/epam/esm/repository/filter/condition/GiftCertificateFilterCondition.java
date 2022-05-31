@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * Condition for filter according to specific GiftCertificate parameters
  */
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GiftCertificateFilterCondition {
-    private String tagName;
+    private List<String> tagNames;
     private String name;
     private String description;
     private SortDirection sortDirection;

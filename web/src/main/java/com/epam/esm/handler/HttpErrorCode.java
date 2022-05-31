@@ -11,6 +11,8 @@ public final class HttpErrorCode {
     public static final String OPERATION_NOT_SUPPORTED_CODE = "40301";
     public static final String GIFT_CERTIFICATE_NOT_FOUND_CODE = "40401";
     public static final String TAG_NOT_FOUND_CODE = "40402";
+    public static final String ORDER_NOT_FOUND_CODE = "40403";
+    public static final String USER_NOT_FOUND_CODE = "40404";
     public static final String RESOURCE_ALREADY_EXIST_CODE = "40901";
     public static final String REQUEST_VALIDATE_ERROR_CODE = "40000";
     public static final String GIFT_CERTIFICATE_VALIDATE_ERROR_CODE = "40001";

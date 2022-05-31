@@ -2,8 +2,8 @@ package com.epam.esm.service;
 
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * {@link GiftCertificateService} is an interface that contains all operations available for {@link GiftCertificateDto} of the API.
@@ -23,22 +23,24 @@ public interface GiftCertificateService {
      * @param id if of GiftCertificateDto
      * @return GiftCertificateDto
      */
-    GiftCertificateDto findById(long id);
+    GiftCertificateDto findById(Long id);
 
     /**
-     * Finds all GiftCertificateDtos
+     * Finds all GiftCertificatesDto
      *
-     * @return List of all GiftCertificateDtos
+     * @param pageable Pageable
+     * @return Page with GiftCertificatesDto
      */
-    List<GiftCertificateDto> findAll();
+    Page<GiftCertificateDto> findAll(Pageable pageable);
 
     /**
-     * Finds GiftCertificateDtos by {@link GiftCertificateFilterCondition}
+     * Finds GiftCertificatesDto by FilterCondition
      *
-     * @param giftCertificateFilterCondition Condition for filter according to specific parameters
-     * @return List with filtered GiftCertificateDtos
+     * @param pageable                       Pageable
+     * @param giftCertificateFilterCondition Filter Condition
+     * @return Page with filtered GiftCertificatesDto
      */
-    List<GiftCertificateDto> findWithFilter(GiftCertificateFilterCondition giftCertificateFilterCondition);
+    Page<GiftCertificateDto> findWithFilter(Pageable pageable, GiftCertificateFilterCondition giftCertificateFilterCondition);
 
     /**
      * Updates GiftCertificateDto
@@ -53,5 +55,5 @@ public interface GiftCertificateService {
      *
      * @param id id of GiftCertificate
      */
-    void delete(long id);
+    void delete(Long id);
 }

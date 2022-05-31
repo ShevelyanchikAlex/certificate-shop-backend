@@ -1,11 +1,12 @@
 package com.epam.esm.service.validator.impl;
 
-import com.epam.esm.config.ServiceConfig;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.repository.filter.condition.SortDirection;
 import com.epam.esm.service.validator.Validator;
+import com.epam.esm.service.validator.ValidatorRegexPattern;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -13,32 +14,35 @@ import java.util.function.Predicate;
  */
 @Component
 public class FilterConditionValidator implements Validator<GiftCertificateFilterCondition> {
-    private static final String ORDER_REGEX_PATTERN = "(ASC)|(DESC)";
-
     @Override
     public boolean validate(GiftCertificateFilterCondition giftCertificateFilterCondition) {
         if (giftCertificateFilterCondition == null) {
             return false;
         }
-        return validateTagName(giftCertificateFilterCondition.getTagName()) &&
+        return validateTagNames(giftCertificateFilterCondition.getTagNames()) &&
                 validatePartOfName(giftCertificateFilterCondition.getName()) &&
                 validatePartOfDescription(giftCertificateFilterCondition.getDescription()) &&
                 validateOrder(giftCertificateFilterCondition.getSortDirection());
     }
 
-    private boolean validateTagName(String tagName) {
-        if (tagName == null) {
+    private boolean validateTagNames(List<String> tagNames) {
+        if (tagNames == null) {
             return true;
         }
-        Predicate<String> tagNamePredicate = str -> str.matches(ServiceConfig.TAG_NAME_REGEX_PATTERN);
-        return tagNamePredicate.test(tagName);
+        Predicate<String> tagNamePredicate = str -> str.matches(ValidatorRegexPattern.TAG_NAME_REGEX_PATTERN);
+        for (String tagName : tagNames) {
+            if (!tagNamePredicate.test(tagName)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean validatePartOfName(String partOfName) {
         if (partOfName == null) {
             return true;
         }
-        Predicate<String> partOfNamePredicate = str -> str.matches(ServiceConfig.GIFT_CERTIFICATE_NAME_REGEX_PATTERN);
+        Predicate<String> partOfNamePredicate = str -> str.matches(ValidatorRegexPattern.GIFT_CERTIFICATE_NAME_REGEX_PATTERN);
         return partOfNamePredicate.test(partOfName);
     }
 
@@ -46,7 +50,7 @@ public class FilterConditionValidator implements Validator<GiftCertificateFilter
         if (partOfDescription == null) {
             return true;
         }
-        Predicate<String> partOfDescriptionPredicate = str -> str.matches(ServiceConfig.GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN);
+        Predicate<String> partOfDescriptionPredicate = str -> str.matches(ValidatorRegexPattern.GIFT_CERTIFICATE_DESCRIPTION_REGEX_PATTERN);
         return partOfDescriptionPredicate.test(partOfDescription);
     }
 
@@ -54,7 +58,7 @@ public class FilterConditionValidator implements Validator<GiftCertificateFilter
         if (sortDirection == null) {
             return true;
         }
-        Predicate<String> orderPredicate = str -> str.matches(ORDER_REGEX_PATTERN);
+        Predicate<String> orderPredicate = str -> str.matches(ValidatorRegexPattern.ORDER_REGEX_PATTERN);
         return orderPredicate.test(sortDirection.getSortDirection());
     }
 }

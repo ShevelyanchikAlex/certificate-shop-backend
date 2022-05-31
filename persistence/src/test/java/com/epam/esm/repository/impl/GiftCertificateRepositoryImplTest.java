@@ -1,24 +1,29 @@
 package com.epam.esm.repository.impl;
 
-import com.epam.esm.config.DevPersistenceConfig;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.repository.GiftCertificateRepository;
+import com.epam.esm.repository.config.TestConfig;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.repository.filter.condition.SortDirection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = DevPersistenceConfig.class)
+@SpringBootTest(classes = TestConfig.class)
 @ActiveProfiles("dev")
 class GiftCertificateRepositoryImplTest {
     private static final LocalDateTime DATE_TIME = LocalDateTime.of(2022, 5, 3, 4, 30);
@@ -29,12 +34,17 @@ class GiftCertificateRepositoryImplTest {
     @Test
     void save() {
         //given
-        giftCertificateRepository.save(new GiftCertificate(0, "New Gift Certificate", "DescriptionUpd new", 20, 2,
-                DATE_TIME, DATE_TIME));
+        GiftCertificate giftCertificate = new GiftCertificate();
+        giftCertificate.setName("New Gift Certificate");
+        giftCertificate.setDescription("DescriptionUpd new");
+        giftCertificate.setPrice(new BigDecimal(20));
+        giftCertificate.setDuration(2);
+        giftCertificate.setCreateDate(DATE_TIME);
+        giftCertificate.setLastUpdateDate(DATE_TIME);
         //when
-        boolean actual = giftCertificateRepository.existsGiftCertificateByName("New Gift Certificate");
+        giftCertificate = giftCertificateRepository.save(giftCertificate);
         //then
-        Assertions.assertTrue(actual);
+        Assertions.assertNotNull(giftCertificate);
     }
 
     @Test
@@ -49,7 +59,7 @@ class GiftCertificateRepositoryImplTest {
 
     @Test
     void findAll() {
-        Assertions.assertNotNull(giftCertificateRepository.findAll());
+        Assertions.assertNotNull(giftCertificateRepository.findAll(PageRequest.of(1, 10)));
     }
 
     @Test
@@ -58,19 +68,18 @@ class GiftCertificateRepositoryImplTest {
         GiftCertificateFilterCondition giftCertificateFilterCondition = new GiftCertificateFilterCondition();
         giftCertificateFilterCondition.setDescription("Swim");
         giftCertificateFilterCondition.setSortDirection(SortDirection.DESC);
-        int expected = 1;
         //when
-        List<GiftCertificate> actual = giftCertificateRepository.findWithFilter(giftCertificateFilterCondition)
+        List<GiftCertificate> actual = giftCertificateRepository.findWithFilter(PageRequest.of(1, 10), giftCertificateFilterCondition)
                 .stream().distinct().collect(Collectors.toList());
         //then
-        Assertions.assertEquals(expected, actual.size());
+        Assertions.assertNotNull(actual);
     }
 
     @Test
     void update() {
         //given
-        GiftCertificate expected = new GiftCertificate(1, "Nike", "DescriptionUpd upd", 22, 2,
-                DATE_TIME, DATE_TIME);
+        GiftCertificate expected = new GiftCertificate(1, "Nike", "DescriptionUpd upd", new BigDecimal(22),
+                2, DATE_TIME, DATE_TIME, new ArrayList<>());
         //when
         GiftCertificate actual = giftCertificateRepository.update(expected);
         //then
@@ -81,9 +90,9 @@ class GiftCertificateRepositoryImplTest {
     void delete() {
         //when
         giftCertificateRepository.delete(2L);
-        boolean actual = giftCertificateRepository.existsGiftCertificateByName("Restaurant");
+        GiftCertificate actual = giftCertificateRepository.findById(2L);
         //then
-        Assertions.assertFalse(actual);
+        Assertions.assertNull(actual);
     }
 
     @Test

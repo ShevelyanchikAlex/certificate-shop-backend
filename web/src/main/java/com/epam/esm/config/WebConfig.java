@@ -22,7 +22,7 @@ import java.util.Locale;
 @EnableWebMvc
 @ComponentScan("com.epam.esm")
 public class WebConfig implements WebMvcConfigurer {
-    private static final String EXCEPTION_MESSAGE_BUNDLE = "message";
+    private static final String EXCEPTION_MESSAGE_BUNDLE = "exception.message";
     private static final String DEFAULT_ENCODING = "UTF-8";
 
     @Bean
