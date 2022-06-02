@@ -43,9 +43,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto save(GiftCertificateDto giftCertificateDto) {
-        if (!giftCertificateValidator.validate(giftCertificateDto)) {
-            throw new ServiceException("gift.certificate.validate.error");
-        }
+        giftCertificateValidator.validate(giftCertificateDto);
         if (giftCertificateRepository.existsGiftCertificateByName(giftCertificateDto.getName())) {
             throw new ServiceException("resource.already.exist", "GIFT_CERTIFICATE");
         }
@@ -60,9 +58,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public GiftCertificateDto findById(Long id) {
-        if (!idValidator.validate(id)) {
-            throw new ServiceException("request.validate.error");
-        }
+        idValidator.validate(id);
         Optional<GiftCertificate> certificateOptional = Optional.ofNullable(giftCertificateRepository.findById(id));
         return certificateOptional.map(giftCertificateMapper::toDto)
                 .orElseThrow(() -> new ServiceException("gift.certificate.not.found", id));
@@ -78,9 +74,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public Page<GiftCertificateDto> findWithFilter(Pageable pageable, GiftCertificateFilterCondition giftCertificateFilterCondition) {
-        if (!filterConditionValidator.validate(giftCertificateFilterCondition)) {
-            throw new ServiceException("gift.certificate.filter.condition.validate.error");
-        }
+        filterConditionValidator.validate(giftCertificateFilterCondition);
         List<GiftCertificateDto> giftCertificateDtoList = giftCertificateRepository.findWithFilter(pageable, giftCertificateFilterCondition)
                 .stream().map(giftCertificateMapper::toDto)
                 .collect(Collectors.toList());
@@ -90,9 +84,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto update(GiftCertificateDto giftCertificateDto) {
-        if (!updateGiftCertificateValidator.validate(giftCertificateDto)) {
-            throw new ServiceException("gift.certificate.update.condition.error");
-        }
+        updateGiftCertificateValidator.validate(giftCertificateDto);
         if (giftCertificateRepository.findById(giftCertificateDto.getId()) == null) {
             throw new ServiceException("gift.certificate.not.found");
         }
@@ -130,9 +122,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public void delete(Long id) {
-        if (!idValidator.validate(id)) {
-            throw new ServiceException("request.validate.error");
-        }
+        idValidator.validate(id);
         giftCertificateRepository.delete(id);
     }
 

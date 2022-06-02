@@ -37,9 +37,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDto save(Long userId, List<Long> giftCertificatesId) {
-        if (!idValidator.validate(userId) || !idValidator.validate(giftCertificatesId)) {
-            throw new ServiceException("request.validate.error");
-        }
+        idValidator.validate(userId);
+        idValidator.validate(giftCertificatesId);
         User user = Optional.ofNullable(userRepository.findById(userId))
                 .orElseThrow(() -> new ServiceException("user.not.found", userId));
         List<GiftCertificate> giftCertificates = new ArrayList<>();
@@ -59,9 +58,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto findById(Long id) {
-        if (!idValidator.validate(id)) {
-            throw new ServiceException("request.validate.error", id);
-        }
+        idValidator.validate(id);
         Order order = Optional.ofNullable(orderRepository.findById(id))
                 .orElseThrow(() -> new ServiceException("order.not.found", id));
         return orderMapper.toDto(order);

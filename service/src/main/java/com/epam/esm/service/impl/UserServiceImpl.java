@@ -29,9 +29,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findById(Long id) {
-        if (!idValidator.validate(id)) {
-            throw new ServiceException("request.validate.error", id);
-        }
+        idValidator.validate(id);
         User user = Optional.ofNullable(userRepository.findById(id))
                 .orElseThrow(() -> new ServiceException("user.not.found", id));
         return userMapper.toDto(user);

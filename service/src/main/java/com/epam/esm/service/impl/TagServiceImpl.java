@@ -33,9 +33,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public TagDto save(TagDto tagDto) {
-        if (!tagValidator.validate(tagDto)) {
-            throw new ServiceException("tag.validate.error");
-        }
+        tagValidator.validate(tagDto);
         if (tagRepository.existsTagByName(tagDto.getName())) {
             throw new ServiceException("resource.already.exist", "TAG");
         }
@@ -44,9 +42,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDto findById(Long id) {
-        if (!idValidator.validate(id)) {
-            throw new ServiceException("request.validate.error", id);
-        }
+        idValidator.validate(id);
         Optional<Tag> tagOptional = Optional.ofNullable(tagRepository.findById(id));
         return tagOptional.map(tagMapper::toDto)
                 .orElseThrow(() -> new ServiceException("tag.not.found", id));
@@ -76,9 +72,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public void delete(Long id) {
-        if (!idValidator.validate(id)) {
-            throw new ServiceException("request.validate.error", id);
-        }
+        idValidator.validate(id);
         tagRepository.delete(id);
     }
 }

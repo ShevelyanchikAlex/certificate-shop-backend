@@ -1,10 +1,9 @@
 package com.epam.esm.service.validator.impl;
 
+import com.epam.esm.service.exception.ServiceException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class IdValidatorTest {
     private IdValidator idValidator;
@@ -16,17 +15,13 @@ class IdValidatorTest {
 
     @Test
     void testValidId() {
-        //when
-        boolean actual = idValidator.validate(1L);
         //then
-        assertTrue(actual);
+        Assertions.assertDoesNotThrow(() -> idValidator.validate(1L));
     }
 
     @Test
     void testInvalidId() {
-        //when
-        boolean actual = idValidator.validate(-10L);
         //then
-        assertFalse(actual);
+        Assertions.assertThrows(ServiceException.class, () -> idValidator.validate(-10L));
     }
 }
