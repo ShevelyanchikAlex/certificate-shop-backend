@@ -15,7 +15,3 @@ security:
       header: Authorization
       secret-key: test
       expire-length: 604800
-
-#  jwt.token.header=Authorization
-#  jwt.secret=test
-#  jwt.expiration=604800
