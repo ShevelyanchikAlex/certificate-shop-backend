@@ -1,6 +1,6 @@
 package com.epam.esm.service.security.details;
 
-import com.epam.esm.domain.User;
+import com.epam.esm.domain.user.User;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;

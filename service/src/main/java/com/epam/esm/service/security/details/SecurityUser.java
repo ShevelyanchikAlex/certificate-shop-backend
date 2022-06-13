@@ -1,7 +1,7 @@
 package com.epam.esm.service.security.details;
 
-import com.epam.esm.domain.Status;
-import com.epam.esm.domain.User;
+import com.epam.esm.domain.user.Status;
+import com.epam.esm.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;

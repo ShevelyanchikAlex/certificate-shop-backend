@@ -1,8 +1,8 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.domain.Role;
-import com.epam.esm.domain.Status;
-import com.epam.esm.domain.User;
+import com.epam.esm.domain.user.Role;
+import com.epam.esm.domain.user.Status;
+import com.epam.esm.domain.user.User;
 import com.epam.esm.dto.UserDto;
 import com.epam.esm.mapper.*;
 import com.epam.esm.repository.UserRepository;

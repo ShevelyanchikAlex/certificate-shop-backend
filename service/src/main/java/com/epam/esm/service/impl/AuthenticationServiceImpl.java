@@ -1,6 +1,6 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.domain.User;
+import com.epam.esm.domain.user.User;
 import com.epam.esm.dto.AuthenticationRequestDTO;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.AuthenticationService;

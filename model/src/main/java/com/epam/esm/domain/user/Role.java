@@ -1,4 +1,4 @@
-package com.epam.esm.domain;
+package com.epam.esm.domain.user;
 
 import lombok.Getter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,8 +8,9 @@ import java.util.stream.Collectors;
 
 @Getter
 public enum Role {
-    USER(Set.of(Permission.USERS_READ)),
-    ADMIN(Set.of(Permission.USERS_READ, Permission.USERS_WRITE));
+    GUEST(Set.of(Permission.GUEST_PERMISSION)),
+    USER(Set.of(Permission.GUEST_PERMISSION, Permission.USER_PERMISSION)),
+    ADMIN(Set.of(Permission.GUEST_PERMISSION, Permission.USER_PERMISSION, Permission.ADMIN_PERMISSION));
 
     private final Set<Permission> permissions;
 

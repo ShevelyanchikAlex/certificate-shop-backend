@@ -1,6 +1,9 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.domain.*;
+import com.epam.esm.domain.user.Role;
+import com.epam.esm.domain.user.Status;
+import com.epam.esm.domain.user.User;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.UserDto;

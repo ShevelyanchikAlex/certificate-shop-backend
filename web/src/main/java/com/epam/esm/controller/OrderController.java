@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,11 +22,13 @@ public class OrderController {
     private final OrderModelProcessor orderModelProcessor;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('USER_PERMISSION')")
     public OrderDto save(@RequestBody CreateOrderDto createOrderDto) {
         return orderService.save(createOrderDto.getUserId(), createOrderDto.getGiftCertificatesId());
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('USER_PERMISSION')")
     public CollectionModel<OrderModel> findAll(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                                @RequestParam(name = "size", defaultValue = "10") Integer size) {
         Page<OrderDto> orderPage = orderService.findAll(PageRequest.of(pageIndex, size));
@@ -34,6 +37,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER_PERMISSION')")
     public OrderDto findById(@PathVariable long id) {
         return orderService.findById(id);
     }

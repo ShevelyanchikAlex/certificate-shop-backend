@@ -1,4 +1,4 @@
-package com.epam.esm.domain;
+package com.epam.esm.domain.user;
 
 public enum Status {
     ACTIVE,

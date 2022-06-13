@@ -2,7 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Order;
-import com.epam.esm.domain.User;
+import com.epam.esm.domain.user.User;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.mapper.OrderMapper;
 import com.epam.esm.repository.GiftCertificateRepository;

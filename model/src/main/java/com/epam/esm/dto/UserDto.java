@@ -1,7 +1,7 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.domain.Role;
-import com.epam.esm.domain.Status;
+import com.epam.esm.domain.user.Role;
+import com.epam.esm.domain.user.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
