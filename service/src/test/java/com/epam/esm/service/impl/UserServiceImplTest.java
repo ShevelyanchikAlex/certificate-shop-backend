@@ -8,6 +8,7 @@ import com.epam.esm.mapper.*;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.validator.impl.IdValidator;
+import com.epam.esm.service.validator.impl.UserValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -36,6 +39,8 @@ class UserServiceImplTest {
     private final UserMapper userMapper;
     private final OrderMapper orderMapper;
     private final IdValidator idValidator = new IdValidator();
+    private final UserValidator userValidator = new UserValidator();
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 
     @Autowired
     UserServiceImplTest(UserMapper userMapper, OrderMapper orderMapper, GiftCertificateMapper giftCertificateMapper, TagMapper tagMapper) {
@@ -45,7 +50,7 @@ class UserServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        userService = new UserServiceImpl(userRepositoryMock, userMapper, orderMapper, idValidator);
+        userService = new UserServiceImpl(userRepositoryMock, userMapper, orderMapper, idValidator, userValidator, passwordEncoder);
     }
 
     @Test

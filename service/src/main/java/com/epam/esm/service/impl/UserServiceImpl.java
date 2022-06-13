@@ -1,5 +1,7 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.domain.user.Role;
+import com.epam.esm.domain.user.Status;
 import com.epam.esm.domain.user.User;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.UserDto;
@@ -9,10 +11,12 @@ import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.impl.IdValidator;
+import com.epam.esm.service.validator.impl.UserValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +30,20 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final OrderMapper orderMapper;
     private final IdValidator idValidator;
+    private final UserValidator userValidator;
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDto save(UserDto userDto) {
+        userValidator.validate(userDto);
+        if (userRepository.existsUserByEmail(userDto.getEmail())) {
+            throw new ServiceException("resource.already.exist", "USER");
+        }
+        userDto.setRole(Role.USER);
+        userDto.setStatus(Status.ACTIVE);
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        return userMapper.toDto(userRepository.save(userMapper.toEntity(userDto)));
+    }
 
     @Override
     public UserDto findById(Long id) {

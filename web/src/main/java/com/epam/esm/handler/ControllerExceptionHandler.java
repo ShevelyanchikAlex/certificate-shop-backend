@@ -44,6 +44,7 @@ public class ControllerExceptionHandler {
         codeMap.put("gift.certificate.filter.condition.validate.error", HttpErrorCode.FILTER_CONDITION_VALIDATE_ERROR_CODE);
         codeMap.put("order.not.found", HttpErrorCode.ORDER_NOT_FOUND_CODE);
         codeMap.put("user.not.found", HttpErrorCode.USER_NOT_FOUND_CODE);
+        codeMap.put("user.validate.error", HttpErrorCode.USER_VALIDATE_ERROR_CODE);
         codeMap.put(BAD_REQUEST_MESSAGE_KEY, HttpErrorCode.BAD_REQUEST_CODE);
         codeMap.put(FORBIDDEN_MESSAGE_KEY, HttpErrorCode.FORBIDDEN_CODE);
         return codeMap;

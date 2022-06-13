@@ -26,8 +26,8 @@ public class UserController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('USER_PERMISSION')")
-    public UserDto findById(@PathVariable Long id) {
-        return userService.findById(id);
+    public UserModel findById(@PathVariable Long id) {
+        return userModelAssembler.toModel(userService.findById(id));
     }
 
     @GetMapping
