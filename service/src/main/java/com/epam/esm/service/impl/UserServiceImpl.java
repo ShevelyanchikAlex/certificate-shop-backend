@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findById(Long id) {
         idValidator.validate(id);
-        User user = Optional.ofNullable(userRepository.findById(id))
+        User user = Optional.of(userRepository.getById(id))
                 .orElseThrow(() -> new ServiceException("user.not.found", id));
         return userMapper.toDto(user);
     }
@@ -41,12 +41,12 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(userMapper::toDto)
                 .collect(Collectors.toList());
-        return new PageImpl<>(users, pageable, userRepository.countAll());
+        return new PageImpl<>(users, pageable, userRepository.count());
     }
 
     @Override
     public Page<OrderDto> findUserOrders(Pageable pageable, Long id) {
-        User user = Optional.ofNullable(userRepository.findById(id))
+        User user = Optional.of(userRepository.getById(id))
                 .orElseThrow(() -> new ServiceException("user.not.found", id));
         List<OrderDto> orders = user.getOrders()
                 .stream().map(orderMapper::toDto)

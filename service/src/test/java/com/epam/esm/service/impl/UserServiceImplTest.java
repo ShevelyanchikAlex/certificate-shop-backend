@@ -1,5 +1,7 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.domain.Role;
+import com.epam.esm.domain.Status;
 import com.epam.esm.domain.User;
 import com.epam.esm.dto.UserDto;
 import com.epam.esm.mapper.*;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -25,8 +28,8 @@ import java.util.List;
         GiftCertificateMapperImpl.class, TagMapperImpl.class})
 class UserServiceImplTest {
     private static final List<User> TEST_USERS = List.of(
-            new User(1L, "User first", Collections.emptyList()),
-            new User(2L, "User second", Collections.emptyList()));
+            new User(1L, "User first", "user1@gmail.com", "pass1", Role.USER, Status.ACTIVE, Collections.emptyList()),
+            new User(2L, "User second", "user2@gmail.com", "pass2", Role.USER, Status.ACTIVE, Collections.emptyList()));
 
     private UserService userService;
     private final UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
@@ -48,7 +51,7 @@ class UserServiceImplTest {
     @Test
     void findById() {
         //given
-        Mockito.when(userRepositoryMock.findById(1L)).thenReturn(TEST_USERS.get(0));
+        Mockito.when(userRepositoryMock.getById(1L)).thenReturn(TEST_USERS.get(0));
         String expected = TEST_USERS.get(0).getName();
         //when
         UserDto userDto = userService.findById(1L);
@@ -60,7 +63,7 @@ class UserServiceImplTest {
     @Test
     void findAll() {
         //given
-        Mockito.when(userRepositoryMock.findAll(PageRequest.of(1, 10))).thenReturn(TEST_USERS);
+        Mockito.when(userRepositoryMock.findAll(PageRequest.of(1, 10))).thenReturn(new PageImpl<>(TEST_USERS));
         int expected = TEST_USERS.size();
         //when
         Page<UserDto> userPage = userService.findAll(PageRequest.of(1, 10));

@@ -39,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto save(Long userId, List<Long> giftCertificatesId) {
         idValidator.validate(userId);
         idValidator.validate(giftCertificatesId);
-        User user = Optional.ofNullable(userRepository.findById(userId))
+        User user = Optional.of(userRepository.getById(userId))
                 .orElseThrow(() -> new ServiceException("user.not.found", userId));
         List<GiftCertificate> giftCertificates = new ArrayList<>();
         giftCertificatesId.forEach(id -> giftCertificates.add(Optional.ofNullable(certificateRepository.findById(id))
