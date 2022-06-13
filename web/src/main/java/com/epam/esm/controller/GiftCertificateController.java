@@ -28,13 +28,11 @@ public class GiftCertificateController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('GUEST_PERMISSION')")
     public GiftCertificateDto findById(@PathVariable long id) {
         return giftCertificateService.findById(id);
     }
 
     @GetMapping(produces = "application/json")
-    @PreAuthorize("hasAuthority('GUEST_PERMISSION')")
     public CollectionModel<GiftCertificateModel> findAll(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                                          @RequestParam(name = "size", defaultValue = "10") Integer size) {
         Page<GiftCertificateDto> giftCertificatePage = giftCertificateService.findAll(PageRequest.of(pageIndex, size));
@@ -43,7 +41,6 @@ public class GiftCertificateController {
     }
 
     @GetMapping("/filter")
-    @PreAuthorize("hasAuthority('GUEST_PERMISSION')")
     public CollectionModel<GiftCertificateModel> findWithFilter(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                                                 @RequestParam(name = "size", defaultValue = "10") Integer size,
                                                                 @RequestBody GiftCertificateFilterCondition giftCertificateFilterCondition) {
