@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class HttpErrorCode {
+    public static final String UNAUTHORIZED = "401";
     public static final String NOT_FOUND_CODE = "404";
     public static final String FORBIDDEN_CODE = "403";
     public static final String BAD_REQUEST_CODE = "40000";
