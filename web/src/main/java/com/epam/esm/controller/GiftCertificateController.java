@@ -23,13 +23,13 @@ public class GiftCertificateController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN_PERMISSION')")
-    public GiftCertificateDto save(@RequestBody GiftCertificateDto giftCertificateDto) {
-        return giftCertificateService.save(giftCertificateDto);
+    public GiftCertificateModel save(@RequestBody GiftCertificateDto giftCertificateDto) {
+        return giftCertificateAssembler.toModel(giftCertificateService.save(giftCertificateDto));
     }
 
     @GetMapping("/{id}")
-    public GiftCertificateDto findById(@PathVariable long id) {
-        return giftCertificateService.findById(id);
+    public GiftCertificateModel findById(@PathVariable long id) {
+        return giftCertificateAssembler.toModel(giftCertificateService.findById(id));
     }
 
     @GetMapping(produces = "application/json")
@@ -51,8 +51,8 @@ public class GiftCertificateController {
 
     @PatchMapping
     @PreAuthorize("hasAuthority('ADMIN_PERMISSION')")
-    public GiftCertificateDto update(@RequestBody GiftCertificateDto giftCertificateDto) {
-        return giftCertificateService.update(giftCertificateDto);
+    public GiftCertificateModel update(@RequestBody GiftCertificateDto giftCertificateDto) {
+        return giftCertificateAssembler.toModel(giftCertificateService.update(giftCertificateDto));
     }
 
     @DeleteMapping("/{id}")

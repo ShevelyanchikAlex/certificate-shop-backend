@@ -22,14 +22,14 @@ public class TagController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN_PERMISSION')")
-    public TagDto save(@RequestBody TagDto tagDto) {
-        return tagService.save(tagDto);
+    public TagModel save(@RequestBody TagDto tagDto) {
+        return tagModelAssembler.toModel(tagService.save(tagDto));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('USER_PERMISSION')")
-    public TagDto findById(@PathVariable Long id) {
-        return tagService.findById(id);
+    public TagModel findById(@PathVariable Long id) {
+        return tagModelAssembler.toModel(tagService.findById(id));
     }
 
     @GetMapping(produces = "application/json")

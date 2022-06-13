@@ -33,12 +33,12 @@ import java.util.List;
 @ContextConfiguration(classes = {OrderMapperImpl.class, UserMapperImpl.class, GiftCertificateMapperImpl.class, TagMapperImpl.class})
 class OrderServiceImplTest {
     private static final List<User> TEST_USERS = List.of(
-            new User(1L, "User first", "user1@gmail.com", "pass1", Role.USER, Status.ACTIVE, Collections.emptyList()),
-            new User(2L, "User second","user2@gmail.com", "pass2", Role.USER, Status.ACTIVE,  Collections.emptyList()));
+            new User(1L, "User first", "user1@gmail.com", "user", Role.USER, Status.ACTIVE, Collections.emptyList()),
+            new User(2L, "User second", "user2@gmail.com", "user", Role.USER, Status.ACTIVE, Collections.emptyList()));
 
     private static final List<UserDto> TEST_USERS_DTO = List.of(
-            new UserDto(1L, "User first", "user1@gmail.com", Role.USER, Status.ACTIVE),
-            new UserDto(2L, "User second", "user2@gmail.com",  Role.USER, Status.ACTIVE)
+            new UserDto(1L, "User first", "user1@gmail.com", "user", Role.USER, Status.ACTIVE),
+            new UserDto(2L, "User second", "user2@gmail.com", "user", Role.USER, Status.ACTIVE)
     );
 
     private static final LocalDateTime DATE_TIME = LocalDateTime.of(2022, 5, 3, 4, 30);

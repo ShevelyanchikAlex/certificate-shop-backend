@@ -23,8 +23,8 @@ public class OrderController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('USER_PERMISSION')")
-    public OrderDto save(@RequestBody CreateOrderDto createOrderDto) {
-        return orderService.save(createOrderDto.getUserId(), createOrderDto.getGiftCertificatesId());
+    public OrderModel save(@RequestBody CreateOrderDto createOrderDto) {
+        return orderModelAssembler.toModel(orderService.save(createOrderDto.getUserId(), createOrderDto.getGiftCertificatesId()));
     }
 
     @GetMapping
@@ -38,7 +38,7 @@ public class OrderController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('USER_PERMISSION')")
-    public OrderDto findById(@PathVariable long id) {
-        return orderService.findById(id);
+    public OrderModel findById(@PathVariable long id) {
+        return orderModelAssembler.toModel(orderService.findById(id));
     }
 }
