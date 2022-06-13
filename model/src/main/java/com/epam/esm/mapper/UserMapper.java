@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
     UserDto toDto(User user);
 
+    @Mapping(target = "password", ignore = true)
     @Mapping(target = "orders", ignore = true)
     User toEntity(UserDto userDto);
 }

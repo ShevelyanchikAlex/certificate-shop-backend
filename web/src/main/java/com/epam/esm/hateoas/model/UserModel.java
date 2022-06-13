@@ -1,5 +1,7 @@
 package com.epam.esm.hateoas.model;
 
+import com.epam.esm.domain.Role;
+import com.epam.esm.domain.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,4 +17,7 @@ import org.springframework.hateoas.server.core.Relation;
 public class UserModel extends RepresentationModel<UserModel> {
     private long id;
     private String name;
+    private String email;
+    private Role role;
+    private Status status;
 }
