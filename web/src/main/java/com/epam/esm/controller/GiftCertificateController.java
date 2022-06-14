@@ -46,7 +46,7 @@ public class GiftCertificateController {
                                                                 @RequestBody GiftCertificateFilterCondition giftCertificateFilterCondition) {
         Page<GiftCertificateDto> giftCertificatePage = giftCertificateService.findWithFilter(PageRequest.of(pageIndex, size), giftCertificateFilterCondition);
         CollectionModel<GiftCertificateModel> collectionModel = giftCertificateAssembler.toCollectionModel(giftCertificatePage.getContent());
-        return giftCertificateModelProcessor.process(giftCertificatePage, giftCertificateFilterCondition, collectionModel);
+        return giftCertificateModelProcessor.process(giftCertificatePage, collectionModel);
     }
 
     @PatchMapping

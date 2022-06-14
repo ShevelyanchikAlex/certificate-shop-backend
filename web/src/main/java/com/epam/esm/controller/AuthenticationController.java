@@ -5,7 +5,6 @@ import com.epam.esm.dto.UserDto;
 import com.epam.esm.hateoas.assembler.UserModelAssembler;
 import com.epam.esm.hateoas.model.UserModel;
 import com.epam.esm.service.AuthenticationService;
-import com.epam.esm.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +22,12 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    private final UserService userService;
     private final AuthenticationService authenticationService;
     private final UserModelAssembler userModelAssembler;
 
     @PostMapping("/signup")
     public UserModel signup(@RequestBody UserDto userDto) {
-        return userModelAssembler.toModel(userService.save(userDto));
+        return userModelAssembler.toModel(authenticationService.signup(userDto));
     }
 
     @PostMapping("/login")

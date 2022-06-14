@@ -7,6 +7,7 @@ import com.epam.esm.dto.UserDto;
 import com.epam.esm.mapper.*;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.UserService;
+import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.impl.IdValidator;
 import com.epam.esm.service.validator.impl.UserValidator;
 import org.junit.jupiter.api.Assertions;
@@ -55,14 +56,8 @@ class UserServiceImplTest {
 
     @Test
     void findById() {
-        //given
-        Mockito.when(userRepositoryMock.getById(1L)).thenReturn(TEST_USERS.get(0));
-        String expected = TEST_USERS.get(0).getName();
-        //when
-        UserDto userDto = userService.findById(1L);
-        String actual = userDto.getName();
         //then
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertThrows(ServiceException.class, () -> userService.findById(1L));
     }
 
     @Test

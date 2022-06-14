@@ -34,7 +34,7 @@ class TagRepositoryImplTest {
         //given
         String expected = "#tag";
         //when
-        Tag tag = tagRepository.findById(1L);
+        Tag tag = tagRepository.getById(1L);
         String actual = tag.getName();
         //then
         Assertions.assertEquals(expected, actual);
@@ -45,7 +45,7 @@ class TagRepositoryImplTest {
         //given
         long expected = 3L;
         //when
-        Tag tag = tagRepository.findByName("#like");
+        Tag tag = tagRepository.getTagByName("#like");
         long actual = tag.getId();
         //then
         Assertions.assertEquals(expected, actual);
@@ -67,8 +67,8 @@ class TagRepositoryImplTest {
     @Test
     void delete() {
         //when
-        tagRepository.delete(2L);
-        Tag actual = tagRepository.findById(2L);
+        tagRepository.deleteById(2L);
+        Tag actual = tagRepository.getById(2L);
         //then
         Assertions.assertNull(actual);
     }

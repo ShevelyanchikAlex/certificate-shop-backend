@@ -1,6 +1,5 @@
 package com.epam.esm.handler;
 
-import com.epam.esm.repository.exception.RepositoryException;
 import com.epam.esm.service.exception.JwtAuthenticationException;
 import com.epam.esm.service.exception.ServiceException;
 import org.springframework.context.MessageSource;
@@ -52,13 +51,6 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<HttpExceptionResponse> handleServiceException(HttpServletRequest httpServletRequest, ServiceException e) {
-        String errorMessage = messageSource.getMessage(e.getMessage(), e.getArgs(), getLocale(httpServletRequest));
-        HttpExceptionResponse errorResponse = new HttpExceptionResponse(exceptionCodeMap.get(e.getMessage()), errorMessage);
-        return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
-    }
-
-    @ExceptionHandler(RepositoryException.class)
-    public ResponseEntity<HttpExceptionResponse> handleRepositoryException(HttpServletRequest httpServletRequest, RepositoryException e) {
         String errorMessage = messageSource.getMessage(e.getMessage(), e.getArgs(), getLocale(httpServletRequest));
         HttpExceptionResponse errorResponse = new HttpExceptionResponse(exceptionCodeMap.get(e.getMessage()), errorMessage);
         return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());

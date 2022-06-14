@@ -50,12 +50,6 @@ public class TagController {
         return tagModelProcessor.process(tagsPage, collectionModel);
     }
 
-    @GetMapping("/count")
-    @PreAuthorize("hasAuthority('ADMIN_PERMISSION')")
-    public int countAll() {
-        return tagService.countAll();
-    }
-
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN_PERMISSION')")
     public void delete(@PathVariable Long id) {

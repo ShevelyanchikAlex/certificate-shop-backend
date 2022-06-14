@@ -2,8 +2,10 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.domain.user.User;
 import com.epam.esm.dto.AuthenticationRequestDTO;
+import com.epam.esm.dto.UserDto;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.AuthenticationService;
+import com.epam.esm.service.UserService;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +21,17 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
+    private final UserService userService;
 
     private static final String EMAIL = "email";
     private static final String TOKEN = "token";
+
+    @Override
+    public UserDto signup(UserDto userDto) {
+        return userService.save(userDto);
+    }
 
     @Override
     public Map<Object, Object> login(AuthenticationRequestDTO authenticationRequestDTO) throws AuthenticationException {

@@ -6,6 +6,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface UserService {
+    /**
+     * Saves User
+     *
+     * @param userDto UserDto
+     * @return Saved UserDto
+     */
     UserDto save(UserDto userDto);
 
     /**

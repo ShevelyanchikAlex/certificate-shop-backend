@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
         User user = Optional.of(userRepository.getById(userId))
                 .orElseThrow(() -> new ServiceException("user.not.found", userId));
         List<GiftCertificate> giftCertificates = new ArrayList<>();
-        giftCertificatesId.forEach(id -> giftCertificates.add(Optional.ofNullable(certificateRepository.findById(id))
+        giftCertificatesId.forEach(id -> giftCertificates.add(Optional.of(certificateRepository.getById(id))
                 .orElseThrow(() -> new ServiceException("gift.certificate.not.found", id))));
         BigDecimal totalPrice = BigDecimal.valueOf(giftCertificates
                 .stream().mapToDouble(giftCertificate -> Double.parseDouble(giftCertificate.getPrice().toString())).sum());
@@ -59,9 +59,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto findById(Long id) {
         idValidator.validate(id);
-        Order order = Optional.ofNullable(orderRepository.findById(id))
-                .orElseThrow(() -> new ServiceException("order.not.found", id));
-        return orderMapper.toDto(order);
+        if (!orderRepository.existsById(id)) {
+            throw new ServiceException("order.not.found", id);
+        }
+        return orderMapper.toDto(orderRepository.getById(id));
     }
 
     @Override
@@ -69,6 +70,6 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDto> orderDtoList = orderRepository.findAll(pageable)
                 .stream().map(orderMapper::toDto)
                 .collect(Collectors.toList());
-        return new PageImpl<>(orderDtoList, pageable, orderRepository.countAll());
+        return new PageImpl<>(orderDtoList, pageable, orderRepository.count());
     }
 }

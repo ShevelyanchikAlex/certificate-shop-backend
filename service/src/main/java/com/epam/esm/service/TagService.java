@@ -41,13 +41,6 @@ public interface TagService {
     Page<TagDto> findMostPopularTags(Pageable pageable);
 
     /**
-     * Counts all TagsDto
-     *
-     * @return count of TagsDto
-     */
-    int countAll();
-
-    /**
      * Deletes TagDto by id
      *
      * @param id id Of TagDto

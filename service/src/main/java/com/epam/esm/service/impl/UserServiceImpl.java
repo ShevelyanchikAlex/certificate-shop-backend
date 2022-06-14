@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,9 +47,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findById(Long id) {
         idValidator.validate(id);
-        User user = Optional.of(userRepository.getById(id))
-                .orElseThrow(() -> new ServiceException("user.not.found", id));
-        return userMapper.toDto(user);
+        if (!userRepository.existsById(id)) {
+            throw new ServiceException("user.not.found", id);
+        }
+        return userMapper.toDto(userRepository.getById(id));
     }
 
     @Override
@@ -64,8 +64,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<OrderDto> findUserOrders(Pageable pageable, Long id) {
-        User user = Optional.of(userRepository.getById(id))
-                .orElseThrow(() -> new ServiceException("user.not.found", id));
+        if (!userRepository.existsById(id)) {
+            throw new ServiceException("user.not.found", id);
+        }
+        User user = userRepository.getById(id);
         List<OrderDto> orders = user.getOrders()
                 .stream().map(orderMapper::toDto)
                 .collect(Collectors.toList());

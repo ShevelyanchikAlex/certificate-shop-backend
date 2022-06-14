@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.Predicate;
 
+/**
+ * Implemented {@link Validator} for {@link UserDto}
+ */
 @Component
 public class UserValidator implements Validator<UserDto> {
     @Override
