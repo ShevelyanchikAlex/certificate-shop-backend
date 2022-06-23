@@ -8,3 +8,10 @@ spring:
     hibernate:
       ddl-auto: update
     generate-ddl: true
+
+security:
+  jwt:
+    token:
+      header: Authorization
+      secret-key: test
+      expire-length: 604800

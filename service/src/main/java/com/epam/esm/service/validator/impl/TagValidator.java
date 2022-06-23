@@ -1,6 +1,7 @@
 package com.epam.esm.service.validator.impl;
 
 import com.epam.esm.dto.TagDto;
+import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.Validator;
 import com.epam.esm.service.validator.ValidatorRegexPattern;
 import org.springframework.stereotype.Component;
@@ -13,11 +14,10 @@ import java.util.function.Predicate;
 @Component
 public class TagValidator implements Validator<TagDto> {
     @Override
-    public boolean validate(TagDto tagDto) {
-        if (tagDto == null) {
-            return false;
+    public void validate(TagDto tagDto) {
+        if ((tagDto == null) || !validateName(tagDto.getName())) {
+            throw new ServiceException("tag.validate.error");
         }
-        return validateName(tagDto.getName());
     }
 
     private boolean validateName(String name) {

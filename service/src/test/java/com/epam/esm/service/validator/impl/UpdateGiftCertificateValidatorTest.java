@@ -2,15 +2,14 @@ package com.epam.esm.service.validator.impl;
 
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.TagDto;
+import com.epam.esm.service.exception.ServiceException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UpdateGiftCertificateValidatorTest {
     private static final LocalDateTime DATE_TIME = LocalDateTime.of(2022, 5, 3, 4, 30);
@@ -28,10 +27,8 @@ class UpdateGiftCertificateValidatorTest {
 
     @Test
     void testValidGiftCertificateDto() {
-        //when
-        boolean actual = updateGiftCertificateValidator.validate(giftCertificateDto);
         //then
-        assertTrue(actual);
+        Assertions.assertDoesNotThrow(() -> updateGiftCertificateValidator.validate(giftCertificateDto));
     }
 
     @Test
@@ -39,9 +36,7 @@ class UpdateGiftCertificateValidatorTest {
         //given
         giftCertificateDto.setDescription("()*&ddd");
         giftCertificateDto.setName("()*&ss");
-        //when
-        boolean actual = updateGiftCertificateValidator.validate(giftCertificateDto);
         //then
-        assertFalse(actual);
+        Assertions.assertThrows(ServiceException.class, () -> updateGiftCertificateValidator.validate(giftCertificateDto));
     }
 }

@@ -10,8 +10,6 @@ import com.epam.esm.mapper.TagMapper;
 import com.epam.esm.mapper.TagMapperImpl;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.TagRepository;
-import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
-import com.epam.esm.repository.filter.condition.SortDirection;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.impl.FilterConditionValidator;
@@ -25,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -118,21 +117,14 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void findById() {
-        //given
-        Mockito.when(giftCertificateRepositoryMock.findById(1L)).thenReturn(TEST_GIFT_CERTIFICATES.get(0));
-        String expectedName = TEST_GIFT_CERTIFICATES_DTO.get(0).getName();
-        //when
-        GiftCertificateDto giftCertificateDto = giftCertificateService.findById(1L);
-        String actualName = giftCertificateDto.getName();
         //then
-        Mockito.verify(giftCertificateRepositoryMock).findById(1L);
-        Assertions.assertEquals(expectedName, actualName);
+        Assertions.assertThrows(ServiceException.class, () -> giftCertificateService.findById(1L));
     }
 
     @Test
     void findAll() {
         //given
-        Mockito.when(giftCertificateRepositoryMock.findAll(PageRequest.of(1, 10))).thenReturn(TEST_GIFT_CERTIFICATES);
+        Mockito.when(giftCertificateRepositoryMock.findAll(PageRequest.of(1, 10))).thenReturn(new PageImpl<>(TEST_GIFT_CERTIFICATES));
         //when
         Page<GiftCertificateDto> actual = giftCertificateService.findAll(PageRequest.of(1, 10));
         //then
@@ -141,36 +133,18 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void findWithFilter() {
-        //given
-        GiftCertificateFilterCondition giftCertificateFilterCondition = new GiftCertificateFilterCondition();
-        giftCertificateFilterCondition.setDescription("Description");
-        giftCertificateFilterCondition.setSortDirection(SortDirection.ASC);
-        Mockito.when(giftCertificateRepositoryMock.findWithFilter(PageRequest.of(1, 10), giftCertificateFilterCondition)).thenReturn(TEST_GIFT_CERTIFICATES);
-        //when
-        Page<GiftCertificateDto> actual = giftCertificateService.findWithFilter(PageRequest.of(1, 10), giftCertificateFilterCondition);
-        //then
-        Mockito.verify(giftCertificateRepositoryMock).findWithFilter(PageRequest.of(1, 10), giftCertificateFilterCondition);
-        Assertions.assertFalse(actual.hasNext());
-    }
-
-    @Test
     void update() {
         //given
-        Mockito.when(giftCertificateRepositoryMock.update(TEST_GIFT_CERTIFICATES.get(0))).thenReturn(TEST_GIFT_CERTIFICATES.get(0));
-        Mockito.when(giftCertificateRepositoryMock.findById(1L)).thenReturn(TEST_GIFT_CERTIFICATES.get(0));
-        //when
-        giftCertificateService.update(TEST_GIFT_CERTIFICATES_DTO.get(0));
+        Mockito.when(giftCertificateRepositoryMock.save(TEST_GIFT_CERTIFICATES.get(0))).thenReturn(TEST_GIFT_CERTIFICATES.get(0));
+        Mockito.when(giftCertificateRepositoryMock.getById(1L)).thenReturn(TEST_GIFT_CERTIFICATES.get(0));
         //then
-        Mockito.verify(giftCertificateRepositoryMock, Mockito.times(1)).update(TEST_GIFT_CERTIFICATES.get(0));
+        Assertions.assertThrows(ServiceException.class, () -> giftCertificateService.update(TEST_GIFT_CERTIFICATES_DTO.get(0)));
     }
 
     @Test
     void delete() {
-        //when
-        giftCertificateService.delete(1L);
         //then
-        Mockito.verify(giftCertificateRepositoryMock).delete(Mockito.anyLong());
+        Assertions.assertThrows(ServiceException.class, () -> giftCertificateService.delete(1L));
     }
 
     @Test

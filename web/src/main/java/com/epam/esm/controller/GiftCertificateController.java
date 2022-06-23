@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,13 +22,14 @@ public class GiftCertificateController {
     private final GiftCertificateModelProcessor giftCertificateModelProcessor;
 
     @PostMapping
-    public GiftCertificateDto save(@RequestBody GiftCertificateDto giftCertificateDto) {
-        return giftCertificateService.save(giftCertificateDto);
+    @PreAuthorize("hasAuthority('ADMIN_PERMISSION')")
+    public GiftCertificateModel save(@RequestBody GiftCertificateDto giftCertificateDto) {
+        return giftCertificateAssembler.toModel(giftCertificateService.save(giftCertificateDto));
     }
 
     @GetMapping("/{id}")
-    public GiftCertificateDto findById(@PathVariable long id) {
-        return giftCertificateService.findById(id);
+    public GiftCertificateModel findById(@PathVariable long id) {
+        return giftCertificateAssembler.toModel(giftCertificateService.findById(id));
     }
 
     @GetMapping(produces = "application/json")
@@ -44,15 +46,17 @@ public class GiftCertificateController {
                                                                 @RequestBody GiftCertificateFilterCondition giftCertificateFilterCondition) {
         Page<GiftCertificateDto> giftCertificatePage = giftCertificateService.findWithFilter(PageRequest.of(pageIndex, size), giftCertificateFilterCondition);
         CollectionModel<GiftCertificateModel> collectionModel = giftCertificateAssembler.toCollectionModel(giftCertificatePage.getContent());
-        return giftCertificateModelProcessor.process(giftCertificatePage, giftCertificateFilterCondition, collectionModel);
+        return giftCertificateModelProcessor.process(giftCertificatePage, collectionModel);
     }
 
     @PatchMapping
-    public GiftCertificateDto update(@RequestBody GiftCertificateDto giftCertificateDto) {
-        return giftCertificateService.update(giftCertificateDto);
+    @PreAuthorize("hasAuthority('ADMIN_PERMISSION')")
+    public GiftCertificateModel update(@RequestBody GiftCertificateDto giftCertificateDto) {
+        return giftCertificateAssembler.toModel(giftCertificateService.update(giftCertificateDto));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN_PERMISSION')")
     public void delete(@PathVariable long id) {
         giftCertificateService.delete(id);
     }

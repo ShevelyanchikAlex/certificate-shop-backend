@@ -18,5 +18,6 @@ public final class HttpErrorCode {
     public static final String GIFT_CERTIFICATE_VALIDATE_ERROR_CODE = "40001";
     public static final String TAG_VALIDATE_ERROR_CODE = "40002";
     public static final String FILTER_CONDITION_VALIDATE_ERROR_CODE = "40003";
+    public static final String USER_VALIDATE_ERROR_CODE = "40004";
     public static final String UPDATE_CONDITION_VALIDATE_ERROR_CODE = "40004";
 }

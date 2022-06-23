@@ -1,11 +1,10 @@
 package com.epam.esm.service.validator.impl;
 
 import com.epam.esm.dto.TagDto;
+import com.epam.esm.service.exception.ServiceException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TagValidatorTest {
     private TagValidator tagValidator;
@@ -14,24 +13,21 @@ class TagValidatorTest {
     @BeforeEach
     public void setUp() {
         tagValidator = new TagValidator();
-        tagDto = new TagDto(1L, "#tag1");
+        tagDto = new TagDto(1L, "#tag1$42");
     }
 
     @Test
     void testValidTagName() {
         //given
-        tagDto.setName("r23r");
-        //when
-        boolean actual = tagValidator.validate(tagDto);
+        tagDto.setName("#tag_1");
         //then
-        assertFalse(actual);
+        Assertions.assertDoesNotThrow(() -> tagValidator.validate(tagDto));
     }
 
     @Test
     void testInvalidTagName() {
-        //when
-        boolean actual = tagValidator.validate(tagDto);
         //then
-        assertTrue(actual);
+        Assertions.assertThrows(ServiceException.class, () -> tagValidator.validate(tagDto));
+
     }
 }

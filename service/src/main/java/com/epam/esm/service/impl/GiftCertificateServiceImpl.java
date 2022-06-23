@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,9 +44,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto save(GiftCertificateDto giftCertificateDto) {
-        if (!giftCertificateValidator.validate(giftCertificateDto)) {
-            throw new ServiceException("gift.certificate.validate.error");
-        }
+        giftCertificateValidator.validate(giftCertificateDto);
         if (giftCertificateRepository.existsGiftCertificateByName(giftCertificateDto.getName())) {
             throw new ServiceException("resource.already.exist", "GIFT_CERTIFICATE");
         }
@@ -60,12 +59,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public GiftCertificateDto findById(Long id) {
-        if (!idValidator.validate(id)) {
-            throw new ServiceException("request.validate.error");
+        idValidator.validate(id);
+        if (!giftCertificateRepository.existsById(id)) {
+            throw new ServiceException("gift.certificate.not.found", id);
         }
-        Optional<GiftCertificate> certificateOptional = Optional.ofNullable(giftCertificateRepository.findById(id));
-        return certificateOptional.map(giftCertificateMapper::toDto)
-                .orElseThrow(() -> new ServiceException("gift.certificate.not.found", id));
+        return giftCertificateMapper.toDto(giftCertificateRepository.getById(id));
     }
 
     @Override
@@ -73,34 +71,31 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<GiftCertificateDto> giftCertificateDtoList = giftCertificateRepository.findAll(pageable)
                 .stream().map(giftCertificateMapper::toDto)
                 .collect(Collectors.toList());
-        return new PageImpl<>(giftCertificateDtoList, pageable, giftCertificateRepository.countAll());
+        return new PageImpl<>(giftCertificateDtoList, pageable, giftCertificateRepository.count());
     }
 
     @Override
     public Page<GiftCertificateDto> findWithFilter(Pageable pageable, GiftCertificateFilterCondition giftCertificateFilterCondition) {
-        if (!filterConditionValidator.validate(giftCertificateFilterCondition)) {
-            throw new ServiceException("gift.certificate.filter.condition.validate.error");
-        }
-        List<GiftCertificateDto> giftCertificateDtoList = giftCertificateRepository.findWithFilter(pageable, giftCertificateFilterCondition)
+        filterConditionValidator.validate(giftCertificateFilterCondition);
+        List<GiftCertificate> filteredGiftCertificates = getFilteredGiftCertificatesFromResultList(giftCertificateRepository.findWithFilter(pageable, giftCertificateFilterCondition));
+        List<GiftCertificateDto> giftCertificateDtoList = filteredGiftCertificates
                 .stream().map(giftCertificateMapper::toDto)
                 .collect(Collectors.toList());
-        return new PageImpl<>(giftCertificateDtoList, pageable, giftCertificateRepository.countAll());
+        return new PageImpl<>(giftCertificateDtoList, pageable, giftCertificateRepository.count());
     }
 
     @Override
     @Transactional
     public GiftCertificateDto update(GiftCertificateDto giftCertificateDto) {
-        if (!updateGiftCertificateValidator.validate(giftCertificateDto)) {
-            throw new ServiceException("gift.certificate.update.condition.error");
-        }
-        if (giftCertificateRepository.findById(giftCertificateDto.getId()) == null) {
-            throw new ServiceException("gift.certificate.not.found");
+        updateGiftCertificateValidator.validate(giftCertificateDto);
+        if (!giftCertificateRepository.existsById(giftCertificateDto.getId())) {
+            throw new ServiceException("gift.certificate.not.found", giftCertificateDto.getId());
         }
         GiftCertificate giftCertificate = giftCertificateMapper.toEntity(giftCertificateDto);
         GiftCertificateUpdateCondition updateCondition = new GiftCertificateUpdateCondition(giftCertificate.getId(), giftCertificate.getName(),
                 giftCertificate.getDescription(), giftCertificate.getPrice(), giftCertificate.getDuration(), giftCertificate.getTags());
-        GiftCertificate preUpdateGiftCertificate = createPreUpdateGiftCertificate(giftCertificateRepository.findById(giftCertificateDto.getId()), updateCondition);
-        return giftCertificateMapper.toDto(giftCertificateRepository.update(preUpdateGiftCertificate));
+        GiftCertificate preUpdateGiftCertificate = createPreUpdateGiftCertificate(giftCertificateRepository.getById(giftCertificateDto.getId()), updateCondition);
+        return giftCertificateMapper.toDto(giftCertificateRepository.save(preUpdateGiftCertificate));
     }
 
     @Transactional
@@ -130,16 +125,26 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public void delete(Long id) {
-        if (!idValidator.validate(id)) {
-            throw new ServiceException("request.validate.error");
+        idValidator.validate(id);
+        if (!giftCertificateRepository.existsById(id)) {
+            throw new ServiceException("gift.certificate.not.found", id);
         }
-        giftCertificateRepository.delete(id);
+        giftCertificateRepository.deleteById(id);
     }
 
     private List<Tag> fetchAssociatedTags(List<Tag> tags) {
         return tags.stream()
-                .map(tag -> Optional.ofNullable(tagRepository.findByName(tag.getName()))
+                .map(tag -> Optional.ofNullable(tagRepository.getTagByName(tag.getName()))
                         .orElseGet(() -> tagRepository.save(tag)))
                 .collect(Collectors.toList());
+    }
+
+    private List<GiftCertificate> getFilteredGiftCertificatesFromResultList(List<Object> resultList) {
+        List<GiftCertificate> giftCertificates = new ArrayList<>();
+        for (Object result : resultList) {
+            long id = Long.parseLong(result.toString());
+            giftCertificates.add(giftCertificateRepository.getById(id));
+        }
+        return giftCertificates;
     }
 }

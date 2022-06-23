@@ -1,8 +1,9 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.domain.GiftCertificate;
-import com.epam.esm.domain.Order;
-import com.epam.esm.domain.User;
+import com.epam.esm.domain.*;
+import com.epam.esm.domain.user.Role;
+import com.epam.esm.domain.user.Status;
+import com.epam.esm.domain.user.User;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.UserDto;
@@ -11,6 +12,7 @@ import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.OrderService;
+import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.impl.IdValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -32,12 +35,12 @@ import java.util.List;
 @ContextConfiguration(classes = {OrderMapperImpl.class, UserMapperImpl.class, GiftCertificateMapperImpl.class, TagMapperImpl.class})
 class OrderServiceImplTest {
     private static final List<User> TEST_USERS = List.of(
-            new User(1L, "User first", Collections.emptyList()),
-            new User(2L, "User second", Collections.emptyList()));
+            new User(1L, "User first", "user1@gmail.com", "user", Role.USER, Status.ACTIVE, Collections.emptyList()),
+            new User(2L, "User second", "user2@gmail.com", "user", Role.USER, Status.ACTIVE, Collections.emptyList()));
 
     private static final List<UserDto> TEST_USERS_DTO = List.of(
-            new UserDto(1L, "User first"),
-            new UserDto(2L, "User second")
+            new UserDto(1L, "User first", "user1@gmail.com", "user", Role.USER, Status.ACTIVE),
+            new UserDto(2L, "User second", "user2@gmail.com", "user", Role.USER, Status.ACTIVE)
     );
 
     private static final LocalDateTime DATE_TIME = LocalDateTime.of(2022, 5, 3, 4, 30);
@@ -89,8 +92,8 @@ class OrderServiceImplTest {
     @Test
     void save() {
         //given
-        Mockito.when(userRepositoryMock.findById(1L)).thenReturn(TEST_USERS.get(0));
-        Mockito.when(giftCertificateRepository.findById(1L)).thenReturn(TEST_GIFT_CERTIFICATES.get(0));
+        Mockito.when(userRepositoryMock.getById(1L)).thenReturn(TEST_USERS.get(0));
+        Mockito.when(giftCertificateRepository.getById(1L)).thenReturn(TEST_GIFT_CERTIFICATES.get(0));
         Mockito.when(orderRepositoryMock.save(TEST_ORDERS.get(0))).thenReturn(TEST_ORDERS.get(0));
         UserDto expectedUserDto = TEST_ORDERS_DTO.get(0).getUser();
         GiftCertificateDto expectedGiftCertificate = TEST_ORDERS_DTO.get(0).getGiftCertificates().get(0);
@@ -105,18 +108,14 @@ class OrderServiceImplTest {
 
     @Test
     void findById() {
-        //given
-        Mockito.when(orderRepositoryMock.findById(1L)).thenReturn(TEST_ORDERS.get(0));
-        //when
-        OrderDto actual = orderService.findById(1L);
         //then
-        Assertions.assertEquals(TEST_ORDERS_DTO.get(0), actual);
+        Assertions.assertThrows(ServiceException.class, () -> orderService.findById(1L));
     }
 
     @Test
     void findAll() {
         //given
-        Mockito.when(orderRepositoryMock.findAll(PageRequest.of(1, 10))).thenReturn(TEST_ORDERS);
+        Mockito.when(orderRepositoryMock.findAll(PageRequest.of(1, 10))).thenReturn(new PageImpl<>(TEST_ORDERS));
         //when
         Page<OrderDto> orders = orderService.findAll(PageRequest.of(1, 10));
         //then

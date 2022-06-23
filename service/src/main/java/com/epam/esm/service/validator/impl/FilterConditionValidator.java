@@ -2,6 +2,7 @@ package com.epam.esm.service.validator.impl;
 
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.repository.filter.condition.SortDirection;
+import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.Validator;
 import com.epam.esm.service.validator.ValidatorRegexPattern;
 import org.springframework.stereotype.Component;
@@ -15,14 +16,14 @@ import java.util.function.Predicate;
 @Component
 public class FilterConditionValidator implements Validator<GiftCertificateFilterCondition> {
     @Override
-    public boolean validate(GiftCertificateFilterCondition giftCertificateFilterCondition) {
-        if (giftCertificateFilterCondition == null) {
-            return false;
+    public void validate(GiftCertificateFilterCondition giftCertificateFilterCondition) {
+        if ((giftCertificateFilterCondition == null) ||
+                !(validateTagNames(giftCertificateFilterCondition.getTagNames()) &&
+                        validatePartOfName(giftCertificateFilterCondition.getName()) &&
+                        validatePartOfDescription(giftCertificateFilterCondition.getDescription()) &&
+                        validateSortDirection(giftCertificateFilterCondition.getSortDirection()))) {
+            throw new ServiceException("gift.certificate.filter.condition.validate.error");
         }
-        return validateTagNames(giftCertificateFilterCondition.getTagNames()) &&
-                validatePartOfName(giftCertificateFilterCondition.getName()) &&
-                validatePartOfDescription(giftCertificateFilterCondition.getDescription()) &&
-                validateOrder(giftCertificateFilterCondition.getSortDirection());
     }
 
     private boolean validateTagNames(List<String> tagNames) {
@@ -54,11 +55,11 @@ public class FilterConditionValidator implements Validator<GiftCertificateFilter
         return partOfDescriptionPredicate.test(partOfDescription);
     }
 
-    private boolean validateOrder(SortDirection sortDirection) {
+    private boolean validateSortDirection(SortDirection sortDirection) {
         if (sortDirection == null) {
             return true;
         }
-        Predicate<String> orderPredicate = str -> str.matches(ValidatorRegexPattern.ORDER_REGEX_PATTERN);
+        Predicate<String> orderPredicate = str -> str.matches(ValidatorRegexPattern.SORT_DIRECTION_REGEX_PATTERN);
         return orderPredicate.test(sortDirection.getSortDirection());
     }
 }

@@ -5,8 +5,8 @@ import com.epam.esm.dto.TagDto;
 import com.epam.esm.mapper.TagMapper;
 import com.epam.esm.mapper.TagMapperImpl;
 import com.epam.esm.repository.TagRepository;
-import com.epam.esm.repository.exception.RepositoryException;
 import com.epam.esm.service.TagService;
+import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.impl.IdValidator;
 import com.epam.esm.service.validator.impl.TagValidator;
 import org.junit.jupiter.api.Assertions;
@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -35,7 +36,7 @@ class TagServiceImplTest {
             new TagDto(1L, "#tag1"),
             new TagDto(2L, "#tag2"),
             new TagDto(3L, "#tag3"));
-    public static final int TAG_LIST_LENGTH = 3;
+    public static final long TAG_LIST_LENGTH = 3;
 
     private TagService tagService;
     private final TagRepository tagRepositoryMock = Mockito.mock(TagRepository.class);
@@ -68,19 +69,14 @@ class TagServiceImplTest {
 
     @Test
     void findById() {
-        //given
-        Mockito.when(tagRepositoryMock.findById(1L)).thenReturn(TEST_TAGS.get(0));
-        //when
-        TagDto actual = tagService.findById(1L);
         //then
-        Mockito.verify(tagRepositoryMock).findById(1L);
-        Assertions.assertEquals(TEST_TAGS_DTO.get(0), actual);
+        Assertions.assertThrows(ServiceException.class, () -> tagService.findById(1L));
     }
 
     @Test
     void findAll() {
         //given
-        Mockito.when(tagRepositoryMock.findAll(PageRequest.of(1, 3))).thenReturn(TEST_TAGS);
+        Mockito.when(tagRepositoryMock.findAll(PageRequest.of(1, 3))).thenReturn(new PageImpl<>(TEST_TAGS));
         //when
         Page<TagDto> actual = tagService.findAll(PageRequest.of(1, 3));
         //then
@@ -88,29 +84,14 @@ class TagServiceImplTest {
     }
 
     @Test
-    void countAll() {
-        //given
-        Mockito.when(tagRepositoryMock.countAll()).thenReturn(TAG_LIST_LENGTH);
-        //when
-        int actual = tagService.countAll();
-        //then
-        Mockito.verify(tagRepositoryMock).countAll();
-        Assertions.assertEquals(TAG_LIST_LENGTH, actual);
-    }
-
-    @Test
     void delete() {
-        //when
-        tagService.delete(1L);
         //then
-        Mockito.verify(tagRepositoryMock).delete(Mockito.anyLong());
+        Assertions.assertThrows(ServiceException.class, () -> tagService.delete(1L));
     }
 
     @Test
     void findNonExistingTagByIdTest() {
-        //given
-        Mockito.when(tagRepositoryMock.findById(10L)).thenThrow(RepositoryException.class);
         //then
-        Assertions.assertThrows(RepositoryException.class, () -> tagService.findById(10L));
+        Assertions.assertThrows(ServiceException.class, () -> tagService.findById(10L));
     }
 }
