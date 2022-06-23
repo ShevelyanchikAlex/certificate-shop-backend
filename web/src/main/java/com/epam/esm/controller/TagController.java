@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,16 +21,19 @@ public class TagController {
     private final TagModelProcessor tagModelProcessor;
 
     @PostMapping
-    public TagDto save(@RequestBody TagDto tagDto) {
-        return tagService.save(tagDto);
+    @PreAuthorize("hasAuthority('ADMIN_PERMISSION')")
+    public TagModel save(@RequestBody TagDto tagDto) {
+        return tagModelAssembler.toModel(tagService.save(tagDto));
     }
 
     @GetMapping("/{id}")
-    public TagDto findById(@PathVariable Long id) {
-        return tagService.findById(id);
+    @PreAuthorize("hasAuthority('USER_PERMISSION')")
+    public TagModel findById(@PathVariable Long id) {
+        return tagModelAssembler.toModel(tagService.findById(id));
     }
 
     @GetMapping(produces = "application/json")
+    @PreAuthorize("hasAuthority('USER_PERMISSION')")
     public CollectionModel<TagModel> findAll(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                              @RequestParam(name = "size", defaultValue = "10") Integer size) {
         Page<TagDto> tagsPage = tagService.findAll(PageRequest.of(pageIndex, size));
@@ -38,6 +42,7 @@ public class TagController {
     }
 
     @GetMapping("/most-popular")
+    @PreAuthorize("hasAuthority('USER_PERMISSION')")
     public CollectionModel<TagModel> findMostPopularTags(@RequestParam(name = "pageIndex", defaultValue = "0") Integer pageIndex,
                                                          @RequestParam(name = "size", defaultValue = "10") Integer size) {
         Page<TagDto> tagsPage = tagService.findMostPopularTags(PageRequest.of(pageIndex, size));
@@ -45,12 +50,8 @@ public class TagController {
         return tagModelProcessor.process(tagsPage, collectionModel);
     }
 
-    @GetMapping("/count")
-    public int countAll() {
-        return tagService.countAll();
-    }
-
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN_PERMISSION')")
     public void delete(@PathVariable Long id) {
         tagService.delete(id);
     }

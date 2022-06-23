@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,11 +25,13 @@ public class UserController {
     private final OrderModelAssembler orderModelAssembler;
 
     @GetMapping("/{id}")
-    public UserDto findById(@PathVariable Long id) {
-        return userService.findById(id);
+    @PreAuthorize("hasAuthority('USER_PERMISSION')")
+    public UserModel findById(@PathVariable Long id) {
+        return userModelAssembler.toModel(userService.findById(id));
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('USER_PERMISSION')")
     public CollectionModel<UserModel> findAll(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                               @RequestParam(name = "size", defaultValue = "10") Integer size) {
         Page<UserDto> userPage = userService.findAll(PageRequest.of(pageIndex, size));
@@ -37,6 +40,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/orders")
+    @PreAuthorize("hasAuthority('USER_PERMISSION')")
     public CollectionModel<OrderModel> findUserOrders(@RequestParam(name = "pageIndex", defaultValue = "1") Integer pageIndex,
                                                       @RequestParam(name = "size", defaultValue = "10") Integer size,
                                                       @PathVariable Long id) {

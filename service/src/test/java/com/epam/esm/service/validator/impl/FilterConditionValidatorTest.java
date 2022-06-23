@@ -2,10 +2,10 @@ package com.epam.esm.service.validator.impl;
 
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import com.epam.esm.repository.filter.condition.SortDirection;
+import com.epam.esm.service.exception.ServiceException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class FilterConditionValidatorTest {
     private FilterConditionValidator filterConditionValidator;
@@ -21,69 +21,55 @@ class FilterConditionValidatorTest {
     void testInvalidName() {
         //given
         giftCertificateFilterCondition.setName("43243dsada@#");
-        //when
-        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
         //then
-        assertFalse(actual);
+        Assertions.assertThrows(ServiceException.class, () -> filterConditionValidator.validate(giftCertificateFilterCondition));
     }
 
     @Test
     void testValidName() {
         //given
         giftCertificateFilterCondition.setName("name");
-        //when
-        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
         //then
-        assertTrue(actual);
+        Assertions.assertDoesNotThrow(() -> filterConditionValidator.validate(giftCertificateFilterCondition));
     }
 
     @Test
     void testInvalidDescription() {
         //given
         giftCertificateFilterCondition.setDescription("Desc$#@");
-        //when
-        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
         //then
-        assertFalse(actual);
+        Assertions.assertThrows(ServiceException.class, () -> filterConditionValidator.validate(giftCertificateFilterCondition));
     }
 
     @Test
     void testValidDescription() {
         //given
         giftCertificateFilterCondition.setDescription("Description of Certificate");
-        //when
-        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
         //then
-        assertTrue(actual);
+        Assertions.assertDoesNotThrow(() -> filterConditionValidator.validate(giftCertificateFilterCondition));
     }
 
     @Test
     void testValidSortDirection() {
         //given
         giftCertificateFilterCondition.setSortDirection(SortDirection.valueOf("ASC"));
-        //when
-        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
         //then
-        assertTrue(actual);
+        Assertions.assertDoesNotThrow(() -> filterConditionValidator.validate(giftCertificateFilterCondition));
     }
 
     @Test
     void testValidSortByName() {
         //given
         giftCertificateFilterCondition.setSortByName(true);
-        //when
-        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
         //then
-        assertTrue(actual);
+        Assertions.assertDoesNotThrow(() -> filterConditionValidator.validate(giftCertificateFilterCondition));
     }
 
     @Test
     void testValidSortByDate() {
         //given
         giftCertificateFilterCondition.setSortByDate(true);
-        //when
-        boolean actual = filterConditionValidator.validate(giftCertificateFilterCondition);
         //then
-        assertTrue(actual);
+        Assertions.assertDoesNotThrow(() -> filterConditionValidator.validate(giftCertificateFilterCondition));
     }
 }

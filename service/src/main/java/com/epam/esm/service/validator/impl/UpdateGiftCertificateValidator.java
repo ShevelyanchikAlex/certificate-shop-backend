@@ -2,6 +2,7 @@ package com.epam.esm.service.validator.impl;
 
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.TagDto;
+import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.validator.Validator;
 import com.epam.esm.service.validator.ValidatorRegexPattern;
 import org.springframework.stereotype.Component;
@@ -19,15 +20,15 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
     public static final int MIN_VALUE = 0;
 
     @Override
-    public boolean validate(GiftCertificateDto giftCertificateDto) {
-        if (giftCertificateDto == null) {
-            return false;
+    public void validate(GiftCertificateDto giftCertificateDto) {
+        if ((giftCertificateDto == null) ||
+                !(validateName(giftCertificateDto.getName()) &&
+                        validateDescription(giftCertificateDto.getDescription()) &&
+                        validatePrice(giftCertificateDto.getPrice()) &&
+                        validateDuration(giftCertificateDto.getDuration()) &&
+                        validateTags(giftCertificateDto.getTags()))) {
+            throw new ServiceException("gift.certificate.update.condition.error");
         }
-        return validateName(giftCertificateDto.getName()) &&
-                validateDescription(giftCertificateDto.getDescription()) &&
-                validatePrice(giftCertificateDto.getPrice()) &&
-                validateDuration(giftCertificateDto.getDuration()) &&
-                validateTags(giftCertificateDto.getTags());
     }
 
     private boolean validateName(String name) {
@@ -68,9 +69,7 @@ public class UpdateGiftCertificateValidator implements Validator<GiftCertificate
         }
         TagValidator tagValidator = new TagValidator();
         for (TagDto tagDto : tags) {
-            if (!tagValidator.validate(tagDto)) {
-                return false;
-            }
+            tagValidator.validate(tagDto);
         }
         return true;
     }

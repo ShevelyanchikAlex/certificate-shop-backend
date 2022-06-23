@@ -2,7 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.domain.Order;
-import com.epam.esm.domain.User;
+import com.epam.esm.domain.user.User;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.mapper.OrderMapper;
 import com.epam.esm.repository.GiftCertificateRepository;
@@ -37,13 +37,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDto save(Long userId, List<Long> giftCertificatesId) {
-        if (!idValidator.validate(userId) || !idValidator.validate(giftCertificatesId)) {
-            throw new ServiceException("request.validate.error");
-        }
-        User user = Optional.ofNullable(userRepository.findById(userId))
+        idValidator.validate(userId);
+        idValidator.validate(giftCertificatesId);
+        User user = Optional.of(userRepository.getById(userId))
                 .orElseThrow(() -> new ServiceException("user.not.found", userId));
         List<GiftCertificate> giftCertificates = new ArrayList<>();
-        giftCertificatesId.forEach(id -> giftCertificates.add(Optional.ofNullable(certificateRepository.findById(id))
+        giftCertificatesId.forEach(id -> giftCertificates.add(Optional.of(certificateRepository.getById(id))
                 .orElseThrow(() -> new ServiceException("gift.certificate.not.found", id))));
         BigDecimal totalPrice = BigDecimal.valueOf(giftCertificates
                 .stream().mapToDouble(giftCertificate -> Double.parseDouble(giftCertificate.getPrice().toString())).sum());
@@ -59,12 +58,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto findById(Long id) {
-        if (!idValidator.validate(id)) {
-            throw new ServiceException("request.validate.error", id);
+        idValidator.validate(id);
+        if (!orderRepository.existsById(id)) {
+            throw new ServiceException("order.not.found", id);
         }
-        Order order = Optional.ofNullable(orderRepository.findById(id))
-                .orElseThrow(() -> new ServiceException("order.not.found", id));
-        return orderMapper.toDto(order);
+        return orderMapper.toDto(orderRepository.getById(id));
     }
 
     @Override
@@ -72,6 +70,6 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDto> orderDtoList = orderRepository.findAll(pageable)
                 .stream().map(orderMapper::toDto)
                 .collect(Collectors.toList());
-        return new PageImpl<>(orderDtoList, pageable, orderRepository.countAll());
+        return new PageImpl<>(orderDtoList, pageable, orderRepository.count());
     }
 }

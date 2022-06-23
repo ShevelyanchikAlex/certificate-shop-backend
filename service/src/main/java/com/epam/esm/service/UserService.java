@@ -7,6 +7,14 @@ import org.springframework.data.domain.Pageable;
 
 public interface UserService {
     /**
+     * Saves User
+     *
+     * @param userDto UserDto
+     * @return Saved UserDto
+     */
+    UserDto save(UserDto userDto);
+
+    /**
      * Finds UserDto by id
      *
      * @param id Id of User

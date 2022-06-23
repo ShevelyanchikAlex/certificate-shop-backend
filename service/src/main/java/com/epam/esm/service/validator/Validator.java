@@ -10,7 +10,6 @@ public interface Validator<T> {
      * Validate Entity
      *
      * @param entity Entity
-     * @return true if valid, otherwise false
      */
-    boolean validate(T entity);
+    void validate(T entity);
 }

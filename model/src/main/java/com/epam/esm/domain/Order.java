@@ -1,6 +1,7 @@
 package com.epam.esm.domain;
 
 import com.epam.esm.audit.AuditListener;
+import com.epam.esm.domain.user.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

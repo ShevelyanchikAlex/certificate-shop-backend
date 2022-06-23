@@ -1,6 +1,5 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.domain.Tag;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.mapper.TagMapper;
 import com.epam.esm.repository.TagRepository;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -33,9 +31,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public TagDto save(TagDto tagDto) {
-        if (!tagValidator.validate(tagDto)) {
-            throw new ServiceException("tag.validate.error");
-        }
+        tagValidator.validate(tagDto);
         if (tagRepository.existsTagByName(tagDto.getName())) {
             throw new ServiceException("resource.already.exist", "TAG");
         }
@@ -44,12 +40,11 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDto findById(Long id) {
-        if (!idValidator.validate(id)) {
-            throw new ServiceException("request.validate.error", id);
+        idValidator.validate(id);
+        if (!tagRepository.existsById(id)) {
+            throw new ServiceException("tag.not.found", id);
         }
-        Optional<Tag> tagOptional = Optional.ofNullable(tagRepository.findById(id));
-        return tagOptional.map(tagMapper::toDto)
-                .orElseThrow(() -> new ServiceException("tag.not.found", id));
+        return tagMapper.toDto(tagRepository.getById(id));
     }
 
     @Override
@@ -57,7 +52,7 @@ public class TagServiceImpl implements TagService {
         List<TagDto> tags = tagRepository.findAll(pageable)
                 .stream().map(tagMapper::toDto)
                 .collect(Collectors.toList());
-        return new PageImpl<>(tags, pageable, tagRepository.countAll());
+        return new PageImpl<>(tags, pageable, tagRepository.count());
     }
 
     @Override
@@ -65,20 +60,16 @@ public class TagServiceImpl implements TagService {
         List<TagDto> tags = tagRepository.findMostPopularTags(pageable)
                 .stream().map(tagMapper::toDto)
                 .collect(Collectors.toList());
-        return new PageImpl<>(tags, pageable, tagRepository.countAll());
-    }
-
-    @Override
-    public int countAll() {
-        return tagRepository.countAll();
+        return new PageImpl<>(tags, pageable, tagRepository.count());
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        if (!idValidator.validate(id)) {
-            throw new ServiceException("request.validate.error", id);
+        idValidator.validate(id);
+        if (!tagRepository.existsById(id)) {
+            throw new ServiceException("tag.not.found", id);
         }
-        tagRepository.delete(id);
+        tagRepository.deleteById(id);
     }
 }

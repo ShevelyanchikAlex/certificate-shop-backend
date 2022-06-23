@@ -3,8 +3,6 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.config.TestConfig;
-import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
-import com.epam.esm.repository.filter.condition.SortDirection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional
 @ExtendWith(SpringExtension.class)
@@ -52,7 +48,7 @@ class GiftCertificateRepositoryImplTest {
         //given
         String expected = "Nike";
         //when
-        GiftCertificate actual = giftCertificateRepository.findById(1L);
+        GiftCertificate actual = giftCertificateRepository.getById(1L);
         //then
         Assertions.assertEquals(expected, actual.getName());
     }
@@ -63,25 +59,12 @@ class GiftCertificateRepositoryImplTest {
     }
 
     @Test
-    void findWithFilter() {
-        //given
-        GiftCertificateFilterCondition giftCertificateFilterCondition = new GiftCertificateFilterCondition();
-        giftCertificateFilterCondition.setDescription("Swim");
-        giftCertificateFilterCondition.setSortDirection(SortDirection.DESC);
-        //when
-        List<GiftCertificate> actual = giftCertificateRepository.findWithFilter(PageRequest.of(1, 10), giftCertificateFilterCondition)
-                .stream().distinct().collect(Collectors.toList());
-        //then
-        Assertions.assertNotNull(actual);
-    }
-
-    @Test
     void update() {
         //given
         GiftCertificate expected = new GiftCertificate(1, "Nike", "DescriptionUpd upd", new BigDecimal(22),
                 2, DATE_TIME, DATE_TIME, new ArrayList<>());
         //when
-        GiftCertificate actual = giftCertificateRepository.update(expected);
+        GiftCertificate actual = giftCertificateRepository.save(expected);
         //then
         Assertions.assertEquals(expected, actual);
     }
@@ -89,8 +72,8 @@ class GiftCertificateRepositoryImplTest {
     @Test
     void delete() {
         //when
-        giftCertificateRepository.delete(2L);
-        GiftCertificate actual = giftCertificateRepository.findById(2L);
+        giftCertificateRepository.deleteById(2L);
+        GiftCertificate actual = giftCertificateRepository.getById(2L);
         //then
         Assertions.assertNull(actual);
     }
