@@ -2,6 +2,8 @@ plugins {
     id 'org.springframework.boot' version '2.6.7'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'jacoco'
+    id "org.sonarqube" version "3.4.0.2513"
 }
 
 group = 'com.epam.esm'
@@ -31,7 +33,7 @@ subprojects {
     }
 
     dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter'
+        implementation 'org.springframework.boot:spring-boot-starter:2.7.2'
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework.boot:spring-boot-starter-hateoas'
@@ -46,5 +48,14 @@ subprojects {
         runtimeOnly 'com.h2database:h2:2.1.212'
 
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "mjs-rest-api-basics"
+        property "sonar.login", "squ_8e817a23ef58f29de9daaaf3cd0b2027cdccc0c2"
+        property "sonar.host.url", "http://localhost:9000"
+        property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
     }
 }

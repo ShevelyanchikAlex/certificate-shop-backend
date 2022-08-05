@@ -4,6 +4,7 @@ import com.epam.esm.domain.Tag;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.config.TestConfig;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+@Disabled
 @Transactional
 @SpringBootTest(classes = TestConfig.class)
 @ActiveProfiles("dev")

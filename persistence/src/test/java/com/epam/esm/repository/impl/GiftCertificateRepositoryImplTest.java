@@ -4,6 +4,7 @@ import com.epam.esm.domain.GiftCertificate;
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.config.TestConfig;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+@Disabled
 @Transactional
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestConfig.class)
