@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'war'
 }
 
 group 'com.epam.esm'
@@ -11,9 +10,12 @@ repositories {
 }
 
 dependencies {
+    apply plugin: 'war'
+
     implementation project(":model")
     implementation project(":service")
     implementation project(":persistence")
+
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2'
@@ -22,4 +24,8 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+war {
+    enabled = true
 }

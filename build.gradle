@@ -4,7 +4,6 @@ plugins {
     id 'java'
     id 'jacoco'
     id "org.sonarqube" version "3.4.0.2513"
-    id 'war'
 }
 
 group = 'com.epam.esm'
@@ -62,8 +61,6 @@ sonarqube {
     }
 }
 
-springBoot {
-    mainClass = 'web.src.main.java.com.epam.esm.config.SpringWebAppInitializer'
+springBoot{
+    mainClass.set('com.epam.esm.controller.config.SpringWebAppInitializer')
 }
-
-war.enabled = false
