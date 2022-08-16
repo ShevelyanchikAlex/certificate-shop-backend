@@ -64,3 +64,4 @@ sonarqube {
 springBoot{
     mainClass.set('com.epam.esm.controller.config.SpringWebAppInitializer')
 }
+//comment
