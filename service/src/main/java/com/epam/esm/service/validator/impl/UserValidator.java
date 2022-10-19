@@ -22,20 +22,20 @@ public class UserValidator implements Validator<UserDto> {
         }
     }
 
+    public boolean validateEmail(String email) {
+        if (email == null) {
+            return false;
+        }
+        Predicate<String> userEmailPredicate = str -> str.matches(ValidatorRegexPattern.EMAIL_REGEX_PATTERN);
+        return userEmailPredicate.test(email);
+    }
+
     private boolean validateName(String name) {
         if (name == null) {
             return false;
         }
         Predicate<String> userNamePredicate = str -> str.matches(ValidatorRegexPattern.USER_NAME_REGEX_PATTERN);
         return userNamePredicate.test(name);
-    }
-
-    private boolean validateEmail(String email) {
-        if (email == null) {
-            return false;
-        }
-        Predicate<String> userEmailPredicate = str -> str.matches(ValidatorRegexPattern.EMAIL_REGEX_PATTERN);
-        return userEmailPredicate.test(email);
     }
 
     private boolean validatePassword(String password) {

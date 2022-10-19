@@ -54,6 +54,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto findByEmail(String email) {
+        userValidator.validateEmail(email);
+        if(!userRepository.existsUserByEmail(email)) {
+            throw new ServiceException("user.not.found", email);
+        }
+        return userMapper.toDto(userRepository.findByEmail(email).get());
+    }
+
+    @Override
     public Page<UserDto> findAll(Pageable pageable) {
         List<UserDto> users = userRepository.findAll(pageable)
                 .stream()
@@ -72,5 +81,10 @@ public class UserServiceImpl implements UserService {
                 .stream().map(orderMapper::toDto)
                 .collect(Collectors.toList());
         return new PageImpl<>(orders, pageable, orders.size());
+    }
+
+    @Override
+    public Long getUsersCount() {
+        return userRepository.count();
     }
 }

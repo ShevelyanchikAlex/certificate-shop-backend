@@ -23,6 +23,14 @@ public interface UserService {
     UserDto findById(Long id);
 
     /**
+     * Finds UserDto by email
+     *
+     * @param email of user
+     * @return Found UserDto
+     */
+    UserDto findByEmail(String email);
+
+    /**
      * Finds all UsersDto
      *
      * @param pageable Pageable
@@ -38,4 +46,11 @@ public interface UserService {
      * @return Page with UserOrders
      */
     Page<OrderDto> findUserOrders(Pageable pageable, Long id);
+
+    /**
+     * Get count of all Users
+     *
+     * @return Long count of all Users
+     */
+    Long getUsersCount();
 }
