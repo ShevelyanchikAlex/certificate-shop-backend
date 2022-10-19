@@ -85,6 +85,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
+    public Long getGiftCertificatesCount() {
+        return giftCertificateRepository.count();
+    }
+
+    @Override
     @Transactional
     public GiftCertificateDto update(GiftCertificateDto giftCertificateDto) {
         updateGiftCertificateValidator.validate(giftCertificateDto);

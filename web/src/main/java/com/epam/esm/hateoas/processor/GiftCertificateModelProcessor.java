@@ -3,7 +3,6 @@ package com.epam.esm.hateoas.processor;
 import com.epam.esm.controller.GiftCertificateController;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.hateoas.model.GiftCertificateModel;
-import com.epam.esm.hateoas.model.TagModel;
 import com.epam.esm.repository.filter.condition.GiftCertificateFilterCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
@@ -15,11 +14,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class GiftCertificateModelProcessor implements RepresentationModelProcessor<TagModel> {
+public class GiftCertificateModelProcessor implements RepresentationModelProcessor<GiftCertificateModel> {
     private static final int FIRST_PAGE = 1;
 
     @Override
-    public TagModel process(TagModel model) {
+    public GiftCertificateModel process(GiftCertificateModel model) {
         return model;
     }
 
