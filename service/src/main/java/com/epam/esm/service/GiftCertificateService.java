@@ -43,6 +43,13 @@ public interface GiftCertificateService {
     Page<GiftCertificateDto> findWithFilter(Pageable pageable, GiftCertificateFilterCondition giftCertificateFilterCondition);
 
     /**
+     * Get count of all GiftCertificates
+     *
+     * @return Long count of all GiftCertificates
+     */
+    Long getGiftCertificatesCount();
+
+    /**
      * Updates GiftCertificateDto
      *
      * @param giftCertificateDto GiftCertificateDto

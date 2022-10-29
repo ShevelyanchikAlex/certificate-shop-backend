@@ -49,6 +49,11 @@ public class GiftCertificateController {
         return giftCertificateModelProcessor.process(giftCertificatePage, collectionModel);
     }
 
+    @GetMapping("/count")
+    public Long getGiftCertificatesCount() {
+        return giftCertificateService.getGiftCertificatesCount();
+    }
+
     @PatchMapping
     @PreAuthorize("hasAuthority('ADMIN_PERMISSION')")
     public GiftCertificateModel update(@RequestBody GiftCertificateDto giftCertificateDto) {

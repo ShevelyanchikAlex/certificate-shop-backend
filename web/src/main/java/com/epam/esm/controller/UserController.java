@@ -48,4 +48,16 @@ public class UserController {
         CollectionModel<OrderModel> collectionModel = orderModelAssembler.toCollectionModel(orderPage.getContent());
         return userModelProcessor.process(orderPage, collectionModel, id);
     }
+
+    @GetMapping("/email/{email}")
+    @PreAuthorize("hasAuthority('USER_PERMISSION')")
+    public UserModel findByEmail(@PathVariable String email) {
+        return userModelAssembler.toModel(userService.findByEmail(email));
+    }
+
+    @GetMapping("/count")
+    @PreAuthorize("hasAuthority('USER_PERMISSION')")
+    public Long getUsersCount() {
+        return userService.getUsersCount();
+    }
 }

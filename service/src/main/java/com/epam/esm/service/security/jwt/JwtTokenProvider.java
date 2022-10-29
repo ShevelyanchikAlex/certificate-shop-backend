@@ -3,6 +3,7 @@ package com.epam.esm.service.security.jwt;
 import com.epam.esm.service.exception.JwtAuthenticationException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,12 +20,12 @@ import java.util.Date;
 public class JwtTokenProvider {
     private final UserDetailsService userDetailsService;
 
-//    @Value("${security.jwt.token.secret-key}")
-    private String secretKey = "test";
-//    @Value("${security.jwt.token.expire-length}")
-    private long validityInMilliseconds = 604800;
-//    @Value("${security.jwt.token.header}")
-    private String authorizationHeader = "Authorization";
+    @Value("${security.jwt.token.secret-key}")
+    private String secretKey;
+    @Value("${security.jwt.token.expire-length}")
+    private long validityInMilliseconds;
+    @Value("${security.jwt.token.header}")
+    private String authorizationHeader;
 
     private static final String ROLE = "role";
 
